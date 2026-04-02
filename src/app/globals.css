@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Brand colors */
+  --color-charcoal: #121212;
+  --color-charcoal-light: #1e1e1e;
+  --color-charcoal-mid: #2a2a2a;
+  --color-gold: #D4AF37;
+  --color-gold-light: #e8c84e;
+  --color-gold-dark: #b8962e;
+  --color-champagne: #F7E7CE;
+  --color-ivory: #FAF9F6;
+  --color-ivory-muted: #d6d3ce;
+
+  /* Fonts */
+  --font-playfair: var(--font-playfair-display);
+  --font-inter: var(--font-inter);
+  --font-montserrat: var(--font-montserrat);
+
+  /* Custom spacing / sizing */
+  --spacing-section: 7rem;
+}
+
+/* ── Base reset ───────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: #121212;
+  color: #FAF9F6;
+}
+
+body {
+  background-color: #121212;
+  color: #FAF9F6;
+  font-family: var(--font-inter), var(--font-montserrat), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── Custom scrollbar ─────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #e8c84e;
+}
+
+/* ── Gold shimmer animation ───────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px);   }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes goldPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+  50%       { box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.3); }
+}
+
+/* ── Utility classes ──────────────────────────────────── */
+.font-playfair   { font-family: var(--font-playfair-display), Georgia, serif; }
+.font-inter      { font-family: var(--font-inter), sans-serif; }
+.font-montserrat { font-family: var(--font-montserrat), sans-serif; }
+
+.text-gradient-gold {
+  background: linear-gradient(
+    135deg,
+    #D4AF37 0%,
+    #F7E7CE 40%,
+    #D4AF37 60%,
+    #b8962e 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+.btn-gold-shimmer {
+  position: relative;
+  background: linear-gradient(
+    90deg,
+    #D4AF37 0%,
+    #F7E7CE 25%,
+    #D4AF37 50%,
+    #b8962e 75%,
+    #D4AF37 100%
+  );
+  background-size: 300% auto;
+  animation: shimmer 3s linear infinite;
+  color: #121212;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-gold-shimmer:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(212, 175, 55, 0.45);
+}
+.btn-gold-shimmer:active {
+  transform: translateY(0);
+}
+
+.btn-gold-outline {
+  border: 1px solid #D4AF37;
+  color: #D4AF37;
+  background: transparent;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+.btn-gold-outline:hover {
+  background: #D4AF37;
+  color: #121212;
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.4);
+}
+
+.section-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: #D4AF37;
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 500;
+}
+
+.divider-gold {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  margin: 1.5rem auto;
+}
+
+/* ── Glass morphism nav ───────────────────────────────── */
+.nav-glass {
+  background: rgba(18, 18, 18, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+}
+
+/* ── Card hover overlay ───────────────────────────────── */
+.showcase-card {
+  position: relative;
+  overflow: hidden;
+}
+.showcase-card img {
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.showcase-card:hover img {
+  transform: scale(1.08);
+}
+.showcase-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(18, 18, 18, 0.88) 0%,
+    rgba(18, 18, 18, 0.2) 50%,
+    transparent 100%
+  );
+  transition: opacity 0.4s ease;
+}
+.showcase-card:hover .showcase-card-overlay {
+  opacity: 1;
+  background: linear-gradient(
+    to top,
+    rgba(18, 18, 18, 0.92) 0%,
+    rgba(18, 18, 18, 0.35) 60%,
+    transparent 100%
+  );
+}
+
+/* ── Float animation for hero image ──────────────────── */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ── Input gold focus ─────────────────────────────────── */
+.input-gold:focus {
+  outline: none;
+  border-bottom-color: #D4AF37 !important;
+  box-shadow: 0 2px 0 0 rgba(212, 175, 55, 0.5);
+}
+
+/* ── Stat counter ──────────────────────────────────────── */
+.stat-divider {
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, #D4AF37, transparent);
+  height: 60px;
+  align-self: center;
+}
