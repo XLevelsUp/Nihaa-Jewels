@@ -1,18 +1,18 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, Variants } from 'framer-motion';
 import SectionLabel from '@/components/ui/SectionLabel';
 import GoldButton from '@/components/ui/GoldButton';
 import { HERITAGE_CONTENT, HERITAGE_STATS } from '@/constants';
 import Image from 'next/image';
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.18 } },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: 'easeOut' } },
 };
