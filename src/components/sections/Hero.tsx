@@ -26,7 +26,7 @@ export default function Hero() {
       {/* Parallax background */}
       <motion.div className="absolute inset-0 z-0" style={{ y, scale }}>
         <Image
-          src="https://images.unsplash.com/photo-1601121141418-5f2b59c6c2b5?w=1920&q=90&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1573408301185-9519f94cc340?w=1920&q=90&auto=format&fit=crop"
           alt="Luxury jewellery collection — Nihaa Jewels hero"
           fill
           priority

@@ -1,9 +1,15 @@
+import type { Metadata } from 'next';
 import Navigation from '@/components/sections/Navigation';
 import Hero from '@/components/sections/Hero';
 import ShowcaseGrid from '@/components/sections/ShowcaseGrid';
 import Heritage from '@/components/sections/Heritage';
 import Newsletter from '@/components/sections/Newsletter';
 import Footer from '@/components/sections/Footer';
+
+export const metadata: Metadata = {
+  title: "Nihaa Jewels — Fine Luxury Jewellery & Bespoke Goldsmiths",
+  description: "Explore Coimbatore's finest collection of handcrafted gold, diamond, and bridal jewellery. Four generations of mastery in every piece.",
+};
 
 export default function Home() {
   return (
