@@ -2,8 +2,7 @@ import type { Metadata } from 'next';
 import Navigation from '@/components/sections/Navigation';
 import Footer from '@/components/sections/Footer';
 import { MapPin, Phone, Clock } from 'lucide-react';
-import { Box, Container, Typography, Button } from '@mui/material';
-import Grid2 from '@mui/material/Grid2';
+import { Box, Container, Typography, Grid, Button } from '@mui/material';
 
 export const metadata: Metadata = {
   title: "Nihaa Jewels Store Locator | Coimbatore Showrooms",
@@ -59,9 +58,9 @@ export default function StoreLocatorPage() {
           <Box className="divider-gold" sx={{ mt: 4 }} />
         </Box>
 
-        <Grid2 container spacing={4}>
+        <Grid container spacing={4}>
           {stores.map((store) => (
-            <Grid2 size={{ xs: 12, md: 6 }} key={store.name}>
+            <Grid item xs={12} md={6} key={store.name}>
               <Box
                 sx={{
                   bgcolor: '#1a1a1a',
@@ -127,9 +126,9 @@ export default function StoreLocatorPage() {
                   Get Directions
                 </Button>
               </Box>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       </Container>
       <Footer />
     </Box>

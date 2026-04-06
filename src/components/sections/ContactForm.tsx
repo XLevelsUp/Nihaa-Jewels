@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from "react";
-import { 
-  Box, 
-  Typography, 
-  TextField, 
-  Select, 
-  MenuItem, 
-  Button, 
-  alpha, 
+import {
+  Box,
+  Typography,
+  TextField,
+  Select,
+  MenuItem,
+  Button,
+  alpha,
   useTheme,
   FormControl,
   InputLabel,
@@ -37,12 +37,28 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setLoading(false);
-    setSuccess(true);
-    setFormData({ name: "", phone: "", email: "", interest: "", message: "" });
-  };
+    try {
+      const params = new URLSearchParams();
+      params.append("name", formData.name);
+      params.append("phone", formData.phone);
+      params.append("email", formData.email);
+      params.append("interest", formData.interest);
+      params.append("message", formData.message);
 
+      await fetch(process.env.NEXT_PUBLIC_GOOGLE_SHEET_URL!, {
+        method: "POST",
+        mode: "no-cors",           // ← critical for Google Apps Script
+        body: params,
+      });
+
+      setSuccess(true);
+      setFormData({ name: "", phone: "", email: "", interest: "", message: "" });
+    } catch (err) {
+      console.error("Form error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
   const textFieldStyle = {
     '& .MuiInput-underline:before': { borderBottomColor: alpha(theme.palette.primary.main, 0.2) },
     '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottomColor: theme.palette.primary.main },
