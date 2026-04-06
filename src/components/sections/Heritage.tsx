@@ -2,7 +2,8 @@
 
 import { useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
-import { Box, Container, Typography, alpha, useTheme, Grid } from '@mui/material';
+import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import SectionLabel from '@/components/ui/SectionLabel';
 import GoldButton from '@/components/ui/GoldButton';
 import { HERITAGE_CONTENT, HERITAGE_STATS } from '@/constants';
@@ -55,9 +56,9 @@ export default function Heritage() {
       />
 
       <Container maxWidth="lg">
-        <Grid container spacing={8} alignItems="center">
+        <Grid2 container spacing={8} alignItems="center">
           {/* Left — typography */}
-          <Grid size={{ xs: 12, lg: 6 }}>
+          <Grid2 size={{ xs: 12, lg: 6 }}>
             <MotionBox
               ref={ref}
               variants={containerVariants}
@@ -124,10 +125,10 @@ export default function Heritage() {
                 </GoldButton>
               </MotionBox>
             </MotionBox>
-          </Grid>
+          </Grid2>
 
           {/* Right — image + stats */}
-          <Grid size={{ xs: 12, lg: 6 }}>
+          <Grid2 size={{ xs: 12, lg: 6 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               {/* Image */}
               <MotionBox
@@ -210,8 +211,8 @@ export default function Heritage() {
                 ))}
               </MotionBox>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
     </Box>
   );
