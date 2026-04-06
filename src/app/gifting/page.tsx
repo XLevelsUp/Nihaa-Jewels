@@ -53,7 +53,7 @@ export default function GiftingPage() {
               lineHeight: 1.8
             }}
           >
-            From anniversaries to life's milestones, discover the perfect gift from our signature gold and diamond collections.
+            From anniversaries to life&apos;s milestones, discover the perfect gift from our signature gold and diamond collections.
           </Typography>
         </Box>
 

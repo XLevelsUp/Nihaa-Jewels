@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Box, Container, Typography, alpha, useTheme, Grid } from '@mui/material';
+import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
+import Grid2 from '@mui/material/Grid2';
 import { Gem, Globe, Phone, MapPin, Mail, ShieldCheck, Truck, RotateCcw, Award } from 'lucide-react';
 import { FOOTER_LINKS, SOCIAL_LINKS } from '@/constants';
 
@@ -25,14 +26,14 @@ export default function Footer() {
     >
       <Container maxWidth="lg">
         {/* ─── Trust Badges ─── */}
-        <Grid container spacing={4} sx={{ pb: 8, mb: 8, borderBottom: '1px solid rgba(212, 175, 55, 0.05)' }}>
+        <Grid2 container spacing={4} sx={{ pb: 8, mb: 8, borderBottom: '1px solid rgba(212, 175, 55, 0.05)' }}>
           {[
             { icon: <Award size={24} />, title: 'BIS Hallmarked', desc: '100% Purity Guaranteed' },
             { icon: <ShieldCheck size={24} />, title: 'IGI Certified', desc: 'Authentic Diamonds' },
             { icon: <RotateCcw size={24} />, title: 'Lifetime Exchange', desc: 'Buyback & Exchange' },
             { icon: <Truck size={24} />, title: 'Insured Shipping', desc: 'Complimentary & Secure' }
           ].map((item, i) => (
-            <Grid key={i} size={{ xs: 6, md: 3 }}>
+            <Grid2 key={i} size={{ xs: 6, md: 3 }}>
               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 1 }}>
                 <Box sx={{ color: 'rgba(212, 175, 55, 0.6)', transition: '0.5s', '&:hover': { color: '#D4AF37' } }}>
                   {item.icon}
@@ -44,14 +45,14 @@ export default function Footer() {
                   {item.desc}
                 </Typography>
               </Box>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
 
         {/* ─── Main Footer Content ─── */}
-        <Grid container spacing={8} sx={{ mb: 10 }}>
+        <Grid2 container spacing={8} sx={{ mb: 10 }}>
           {/* Brand & Story */}
-          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+          <Grid2 size={{ xs: 12, md: 6, lg: 4 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
               <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none' }}>
                 <Box sx={{ color: '#D4AF37' }}>
@@ -95,11 +96,11 @@ export default function Footer() {
                 ))}
               </Box>
             </Box>
-          </Grid>
+          </Grid2>
 
           {/* Links columns */}
           {FOOTER_LINKS.map((column) => (
-            <Grid key={column.heading} size={{ xs: 6, md: 3, lg: 2 }}>
+            <Grid2 key={column.heading} size={{ xs: 6, md: 3, lg: 2 }}>
               <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, display: 'block', mb: 4, textTransform: 'uppercase', letterSpacing: '0.3em' }}>
                 {column.heading}
               </Typography>
@@ -124,11 +125,11 @@ export default function Footer() {
                   </Box>
                 ))}
               </Box>
-            </Grid>
+            </Grid2>
           ))}
 
           {/* Contact Section */}
-          <Grid size={{ xs: 12, md: 6, lg: 2 }}>
+          <Grid2 size={{ xs: 12, md: 6, lg: 2 }}>
             <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, display: 'block', mb: 4, textTransform: 'uppercase', letterSpacing: '0.3em' }}>
               The Atelier
             </Typography>
@@ -152,8 +153,8 @@ export default function Footer() {
                 </Typography>
               </Box>
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
         {/* ─── Bottom copyright bar ─── */}
         <Box sx={{ pt: 5, borderTop: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 3 }}>

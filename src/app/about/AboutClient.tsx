@@ -3,9 +3,8 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Box, Container, Typography, Button, useTheme, alpha, Grid } from "@mui/material";
-
-
+import { Box, Container, Typography, Button, useTheme, alpha } from "@mui/material";
+import Grid2 from "@mui/material/Grid2";
 
 const milestones = [
   { year: "1986", title: "The Beginning", desc: "Founded in a small workshop in Coimbatore by master goldsmith A. Krishnamurthy." },
@@ -28,8 +27,8 @@ export default function AboutClient() {
         </Box>
       </Box>
       <Container component="section" maxWidth="lg" sx={{ py: { xs: 10, md: 15 }, px: 3 }}>
-        <Grid container spacing={8} alignItems="center">
-          <Grid size={{ xs: 12, md: 6 }}>
+        <Grid2 container spacing={8} alignItems="center">
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: '0.22em' }}>Our Story</Typography>
               <Typography variant="h2" sx={{ color: 'text.primary', fontFamily: 'var(--font-playfair-display), serif', fontSize: { xs: '2.25rem', md: '3rem' } }}>Mastery Passed Through Generations</Typography>
@@ -37,14 +36,14 @@ export default function AboutClient() {
               <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 300, lineHeight: 1.8 }}>Every piece is a testament to the skill of our master artisans. Rooted in tradition but looking towards the future.</Typography>
               <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 300, lineHeight: 1.8 }}>We draw inspiration from royal courts and ancient temples — ensuring each piece is unique.</Typography>
             </Box>
-          </Grid>
-          <Grid size={{ xs: 12, md: 6 }}>
+          </Grid2>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ position: 'relative', height: { xs: 400, md: 600 }, width: '100%', overflow: 'hidden' }}>
               <Image src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=900&q=85&auto=format&fit=crop" alt="Craftsmanship" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
               <Box sx={{ position: 'absolute', inset: 0, border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`, m: 2 }} />
             </Box>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
       <Box component="section" sx={{ py: { xs: 10, md: 15 }, px: 3, bgcolor: '#0d0d0d' }}>
         <Container maxWidth="md">
@@ -53,11 +52,11 @@ export default function AboutClient() {
             <Typography variant="h2" sx={{ color: 'primary.main', fontFamily: 'var(--font-playfair-display), serif', fontSize: { xs: '2rem', md: '2.5rem' } }}>Ethical Sourcing & Sustainability</Typography>
             <Box className="divider-gold" sx={{ mx: 'auto' }} />
             <Typography variant="body1" sx={{ color: 'text.secondary', fontWeight: 300, fontSize: '1.2rem', lineHeight: 1.8 }}>Certified conflict-free diamonds and fair-wage artisan workshops.</Typography>
-            <Grid container spacing={4} sx={{ pt: 8, mt: 4, borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.1)}` }}>
+            <Grid2 container spacing={4} sx={{ pt: 8, mt: 4, borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.1)}` }}>
               {[{ stat: "100%", label: "Conflict-Free" }, { stat: "Fair Wage", label: "Workshops" }, { stat: "BIS", label: "Hallmarked" }].map((item) => (
-                <Grid key={item.stat} size={{ xs: 12, md: 4 }}><Box sx={{ textAlign: 'center' }}><Typography variant="h4" sx={{ color: 'primary.main', mb: 1, fontFamily: 'var(--font-playfair-display), serif' }}>{item.stat}</Typography><Typography variant="caption" sx={{ color: alpha(theme.palette.text.secondary, 0.6), textTransform: 'uppercase', letterSpacing: '0.15em' }}>{item.label}</Typography></Box></Grid>
+                <Grid2 key={item.stat} size={{ xs: 12, md: 4 }}><Box sx={{ textAlign: 'center' }}><Typography variant="h4" sx={{ color: 'primary.main', mb: 1, fontFamily: 'var(--font-playfair-display), serif' }}>{item.stat}</Typography><Typography variant="caption" sx={{ color: alpha(theme.palette.text.secondary, 0.6), textTransform: 'uppercase', letterSpacing: '0.15em' }}>{item.label}</Typography></Box></Grid2>
               ))}
-            </Grid>
+            </Grid2>
           </Box>
         </Container>
       </Box>
