@@ -1,3 +1,5 @@
+import { Typography, alpha } from '@mui/material';
+
 interface SectionLabelProps {
   children: React.ReactNode;
   centered?: boolean;
@@ -10,10 +12,22 @@ export default function SectionLabel({
   className = '',
 }: SectionLabelProps) {
   return (
-    <p
-      className={`section-label ${centered ? 'text-center' : ''} ${className}`}
+    <Typography
+      variant="overline"
+      sx={{
+        display: 'block',
+        textAlign: centered ? 'center' : 'left',
+        color: '#D4AF37',
+        letterSpacing: '0.28em',
+        fontWeight: 500,
+        textTransform: 'uppercase',
+        fontSize: '0.7rem',
+        fontFamily: 'var(--font-inter), sans-serif',
+        mb: 2
+      }}
+      className={className}
     >
       {children}
-    </p>
+    </Typography>
   );
 }

@@ -2,162 +2,201 @@
 
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { Box, Container, Typography, alpha, useTheme, Grid } from '@mui/material';
 import { Gem, Globe, Phone, MapPin, Mail, ShieldCheck, Truck, RotateCcw, Award } from 'lucide-react';
 import { FOOTER_LINKS, SOCIAL_LINKS } from '@/constants';
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const theme = useTheme();
 
   return (
-    <footer
+    <Box
+      component="footer"
       id="footer"
-      className="bg-[#0a0a0a] border-t border-[#D4AF37]/10 pt-24 pb-8 px-6 lg:px-8"
+      sx={{
+        bg: '#0a0a0a',
+        borderTop: '1px solid rgba(212, 175, 55, 0.1)',
+        pt: 12,
+        pb: 4,
+        px: 3,
+        bgcolor: '#0a0a0a'
+      }}
     >
-      <div className="max-w-7xl mx-auto">
-
-        {/* ─── Trust Badges (Premium Addition) ─── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pb-16 mb-16 border-b border-[#D4AF37]/5">
+      <Container maxWidth="lg">
+        {/* ─── Trust Badges ─── */}
+        <Grid container spacing={4} sx={{ pb: 8, mb: 8, borderBottom: '1px solid rgba(212, 175, 55, 0.05)' }}>
           {[
             { icon: <Award size={24} />, title: 'BIS Hallmarked', desc: '100% Purity Guaranteed' },
             { icon: <ShieldCheck size={24} />, title: 'IGI Certified', desc: 'Authentic Diamonds' },
             { icon: <RotateCcw size={24} />, title: 'Lifetime Exchange', desc: 'Buyback & Exchange' },
             { icon: <Truck size={24} />, title: 'Insured Shipping', desc: 'Complimentary & Secure' }
           ].map((item, i) => (
-            <div key={i} className="flex flex-col items-center text-center space-y-2 group">
-              <div className="text-[#D4AF37]/60 group-hover:text-[#D4AF37] transition-colors duration-500">
-                {item.icon}
-              </div>
-              <h5 className="text-[#FAF9F6] text-[0.65rem] uppercase tracking-[0.2em] font-bold">
-                {item.title}
-              </h5>
-              <p className="text-[#d6d3ce]/40 text-[0.55rem] uppercase tracking-widest font-light">
-                {item.desc}
-              </p>
-            </div>
+            <Grid key={i} size={{ xs: 6, md: 3 }}>
+              <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 1 }}>
+                <Box sx={{ color: 'rgba(212, 175, 55, 0.6)', transition: '0.5s', '&:hover': { color: '#D4AF37' } }}>
+                  {item.icon}
+                </Box>
+                <Typography variant="caption" sx={{ color: '#FAF9F6', fontSize: '0.65rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                  {item.title}
+                </Typography>
+                <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.4)', fontSize: '0.55rem', fontWeight: 300, textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                  {item.desc}
+                </Typography>
+              </Box>
+            </Grid>
           ))}
-        </div>
+        </Grid>
 
         {/* ─── Main Footer Content ─── */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20">
-
+        <Grid container spacing={8} sx={{ mb: 10 }}>
           {/* Brand & Story */}
-          <div className="space-y-8">
-            <Link href="/" className="flex items-center gap-3 group w-fit">
-              <motion.div whileHover={{ rotate: 12 }} className="text-[#D4AF37]">
-                <Gem size={22} strokeWidth={1.5} />
-              </motion.div>
-              <div className="leading-tight">
-                <span className="text-[#D4AF37] text-2xl font-bold font-playfair tracking-tight gold-glow">
-                  Nihaa
-                </span>
-                <span className="block text-[#FAF9F6]/40 text-[0.45rem] tracking-[0.5em] uppercase font-medium">
-                  Jewels
-                </span>
-              </div>
-            </Link>
-            <p className="text-[#d6d3ce]/60 text-xs font-light leading-[1.8] max-w-sm">
-              Crafting heirlooms for four generations. Our pieces blend the sacred traditions of Coimbatore with modern silhouettes, ensuring every jewel tells a story of elegance and devotion.
-            </p>
-            <div className="flex items-center gap-4">
-              {SOCIAL_LINKS.map((social) => (
-                <motion.a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ y: -3, color: '#D4AF37' }}
-                  className="w-9 h-9 border border-white/5 rounded-full flex items-center justify-center text-[#d6d3ce]/30 hover:border-[#D4AF37]/30 transition-all duration-500"
-                >
-                  <Globe size={16} strokeWidth={1.5} />
-                </motion.a>
-              ))}
-            </div>
-          </div>
-
-          {/* Dynamic Links columns */}
-          {FOOTER_LINKS.map((column) => (
-            <div key={column.heading}>
-              <h4 className="text-[#D4AF37] text-[0.65rem] uppercase tracking-[0.3em] font-bold mb-8">
-                {column.heading}
-              </h4>
-              <ul className="space-y-4">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className="text-[#d6d3ce]/40 text-xs font-light hover:text-[#FAF9F6] transition-all duration-300 tracking-wider flex items-center group"
-                    >
-                      <span className="w-0 group-hover:w-3 h-px bg-[#D4AF37] mr-0 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:mr-2" />
-                      {link.label}
-                    </Link>
-                  </li>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1.5, textDecoration: 'none' }}>
+                <Box sx={{ color: '#D4AF37' }}>
+                  <Gem size={22} strokeWidth={1.5} />
+                </Box>
+                <Box>
+                  <Typography variant="h6" sx={{ color: '#D4AF37', fontWeight: 700, fontFamily: 'var(--font-playfair-display), serif', lineHeight: 1 }}>
+                    Nihaa
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: 'rgba(250, 249, 246, 0.4)', fontSize: '0.45rem', textTransform: 'uppercase', letterSpacing: '0.5em', fontWeight: 500, display: 'block' }}>
+                    Jewels
+                  </Typography>
+                </Box>
+              </Box>
+              <Typography variant="body2" sx={{ color: 'rgba(214, 211, 206, 0.6)', fontSize: '0.75rem', fontWeight: 300, lineHeight: 1.8, maxWidth: 320 }}>
+                Crafting heirlooms for four generations. Our pieces blend the sacred traditions of Coimbatore with modern silhouettes, ensuring every jewel tells a story of elegance and devotion.
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                {SOCIAL_LINKS.map((social) => (
+                  <Box
+                    key={social.label}
+                    component="a"
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    sx={{
+                      width: 36,
+                      height: 36,
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'rgba(214, 211, 206, 0.3)',
+                      transition: '0.5s',
+                      '&:hover': { color: '#D4AF37', borderColor: 'rgba(212, 175, 55, 0.3)', transform: 'translateY(-3px)' }
+                    }}
+                  >
+                    <Globe size={16} strokeWidth={1.5} />
+                  </Box>
                 ))}
-              </ul>
-            </div>
+              </Box>
+            </Box>
+          </Grid>
+
+          {/* Links columns */}
+          {FOOTER_LINKS.map((column) => (
+            <Grid key={column.heading} size={{ xs: 6, md: 3, lg: 2 }}>
+              <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, display: 'block', mb: 4, textTransform: 'uppercase', letterSpacing: '0.3em' }}>
+                {column.heading}
+              </Typography>
+              <Box component="ul" sx={{ p: 0, m: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {column.links.map((link) => (
+                  <Box component="li" key={link.label}>
+                    <Box
+                      component={Link}
+                      href={link.href}
+                      sx={{
+                        color: 'rgba(214, 211, 206, 0.4)',
+                        fontSize: '0.75rem',
+                        fontWeight: 300,
+                        textDecoration: 'none',
+                        transition: '0.3s',
+                        letterSpacing: '0.05em',
+                        '&:hover': { color: '#FAF9F6' }
+                      }}
+                    >
+                      {link.label}
+                    </Box>
+                  </Box>
+                ))}
+              </Box>
+            </Grid>
           ))}
 
-          {/* Contact & Newsletter */}
-          <div className="space-y-8">
-            <div>
-              <h4 className="text-[#D4AF37] text-[0.65rem] uppercase tracking-[0.3em] font-bold mb-8">
-                The Atelier
-              </h4>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin size={14} className="text-[#D4AF37]/60 mt-1 shrink-0" />
-                  <p className="text-[#d6d3ce]/50 text-xs font-light leading-relaxed">
-                    42, Jewellers Street, RS Puram,<br />Coimbatore, Tamil Nadu 641002
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Phone size={14} className="text-[#D4AF37]/60 shrink-0" />
-                  <p className="text-[#d6d3ce]/50 text-xs font-light">+91 422 280 0000</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Mail size={14} className="text-[#D4AF37]/60 shrink-0" />
-                  <p className="text-[#d6d3ce]/50 text-xs font-light">concierge@nihaajewels.com</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* Contact Section */}
+          <Grid size={{ xs: 12, md: 6, lg: 2 }}>
+            <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, display: 'block', mb: 4, textTransform: 'uppercase', letterSpacing: '0.3em' }}>
+              The Atelier
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
+              <Box sx={{ display: 'flex', alignItems: 'start', gap: 1.5 }}>
+                <MapPin size={14} style={{ color: 'rgba(212, 175, 55, 0.6)', marginTop: '4px', flexShrink: 0 }} />
+                <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.5)', fontWeight: 300, lineHeight: 1.6 }}>
+                  42, Jewellers Street, RS Puram,<br />Coimbatore, TN 641002
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Phone size={14} style={{ color: 'rgba(212, 175, 55, 0.6)', flexShrink: 0 }} />
+                <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.5)', fontWeight: 300 }}>
+                  +91 422 280 0000
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                <Mail size={14} style={{ color: 'rgba(212, 175, 55, 0.6)', flexShrink: 0 }} />
+                <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.5)', fontWeight: 300 }}>
+                  concierge@nihaajewels.com
+                </Typography>
+              </Box>
+            </Box>
+          </Grid>
+        </Grid>
 
-        {/* ─── Bottom Copyright Bar ─── */}
-        <div className="border-t border-white/5 pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col md:flex-row items-center gap-4 md:gap-8 order-2 md:order-1">
-            <p className="text-[#d6d3ce]/20 text-[0.55rem] uppercase tracking-[0.25em] font-medium">
+        {/* ─── Bottom copyright bar ─── */}
+        <Box sx={{ pt: 5, borderTop: '1px solid rgba(255, 255, 255, 0.05)', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: 3 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 4 }, flexWrap: 'wrap' }}>
+            <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.2)', textTransform: 'uppercase', letterSpacing: '0.25em', fontWeight: 500 }}>
               © {year} Nihaa Jewels. All rights reserved.
-            </p>
-            <div className="flex items-center gap-6">
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 3 }}>
               {['Privacy', 'Terms', 'Gifts'].map((item) => (
-                <Link
+                <Typography
                   key={item}
+                  component={Link}
                   href="#"
-                  className="text-[#d6d3ce]/20 text-[0.55rem] uppercase tracking-[0.2em] font-medium hover:text-[#D4AF37] transition-colors"
+                  variant="caption"
+                  sx={{ color: 'rgba(214, 211, 206, 0.2)', textTransform: 'uppercase', letterSpacing: '0.2em', fontWeight: 500, textDecoration: 'none', '&:hover': { color: '#D4AF37' } }}
                 >
                   {item}
-                </Link>
+                </Typography>
               ))}
-            </div>
-          </div>
+            </Box>
+          </Box>
 
-          <div className="order-1 md:order-2">
-            <p className="text-[#D4AF37] text-[0.6rem] uppercase tracking-[0.3em] font-bold flex items-center gap-2">
-              <span className="opacity-60 font-light italic">Built with</span>
-              <span className="text-[#FF3B30] text-sm leading-none animate-pulse">❤️</span>
-              <span className="opacity-60 font-light italic">by</span>
-              <a
+          <Box>
+            <Typography
+              variant="caption"
+              sx={{ color: '#D4AF37', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.3em', display: 'flex', alignItems: 'center', gap: 1 }}
+            >
+              <Box component="span" sx={{ opacity: 0.6, fontWeight: 300, fontStyle: 'italic' }}>Built with</Box>
+              <Box component="span" className="text-[#FF3B30] text-sm leading-none animate-pulse">❤️</Box>
+              <Box component="span" sx={{ opacity: 0.6, fontWeight: 300, fontStyle: 'italic' }}>by</Box>
+              <Box
+                component="a"
                 href="https://xlevelsup.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-[#D4AF37] transition-all duration-500 underline underline-offset-4 decoration-white/10 hover:decoration-[#D4AF37]/50"
+                sx={{ color: '#fff', textDecoration: 'underline', textUnderlineOffset: 4, textDecorationColor: 'rgba(255, 255, 255, 0.1)', '&:hover': { color: '#D4AF37', textDecorationColor: 'rgba(212, 175, 55, 0.5)' }, transition: '0.5s' }}
               >
                 XLevelsUp
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
+              </Box>
+            </Typography>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 }

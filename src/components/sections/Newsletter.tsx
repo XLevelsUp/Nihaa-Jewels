@@ -2,13 +2,18 @@
 
 import { useState, useRef } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Box, Typography, IconButton, InputBase, alpha, useTheme } from '@mui/material';
 import { Send, CheckCircle } from 'lucide-react';
 import SectionLabel from '@/components/ui/SectionLabel';
+
+const MotionBox = motion.create(Box);
+const MotionTypography = motion.create(Typography);
 
 export default function Newsletter() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [focused, setFocused] = useState(false);
+  const theme = useTheme();
 
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
@@ -20,14 +25,23 @@ export default function Newsletter() {
   };
 
   return (
-    <section
+    <Box
+      component="section"
       id="newsletter"
-      className="relative py-32 px-6 bg-[#121212] overflow-hidden"
+      sx={{
+        position: 'relative',
+        py: { xs: 15, md: 20 },
+        px: 3,
+        bgcolor: '#121212',
+        overflow: 'hidden'
+      }}
     >
       {/* Background pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
+      <Box
+        sx={{
+          position: 'absolute',
+          inset: 0,
+          opacity: 0.03,
           backgroundImage: `repeating-linear-gradient(
             45deg,
             #D4AF37 0px,
@@ -35,53 +49,93 @@ export default function Newsletter() {
             transparent 1px,
             transparent 40px
           )`,
+          pointerEvents: 'none'
         }}
       />
 
       {/* Gold glow center */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] rounded-full bg-[#D4AF37]/8 blur-[80px] pointer-events-none" />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '400px', md: '800px' },
+          height: { xs: '200px', md: '300px' },
+          borderRadius: '50%',
+          bgcolor: alpha('#D4AF37', 0.08),
+          filter: 'blur(80px)',
+          pointerEvents: 'none'
+        }}
+      />
 
-      <motion.div
+      <MotionBox
         ref={ref}
         initial={{ opacity: 0, y: 32 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.9 }}
-        className="relative max-w-2xl mx-auto text-center"
+        sx={{
+          position: 'relative',
+          maxWidth: '800px',
+          mx: 'auto',
+          textAlign: 'center'
+        }}
       >
         <SectionLabel centered>Private Circle</SectionLabel>
-        <div className="divider-gold" />
+        <Box className="divider-gold" sx={{ mb: 4 }} />
 
-        <h2
-          className="font-playfair text-4xl md:text-5xl text-[#FAF9F6] mt-4 mb-4 leading-tight"
-          style={{ fontFamily: 'var(--font-playfair-display), serif' }}
+        <Typography
+          variant="h2"
+          sx={{
+            fontFamily: 'var(--font-playfair-display), serif',
+            fontSize: { xs: '2.25rem', md: '3rem' },
+            color: '#FAF9F6',
+            mt: 2,
+            mb: 4,
+            lineHeight: 1.2
+          }}
         >
           Before the World Sees It
-        </h2>
+        </Typography>
 
-        <p
-          className="text-[#d6d3ce] text-sm font-light leading-relaxed mb-12 max-w-sm mx-auto"
-          style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+        <Typography
+          variant="body2"
+          sx={{
+            color: 'rgba(214, 211, 206, 0.6)',
+            fontSize: '0.875rem',
+            fontWeight: 300,
+            lineHeight: 1.8,
+            mb: 8,
+            maxWidth: '400px',
+            mx: 'auto',
+            fontFamily: 'var(--font-inter), sans-serif'
+          }}
         >
           Join our private circle. Be the first to receive new arrivals, bespoke
           invitations, and exclusive access to rare pieces.
-        </p>
+        </Typography>
 
         <AnimatePresence mode="wait">
           {!submitted ? (
-            <motion.form
+            <MotionBox
               key="form"
               initial={{ opacity: 1 }}
               exit={{ opacity: 0, y: -10 }}
-              onSubmit={handleSubmit}
-              className="relative max-w-md mx-auto"
-              id="newsletter-form"
+              sx={{
+                position: 'relative',
+                maxWidth: '448px',
+                mx: 'auto'
+              }}
             >
-              <div
-                className={`flex border-b transition-colors duration-300 ${
-                  focused ? 'border-[#D4AF37]' : 'border-[#D4AF37]/30'
-                }`}
-              >
-                <input
+              <form onSubmit={handleSubmit} id="newsletter-form">
+                <Box
+                  sx={{
+                    display: 'flex',
+                    borderBottom: `1px solid ${focused ? alpha('#D4AF37', 1) : alpha('#D4AF37', 0.3)}`,
+                    transition: 'border-color 0.3s ease'
+                  }}
+                >
+                <InputBase
                   id="newsletter-email"
                   type="email"
                   value={email}
@@ -90,58 +144,97 @@ export default function Newsletter() {
                   onBlur={() => setFocused(false)}
                   placeholder="Your email address"
                   required
-                  className="flex-1 bg-transparent text-[#FAF9F6] text-sm py-3 pr-4 placeholder-[#d6d3ce]/30 focus:outline-none font-light tracking-wide input-gold"
-                  style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+                  fullWidth
+                  sx={{
+                    color: '#FAF9F6',
+                    fontSize: '0.875rem',
+                    py: 1.5,
+                    pr: 2,
+                    fontFamily: 'var(--font-inter), sans-serif',
+                    '& input::placeholder': {
+                      color: 'rgba(214, 211, 206, 0.3)',
+                      opacity: 1
+                    }
+                  }}
                   aria-label="Email address for newsletter"
                 />
-                <motion.button
+                <IconButton
                   id="newsletter-submit"
                   type="submit"
+                  sx={{
+                    color: '#D4AF37',
+                    p: 1.5,
+                    '&:hover': { color: '#F7E7CE' },
+                    transition: 'color 0.3s ease'
+                  }}
+                  component={motion.button}
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="text-[#D4AF37] hover:text-[#F7E7CE] transition-colors py-3 pl-2"
                   aria-label="Subscribe"
                 >
-                  <Send size={16} strokeWidth={1.5} />
-                </motion.button>
-              </div>
+                  <Send size={18} strokeWidth={1.5} />
+                </IconButton>
+              </Box>
 
-              <p
-                className="text-[#d6d3ce]/40 text-[0.6rem] uppercase tracking-widest mt-4"
-                style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+              <Typography
+                variant="caption"
+                sx={{
+                  display: 'block',
+                  color: 'rgba(214, 211, 206, 0.25)',
+                  fontSize: '0.6rem',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.2em',
+                  mt: 3,
+                  fontFamily: 'var(--font-inter), sans-serif'
+                }}
               >
                 No spam. Unsubscribe anytime. Pure luxury in your inbox.
-              </p>
-            </motion.form>
+              </Typography>
+              </form>
+            </MotionBox>
           ) : (
-            <motion.div
+            <MotionBox
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="flex flex-col items-center gap-4"
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 3
+              }}
             >
               <CheckCircle
-                size={40}
+                size={48}
                 strokeWidth={1}
-                className="text-[#D4AF37]"
+                color={alpha('#D4AF37', 0.8).toString()}
               />
-              <p
-                className="font-playfair text-xl text-[#F7E7CE] italic"
-                style={{ fontFamily: 'var(--font-playfair-display), serif' }}
+              <Typography
+                sx={{
+                  fontFamily: 'var(--font-playfair-display), serif',
+                  fontSize: '1.5rem',
+                  color: '#F7E7CE',
+                  fontStyle: 'italic'
+                }}
               >
                 Welcome to the circle.
-              </p>
-              <p
-                className="text-[#d6d3ce] text-xs font-light tracking-wide"
-                style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+              </Typography>
+              <Typography
+                sx={{
+                  color: 'rgba(214, 211, 206, 0.6)',
+                  fontSize: '0.75rem',
+                  fontWeight: 300,
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-inter), sans-serif'
+                }}
               >
-                We'll be in touch soon with something worth waiting for.
-              </p>
-            </motion.div>
+                We&apos;ve added you to our list. Expect the extraordinary soon.
+              </Typography>
+            </MotionBox>
           )}
         </AnimatePresence>
-      </motion.div>
-    </section>
+      </MotionBox>
+    </Box>
   );
 }

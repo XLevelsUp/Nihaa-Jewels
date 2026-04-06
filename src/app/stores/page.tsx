@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Navigation from '@/components/sections/Navigation';
 import Footer from '@/components/sections/Footer';
 import { MapPin, Phone, Clock } from 'lucide-react';
+import { Box, Container, Typography, Grid, Button } from '@mui/material';
 
 export const metadata: Metadata = {
   title: "Nihaa Jewels Store Locator | Coimbatore Showrooms",
@@ -25,41 +26,111 @@ const stores = [
 
 export default function StoreLocatorPage() {
   return (
-    <div className="bg-[#121212] min-h-screen">
+    <Box sx={{ bgcolor: '#121212', minHeight: '100vh' }}>
       <Navigation />
-      <main className="pt-32 pb-20 px-6 max-w-5xl mx-auto">
-        <header className="mb-16 text-center">
-          <p className="section-label mb-2 text-[#D4AF37]/60">Visit Us</p>
-          <h1 className="text-4xl md:text-5xl text-[#FAF9F6] font-playfair">Store <em className="text-gradient-gold not-italic">Locator</em></h1>
-          <div className="divider-gold" />
-        </header>
+      <Container component="main" maxWidth="lg" sx={{ pt: 32, pb: 20, px: 3 }}>
+        <Box component="header" sx={{ mb: 12, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Typography 
+            variant="overline" 
+            sx={{ 
+              display: 'block',
+              mb: 2, 
+              color: 'rgba(212, 175, 55, 0.6)', 
+              letterSpacing: '0.2em'
+            }}
+          >
+            Visit Us
+          </Typography>
+          <Typography 
+            variant="h1" 
+            sx={{ 
+              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
+              color: '#FAF9F6',
+              fontFamily: 'var(--font-playfair-display), serif',
+              lineHeight: 1.2
+            }}
+          >
+            Store{" "}
+            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
+              Locator
+            </Box>
+          </Typography>
+          <Box className="divider-gold" sx={{ mt: 4 }} />
+        </Box>
 
-        <section className="grid md:grid-cols-2 gap-8">
+        <Grid container spacing={4}>
           {stores.map((store) => (
-            <div key={store.name} className="bg-[#1a1a1a] border border-[#D4AF37]/10 p-8 space-y-6">
-              <h2 className="text-2xl text-[#FAF9F6] font-playfair">{store.name}</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 text-[#d6d3ce] text-sm">
-                  <MapPin size={16} className="text-[#D4AF37] shrink-0 mt-1" />
-                  <p>{store.address}</p>
-                </div>
-                <div className="flex items-center gap-3 text-[#d6d3ce] text-sm">
-                  <Phone size={16} className="text-[#D4AF37] shrink-0" />
-                  <p>{store.phone}</p>
-                </div>
-                <div className="flex items-center gap-3 text-[#d6d3ce] text-sm">
-                  <Clock size={16} className="text-[#D4AF37] shrink-0" />
-                  <p>{store.hours}</p>
-                </div>
-              </div>
-              <button className="w-full py-3 bg-[#D4AF37]/10 text-[#D4AF37] border border-[#D4AF37]/20 text-[0.65rem] uppercase tracking-widest hover:bg-[#D4AF37] hover:text-[#121212] transition-all">
-                Get Directions
-              </button>
-            </div>
+            <Grid size={{ xs: 12, md: 6 }} key={store.name}>
+              <Box 
+                sx={{ 
+                  bgcolor: '#1a1a1a', 
+                  border: '1px solid rgba(212, 175, 55, 0.1)', 
+                  p: 6,
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 4
+                }}
+              >
+                <Typography 
+                  variant="h2" 
+                  sx={{ 
+                    fontSize: '1.75rem', 
+                    color: '#FAF9F6', 
+                    fontFamily: 'var(--font-playfair-display), serif' 
+                  }}
+                >
+                  {store.name}
+                </Typography>
+                
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'start', gap: 2 }}>
+                    <MapPin size={18} style={{ color: '#D4AF37', flexShrink: 0, marginTop: '4px' }} />
+                    <Typography variant="body2" sx={{ color: '#d6d3ce', lineHeight: 1.6 }}>
+                      {store.address}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Phone size={18} style={{ color: '#D4AF37', flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: '#d6d3ce' }}>
+                      {store.phone}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Clock size={18} style={{ color: '#D4AF37', flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: '#d6d3ce' }}>
+                      {store.hours}
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Button 
+                  variant="outlined" 
+                  fullWidth
+                  sx={{ 
+                    mt: 'auto',
+                    py: 1.5, 
+                    borderColor: 'rgba(212, 175, 55, 0.2)', 
+                    color: '#D4AF37', 
+                    fontSize: '0.65rem', 
+                    letterSpacing: '0.15em', 
+                    textTransform: 'uppercase',
+                    borderRadius: 0,
+                    '&:hover': {
+                      bgcolor: '#D4AF37',
+                      color: '#121212',
+                      borderColor: '#D4AF37'
+                    }
+                  }}
+                >
+                  Get Directions
+                </Button>
+              </Box>
+            </Grid>
           ))}
-        </section>
-      </main>
+        </Grid>
+      </Container>
       <Footer />
-    </div>
+    </Box>
   );
 }

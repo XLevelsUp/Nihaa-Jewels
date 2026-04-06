@@ -2,6 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
+import { Box, Container, Typography, alpha, useTheme, Grid } from '@mui/material';
 import SectionLabel from '@/components/ui/SectionLabel';
 import GoldButton from '@/components/ui/GoldButton';
 import { HERITAGE_CONTENT, HERITAGE_STATS } from '@/constants';
@@ -17,123 +18,201 @@ const itemVariants: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: 'easeOut' } },
 };
 
+const MotionBox = motion.create(Box);
+const MotionTypography = motion.create(Typography);
+
 export default function Heritage() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+  const theme = useTheme();
 
   return (
-    <section
+    <Box
+      component="section"
       id="heritage"
-      className="py-32 px-6 bg-[#0e0e0e] relative overflow-hidden"
+      sx={{
+        py: { xs: 15, md: 20 },
+        px: 3,
+        bgcolor: '#0e0e0e',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
     >
       {/* Decorative background glow */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#D4AF37]/5 blur-[100px] pointer-events-none" />
+      <Box
+        sx={{
+          position: 'absolute',
+          right: 0,
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: { xs: 300, md: 500 },
+          height: { xs: 300, md: 500 },
+          borderRadius: '50%',
+          bgcolor: alpha('#D4AF37', 0.05),
+          filter: 'blur(100px)',
+          pointerEvents: 'none'
+        }}
+      />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+      <Container maxWidth="lg">
+        <Grid container spacing={8} alignItems="center">
           {/* Left — typography */}
-          <motion.div
-            ref={ref}
-            variants={containerVariants}
-            initial="hidden"
-            animate={inView ? 'visible' : 'hidden'}
-          >
-            <motion.div variants={itemVariants}>
-              <SectionLabel>{HERITAGE_CONTENT.eyebrow}</SectionLabel>
-              <div className="w-10 h-px bg-[#D4AF37] mt-4 mb-8 opacity-60" />
-            </motion.div>
-
-            <motion.blockquote
-              variants={itemVariants}
-              className="font-playfair text-2xl md:text-3xl text-[#F7E7CE] italic leading-snug mb-8"
-              style={{ fontFamily: 'var(--font-playfair-display), Georgia, serif' }}
+          <Grid size={{ xs: 12, lg: 6 }}>
+            <MotionBox
+              ref={ref}
+              variants={containerVariants}
+              initial="hidden"
+              animate={inView ? 'visible' : 'hidden'}
+              sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
             >
-              {HERITAGE_CONTENT.quote}
-            </motion.blockquote>
+              <MotionBox variants={itemVariants}>
+                <SectionLabel>{HERITAGE_CONTENT.eyebrow}</SectionLabel>
+                <Box sx={{ width: 40, height: '1px', bgcolor: alpha('#D4AF37', 0.6), mt: 2, mb: 4 }} />
+              </MotionBox>
 
-            {HERITAGE_CONTENT.body.split('\n\n').map((paragraph, i) => (
-              <motion.p
-                key={i}
+              <MotionBox variants={itemVariants}>
+                <Typography
+                  variant="h3"
+                  component="blockquote"
+                  sx={{
+                    fontFamily: 'var(--font-playfair-display), serif',
+                    fontSize: { xs: '1.5rem', md: '2rem' },
+                    color: '#F7E7CE',
+                    fontStyle: 'italic',
+                    lineHeight: 1.4,
+                    mb: 4
+                  }}
+                >
+                  {HERITAGE_CONTENT.quote}
+                </Typography>
+              </MotionBox>
+
+              {HERITAGE_CONTENT.body.split('\n\n').map((paragraph, i) => (
+                <MotionTypography
+                  key={i}
+                  variants={itemVariants}
+                  variant="body2"
+                  sx={{
+                    color: '#d6d3ce',
+                    fontWeight: 300,
+                    lineHeight: 1.9,
+                    maxWidth: 540,
+                    fontFamily: 'var(--font-inter), sans-serif'
+                  }}
+                >
+                  {paragraph}
+                </MotionTypography>
+              ))}
+
+              <MotionTypography
                 variants={itemVariants}
-                className="text-[#d6d3ce] text-sm font-light leading-[1.9] mb-4"
-                style={{ fontFamily: 'var(--font-inter), sans-serif' }}
+                sx={{
+                  fontFamily: 'var(--font-playfair-display), serif',
+                  color: '#D4AF37',
+                  fontStyle: 'italic',
+                  fontSize: '1.125rem',
+                  mt: 2,
+                  mb: 4
+                }}
               >
-                {paragraph}
-              </motion.p>
-            ))}
+                {HERITAGE_CONTENT.signature}
+              </MotionTypography>
 
-            <motion.p
-              variants={itemVariants}
-              className="font-playfair text-[#D4AF37] italic text-base mt-4 mb-8"
-              style={{ fontFamily: 'var(--font-playfair-display), serif' }}
-            >
-              {HERITAGE_CONTENT.signature}
-            </motion.p>
-
-            <motion.div variants={itemVariants}>
-              <GoldButton href="#collections" variant="outline" icon id="heritage-cta">
-                View Collection
-              </GoldButton>
-            </motion.div>
-          </motion.div>
+              <MotionBox variants={itemVariants}>
+                <GoldButton href="#collections" variant="outline" icon id="heritage-cta">
+                  View Collection
+                </GoldButton>
+              </MotionBox>
+            </MotionBox>
+          </Grid>
 
           {/* Right — image + stats */}
-          <div className="flex flex-col gap-8">
-            {/* Image */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 1, delay: 0.3 }}
-              className="relative h-[380px] overflow-hidden"
-            >
-              <Image
-                src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=900&q=85&auto=format&fit=crop"
-                alt="Nihaa Jewels artisan crafting gold jewellery"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e0e]/60 to-transparent" />
-              {/* Gold corner accent */}
-              <div className="absolute top-5 left-5 w-10 h-10 border-t border-l border-[#D4AF37]/60" />
-              <div className="absolute bottom-5 right-5 w-10 h-10 border-b border-r border-[#D4AF37]/60" />
-            </motion.div>
+          <Grid size={{ xs: 12, lg: 6 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+              {/* Image */}
+              <MotionBox
+                initial={{ opacity: 0, x: 40 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 1, delay: 0.3 }}
+                sx={{
+                  position: 'relative',
+                  height: { xs: 300, md: 440 },
+                  width: '100%',
+                  overflow: 'hidden'
+                }}
+              >
+                <Image
+                  src="https://images.unsplash.com/photo-1611085583191-a3b181a88401?w=900&q=85&auto=format&fit=crop"
+                  alt="Nihaa Jewels artisan crafting gold jewellery"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(14, 14, 14, 0.6), transparent)'
+                  }}
+                />
+                {/* Gold corner accents */}
+                <Box sx={{ position: 'absolute', top: 20, left: 20, width: 40, height: 40, borderTop: '1px solid rgba(212, 175, 55, 0.6)', borderLeft: '1px solid rgba(212, 175, 55, 0.6)' }} />
+                <Box sx={{ position: 'absolute', bottom: 20, right: 20, width: 40, height: 40, borderBottom: '1px solid rgba(212, 175, 55, 0.6)', borderRight: '1px solid rgba(212, 175, 55, 0.6)' }} />
+              </MotionBox>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
-              className="grid grid-cols-4 gap-0 border border-[#D4AF37]/15"
-            >
-              {HERITAGE_STATS.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`flex flex-col items-center py-6 gap-1.5 ${
-                    i < HERITAGE_STATS.length - 1
-                      ? 'border-r border-[#D4AF37]/15'
-                      : ''
-                  }`}
-                  id={`stat-${stat.label.toLowerCase().replace(/\s+/g, '-')}`}
-                >
-                  <span
-                    className="font-playfair text-2xl text-[#D4AF37] font-semibold"
-                    style={{ fontFamily: 'var(--font-playfair-display), serif' }}
+              {/* Stats */}
+              <MotionBox
+                initial={{ opacity: 0, y: 24 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  border: '1px solid rgba(212, 175, 55, 0.15)'
+                }}
+              >
+                {HERITAGE_STATS.map((stat, i) => (
+                  <Box
+                    key={stat.label}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      py: 3,
+                      gap: 1,
+                      borderRight: i < HERITAGE_STATS.length - 1 ? '1px solid rgba(212, 175, 55, 0.15)' : 'none'
+                    }}
                   >
-                    {stat.value}
-                  </span>
-                  <span
-                    className="text-[#d6d3ce] text-[0.6rem] uppercase tracking-wide text-center leading-tight"
-                    style={{ fontFamily: 'var(--font-inter), sans-serif' }}
-                  >
-                    {stat.label}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </div>
-    </section>
+                    <Typography
+                      sx={{
+                        fontFamily: 'var(--font-playfair-display), serif',
+                        fontSize: { xs: '1.25rem', md: '1.75rem' },
+                        color: '#D4AF37',
+                        fontWeight: 600
+                      }}
+                    >
+                      {stat.value}
+                    </Typography>
+                    <Typography
+                      variant="caption"
+                      sx={{
+                        color: '#d6d3ce',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        textAlign: 'center',
+                        fontSize: '0.6rem',
+                        lineHeight: 1.2
+                      }}
+                    >
+                      {stat.label}
+                    </Typography>
+                  </Box>
+                ))}
+              </MotionBox>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
   );
 }

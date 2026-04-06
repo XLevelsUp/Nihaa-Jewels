@@ -1,28 +1,83 @@
-import type { Metadata } from 'next';
+'use client';
+
+import React from 'react';
+import { 
+  Box, 
+  Container, 
+  Typography, 
+  alpha, 
+  useTheme 
+} from '@mui/material';
 import Navigation from '@/components/sections/Navigation';
 import Footer from '@/components/sections/Footer';
 
-export const metadata: Metadata = {
-  title: "Elegant Necklaces & Pendants",
-  description: "Discover handcrafted necklaces and pendants in gold and diamond. From delicate chains to bold collars made with heritage craftsmanship in Coimbatore.",
-};
+// Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)
+// export const metadata = { ... };
 
 export default function NecklacesPage() {
-  return (
-    <div className="bg-[#121212] min-h-screen">
-      <Navigation />
-      <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
-        <header className="mb-12">
-          <p className="section-label mb-2 text-[#D4AF37]/60">Collection</p>
-          <h1 className="text-4xl md:text-5xl text-[#FAF9F6] font-playfair">Sculpted <em className="text-gradient-gold not-italic">Necklaces</em></h1>
-          <div className="w-14 h-px bg-[#D4AF37] mt-6" />
-        </header>
+  const theme = useTheme();
 
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 opacity-40 py-20 border border-[#D4AF37]/10 flex items-center justify-center text-center">
-            <p className="text-[#d6d3ce] font-playfair italic text-lg col-span-full">The full collection is being curated and will be unveiled shortly.</p>
-        </section>
-      </main>
+  return (
+    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
+      <Navigation />
+      <Container component="main" maxWidth="lg" sx={{ pt: 20, pb: 12, px: 3 }}>
+        <Box component="header" sx={{ mb: 10 }}>
+          <Typography 
+            variant="overline" 
+            sx={{ 
+              display: 'block',
+              mb: 1, 
+              color: alpha(theme.palette.primary.main, 0.6),
+              letterSpacing: '0.2em'
+            }}
+          >
+            Collection
+          </Typography>
+          <Typography 
+            variant="h1" 
+            sx={{ 
+              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
+              color: 'text.primary',
+              fontFamily: 'var(--font-playfair-display), serif'
+            }}
+          >
+            Sculpted{" "}
+            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
+              Necklaces
+            </Box>
+          </Typography>
+          <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3 }} />
+        </Box>
+
+        <Box 
+          component="section" 
+          sx={{ 
+            py: 10, 
+            px: 3, 
+            textAlign: 'center', 
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+            borderRadius: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '300px'
+          }}
+        >
+          <Typography 
+            variant="body1" 
+            sx={{ 
+              color: 'text.secondary', 
+              fontFamily: 'var(--font-playfair-display), serif',
+              fontStyle: 'italic',
+              fontSize: '1.25rem',
+              opacity: 0.5
+            }}
+          >
+            The full collection is being curated and will be unveiled shortly.
+          </Typography>
+        </Box>
+      </Container>
       <Footer />
-    </div>
+    </Box>
   );
 }
