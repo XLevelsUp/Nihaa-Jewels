@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Inter, Montserrat } from "next/font/google";
 import Script from "next/script";
+import ThemeRegistry from "@/components/ThemeRegistry";
 import "./globals.css";
 
 /* ── Font loading ─────────────────────────────────────── */
@@ -127,17 +128,19 @@ export default function RootLayout({
       className={`${playfairDisplay.variable} ${inter.variable} ${montserrat.variable}`}
     >
       <body className="min-h-screen antialiased">
-        <Script
-          id="structured-data"
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <a href="#main-content" id="skip-to-content">
-          Skip to main content
-        </a>
-        <div id="main-content">
-          {children}
-        </div>
+        <ThemeRegistry>
+          <Script
+            id="structured-data"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
+          <a href="#main-content" id="skip-to-content">
+            Skip to main content
+          </a>
+          <main id="main-content">
+            {children}
+          </main>
+        </ThemeRegistry>
       </body>
     </html>
   );

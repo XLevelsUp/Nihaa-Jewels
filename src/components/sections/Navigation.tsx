@@ -1,43 +1,83 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AppBar, Toolbar, Container, Box, Typography, IconButton, Button, alpha, useTheme, Stack } from '@mui/material';
 import { Menu, X, Gem, Search, Phone, ChevronDown, ArrowRight, Heart } from 'lucide-react';
 import { NAV_LINKS, COLLECTIONS_SUBMENU } from '@/constants';
 
 /* ─── Sub-Components ───────────────────────────── */
 
-
-
 const Logo = () => (
-  <Link href="/" className="flex items-center gap-3 group shrink-0" aria-label="Nihaa Jewels Home">
-    <div className="relative">
-      <motion.div whileHover={{ rotate: 15 }} className="text-[#D4AF37] filter drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]">
+  <Box
+    component={Link}
+    href="/"
+    sx={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 1.5,
+      textDecoration: 'none',
+      flexShrink: 0,
+      '&:hover .logo-gem': { transform: 'rotate(15deg)' }
+    }}
+    aria-label="Nihaa Jewels Home"
+  >
+    <Box sx={{ position: 'relative' }}>
+      <Box
+        className="logo-gem"
+        sx={{
+          color: '#D4AF37',
+          filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))',
+          transition: 'transform 0.3s ease',
+          display: 'flex',
+          alignItems: 'center'
+        }}
+      >
         <Gem size={24} strokeWidth={1.5} />
-      </motion.div>
-    </div>
-    <div className="flex flex-col leading-tight">
-      <span className="text-[#D4AF37] text-2xl font-bold tracking-tight font-playfair gold-glow">
+      </Box>
+    </Box>
+    <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
+      <Typography
+        variant="h6"
+        sx={{
+          color: '#D4AF37',
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          tracking: '-0.02em',
+          fontFamily: 'var(--font-playfair-display), serif',
+          textShadow: '0 0 12px rgba(212, 175, 55, 0.2)'
+        }}
+      >
         Nihaa
-      </span>
-      <span className="text-[#FAF9F6]/40 text-[0.45rem] tracking-[0.5em] uppercase font-medium -mt-1 ml-0.5">
+      </Typography>
+      <Typography
+        variant="caption"
+        sx={{
+          color: 'rgba(250, 249, 246, 0.4)',
+          fontSize: '0.45rem',
+          tracking: '0.5em',
+          textTransform: 'uppercase',
+          fontWeight: 500,
+          mt: -0.5,
+          ml: 0.1
+        }}
+      >
         Jewels
-      </span>
-    </div>
-  </Link>
+      </Typography>
+    </Box>
+  </Box>
 );
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileAccordion, setMobileAccordion] = useState(false);
+  const theme = useTheme();
 
   const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -48,184 +88,369 @@ export default function Navigation() {
   useEffect(() => {
     setMenuOpen(false);
     setDropdownOpen(false);
-    document.body.style.overflow = '';
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
   }, [pathname]);
 
   const activeLink = pathname;
 
   return (
     <>
-
-
-      <motion.header
-        id="navigation-header"
-        className={`sticky top-0 left-0 right-0 z-50 transition-all duration-700 ${scrolled
-            ? 'nav-glass py-2 shadow-2xl'
-            : 'bg-[#121212] py-5 border-b border-white/[0.03]'
-          }`}
+      <AppBar
+        position="sticky"
+        elevation={0}
+        sx={{
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: 1100,
+          transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
+          background: scrolled ? 'rgba(18, 18, 18, 0.85)' : '#121212',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          py: scrolled ? 1 : 2.5,
+          borderBottom: scrolled ? '1px solid rgba(212, 175, 55, 0.1)' : '1px solid rgba(255, 255, 255, 0.03)',
+        }}
       >
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between">
-          <Logo />
+        <Container maxWidth="lg">
+          <Toolbar disableGutters sx={{ justifyContent: 'space-between' }}>
+            <Logo />
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-10 lg:gap-14">
-            {NAV_LINKS.map(link => {
-              const isActive = activeLink === link.href || (link.label === 'Collections' && activeLink.startsWith('/collections'));
+            {/* Desktop Nav */}
+            <Box
+              component="nav"
+              sx={{
+                display: { xs: 'none', md: 'flex' },
+                alignItems: 'center',
+                gap: { md: 5, lg: 8 }
+              }}
+            >
+              {NAV_LINKS.map(link => {
+                const isActive = activeLink === link.href || (link.label === 'Collections' && activeLink.startsWith('/collections'));
 
-              if (link.label === 'Collections') {
-                return (
-                  <div
-                    key="desktop-collections"
-                    className="relative group"
-                    onMouseEnter={() => setDropdownOpen(true)}
-                    onMouseLeave={() => setDropdownOpen(false)}
-                  >
-                    <button
-                      className={`flex items-center gap-2 text-[0.7rem] uppercase tracking-[0.2em] font-medium transition-all duration-300 ${isActive ? 'text-[#D4AF37]' : 'text-[#d6d3ce] group-hover:text-[#D4AF37]'
-                        }`}
+                if (link.label === 'Collections') {
+                  return (
+                    <Box
+                      key="desktop-collections"
+                      onMouseEnter={() => setDropdownOpen(true)}
+                      onMouseLeave={() => setDropdownOpen(false)}
+                      sx={{ position: 'relative' }}
                     >
-                      Collections
-                      <ChevronDown size={12} className={`transition-transform duration-300 ${dropdownOpen ? 'rotate-180' : ''}`} />
-                    </button>
+                      <Button
+                        disableRipple
+                        sx={{
+                          color: isActive ? '#D4AF37' : 'rgba(214, 211, 206, 0.6)',
+                          fontSize: '0.7rem',
+                          fontWeight: 500,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.2em',
+                          p: 0,
+                          minWidth: 'auto',
+                          '&:hover': { color: '#D4AF37', bgcolor: 'transparent' },
+                          transition: 'color 0.3s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1
+                        }}
+                      >
+                        Collections
+                        <ChevronDown size={12} style={{ transition: 'transform 0.3s ease', transform: dropdownOpen ? 'rotate(180deg)' : 'none' }} />
+                      </Button>
 
-                    <AnimatePresence>
-                      {dropdownOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          className="absolute top-full -left-40 mt-4 w-[650px] bg-[#1a1a1a] border border-[#D4AF37]/20 shadow-[0_20px_50px_rgba(0,0,0,0.8)] grid grid-cols-[1.2fr_1fr] overflow-hidden"
-                        >
-                          <div className="p-8 border-r border-[#D4AF37]/10">
-                            <p className="text-[0.6rem] uppercase tracking-[0.3em] text-[#D4AF37] font-bold mb-6">Categories</p>
-                            <div className="space-y-4">
-                              {COLLECTIONS_SUBMENU.map(item => (
-                                <Link
-                                  key={item.label}
-                                  href={item.href}
-                                  className="flex flex-col group/item transition-all"
+                      <AnimatePresence>
+                        {dropdownOpen && (
+                          <Box
+                            component={motion.div}
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 10 }}
+                            sx={{
+                              position: 'absolute',
+                              top: '100%',
+                              left: -160,
+                              mt: 3,
+                              width: 650,
+                              bgcolor: '#1a1a1a',
+                              border: '1px solid rgba(212, 175, 55, 0.15)',
+                              boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                              display: 'grid',
+                              gridTemplateColumns: '1.2fr 1fr',
+                              overflow: 'hidden',
+                              zIndex: 1000
+                            }}
+                          >
+                            <Box sx={{ p: 4, borderRight: '1px solid rgba(212, 175, 55, 0.08)' }}>
+                              <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, mb: 3, display: 'block', textTransform: 'uppercase', letterSpacing: '0.25em' }}>
+                                Categories
+                              </Typography>
+                              <Stack spacing={2.5}>
+                                {COLLECTIONS_SUBMENU.map(item => (
+                                  <Box
+                                    key={item.label}
+                                    component={Link}
+                                    href={item.href}
+                                    sx={{
+                                      display: 'flex',
+                                      flexDirection: 'column',
+                                      textDecoration: 'none',
+                                      '&:hover .cat-label': { color: '#D4AF37', transform: 'translateX(4px)' }
+                                    }}
+                                  >
+                                    <Typography
+                                      className="cat-label"
+                                      sx={{
+                                        color: '#FAF9F6',
+                                        fontSize: '0.75rem',
+                                        fontWeight: 500,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.15em',
+                                        transition: 'all 0.3s ease'
+                                      }}
+                                    >
+                                      {item.label}
+                                    </Typography>
+                                    <Typography variant="caption" sx={{ color: 'rgba(214, 211, 206, 0.3)', fontWeight: 300, mt: 0.2 }}>
+                                      {item.desc}
+                                    </Typography>
+                                  </Box>
+                                ))}
+                              </Stack>
+                            </Box>
+
+                            {/* Visual Featured Area */}
+                            <Box sx={{ position: 'relative', overflow: 'hidden', minHeight: 350, '&:hover .feat-img': { transform: 'scale(1.05)' } }}>
+                              <Box
+                                className="feat-img"
+                                sx={{
+                                  position: 'absolute',
+                                  inset: 0,
+                                  transition: 'transform 1.2s cubic-bezier(0.2, 0, 0.2, 1)'
+                                }}
+                              >
+                                <Image
+                                  src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80"
+                                  alt="Featured Collection"
+                                  fill
+                                  style={{ objectFit: 'cover' }}
+                                />
+                              </Box>
+                              <Box
+                                sx={{
+                                  position: 'absolute',
+                                  inset: 0,
+                                  background: 'linear-gradient(to top, rgba(18, 18, 18, 0.9), transparent)',
+                                  p: 4,
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  justifyContent: 'end'
+                                }}
+                              >
+                                <Typography variant="caption" sx={{ color: '#D4AF37', fontWeight: 700, mb: 1, textTransform: 'uppercase', letterSpacing: '0.25em' }}>
+                                  Editor&apos; Pick
+                                </Typography>
+                                <Typography variant="h5" sx={{ color: '#fff', mb: 2, fontFamily: 'var(--font-playfair-display), serif', lineHeight: 1.2 }}>
+                                  The Heritage <br /> Gold Series
+                                </Typography>
+                                <Box
+                                  component={Link}
+                                  href="/collections/temple"
+                                  sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    color: '#fff',
+                                    fontSize: '0.625rem',
+                                    fontWeight: 700,
+                                    textTransform: 'uppercase',
+                                    letterSpacing: '0.2em',
+                                    textDecoration: 'none',
+                                    '&:hover': { color: '#D4AF37' },
+                                    transition: 'color 0.3s ease'
+                                  }}
                                 >
-                                  <span className="text-[0.75rem] text-[#FAF9F6] group-hover/item:text-[#D4AF37] group-hover/item:translate-x-1 transition-all uppercase tracking-widest font-medium">
-                                    {item.label}
-                                  </span>
-                                  <span className="text-[0.55rem] text-[#d6d3ce]/30 font-light mt-1">
-                                    {item.desc}
-                                  </span>
-                                </Link>
-                              ))}
-                            </div>
-                          </div>
+                                  View Collection <ArrowRight size={12} />
+                                </Box>
+                              </Box>
+                            </Box>
+                          </Box>
+                        )}
+                      </AnimatePresence>
+                    </Box>
+                  );
+                }
 
-                          {/* Visual Featured Area */}
-                          <div className="relative group/feat overflow-hidden h-full min-h-[350px]">
-                            <Image
-                              src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&q=80"
-                              alt="Featured Collection"
-                              fill
-                              className="object-cover transition-transform duration-1000 group-hover/feat:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-black/20 to-transparent p-8 flex flex-col justify-end">
-                              <p className="text-[#D4AF37] text-[0.55rem] uppercase tracking-[0.3em] font-bold mb-2">Editor&apos;s Pick</p>
-                              <h4 className="text-2xl font-playfair text-white mb-3 leading-tight">The Heritage <br /> Gold Series</h4>
-                              <Link href="/collections/temple" className="flex items-center gap-2 text-white text-[0.62rem] uppercase tracking-[0.2em] font-bold hover:text-[#D4AF37] transition-colors">
-                                View Collection <ArrowRight size={12} />
-                              </Link>
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
+                return (
+                  <Box
+                    key={link.label}
+                    component={Link}
+                    href={link.href}
+                    sx={{
+                      color: isActive ? '#D4AF37' : 'rgba(214, 211, 206, 0.6)',
+                      fontSize: '0.7rem',
+                      fontWeight: 500,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.2em',
+                      textDecoration: 'none',
+                      position: 'relative',
+                      py: 0.5,
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        width: isActive ? '100%' : '0%',
+                        height: '1px',
+                        background: 'linear-gradient(90deg, #D4AF37, transparent)',
+                        transition: 'width 0.4s ease'
+                      },
+                      '&:hover': { color: '#D4AF37' },
+                      '&:hover::after': { width: '100%' }
+                    }}
+                  >
+                    {link.label}
+                  </Box>
                 );
-              }
+              })}
+            </Box>
 
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`text-[0.7rem] uppercase tracking-[0.2em] font-medium transition-colors relative py-1 group ${isActive ? 'text-[#D4AF37]' : 'text-[#d6d3ce] hover:text-[#D4AF37]'
-                    }`}
-                >
-                  {link.label}
-                  <span className={`absolute -bottom-1 left-0 h-[1px] bg-gradient-to-r from-[#D4AF37] to-transparent transition-all duration-500 ${isActive ? 'w-full' : 'w-0 group-hover:w-full'}`} />
-                </Link>
-              );
-            })}
-          </nav>
+            {/* Icons & CTA */}
+            <Stack direction="row" spacing={{ xs: 1, sm: 2 }} alignItems="center">
+              <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1 }}>
+                <IconButton sx={{ color: 'rgba(214, 211, 206, 0.4)', '&:hover': { color: '#D4AF37' } }}>
+                  <Search size={19} strokeWidth={1.5} />
+                </IconButton>
+                <IconButton sx={{ color: 'rgba(214, 211, 206, 0.4)', '&:hover': { color: '#D4AF37' } }}>
+                  <Heart size={19} strokeWidth={1.5} />
+                </IconButton>
+              </Box>
 
-          {/* Icons & CTA */}
-          <div className="flex items-center gap-5 sm:gap-7 shrink-0">
-            <div className="hidden lg:flex items-center gap-4 text-[#d6d3ce]/40">
-              <button className="hover:text-[#D4AF37] transition-colors" aria-label="Search">
-                <Search size={19} strokeWidth={1.5} />
-              </button>
-              <button className="hover:text-[#D4AF37] transition-colors" aria-label="Wishlist">
-                <Heart size={19} strokeWidth={1.5} />
-              </button>
-            </div>
+              <Button
+                component={Link}
+                href="/contact"
+                disableElevation
+                variant="contained"
+                sx={{
+                  bgcolor: '#D4AF37',
+                  color: '#121212',
+                  px: { xs: 2.5, sm: 4 },
+                  py: 1,
+                  fontSize: '0.625rem',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.2em',
+                  borderRadius: 0,
+                  position: 'relative',
+                  overflow: 'hidden',
+                  '&:hover': { bgcolor: '#E8C84E' },
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    bgcolor: 'rgba(255, 255, 255, 0.15)',
+                    transform: 'translateY(100%)',
+                    transition: 'transform 0.3s ease'
+                  },
+                  '&:hover::before': { transform: 'translateY(0)' }
+                }}
+              >
+                Inquire
+              </Button>
 
-            <Link
-              href="/contact"
-              className="relative bg-[#D4AF37] text-[#121212] px-6 py-2.5 text-[0.62rem] uppercase tracking-[0.25em] font-bold hover:bg-[#E8C84E] transition-all overflow-hidden group/cta"
-            >
-              <span className="relative z-10 transition-colors">Inquire</span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/cta:translate-y-0 transition-transform duration-300" />
-            </Link>
-
-            <button
-              className="md:hidden text-[#FAF9F6] p-2 -mr-2"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle Menu"
-            >
-              {menuOpen ? <X size={26} /> : <Menu size={26} />}
-            </button>
-          </div>
-        </div>
-      </motion.header>
+              <IconButton
+                sx={{ display: { md: 'none' }, color: '#FAF9F6' }}
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle Menu"
+              >
+                {menuOpen ? <X size={26} /> : <Menu size={26} />}
+              </IconButton>
+            </Stack>
+          </Toolbar>
+        </Container>
+      </AppBar>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <Box
+            component={motion.div}
             initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.05 }}
-            className="fixed inset-0 z-[60] bg-[#121212] flex flex-col pt-32 px-8"
+            sx={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 1050,
+              bgcolor: '#121212',
+              display: 'flex',
+              flexDirection: 'column',
+              pt: 16,
+              px: 4
+            }}
           >
-            <nav className="flex flex-col gap-8">
+            <Stack spacing={4}>
               {NAV_LINKS.map((link, i) => (
-                <motion.div
+                <Box
                   key={`mob-${link.label}`}
+                  component={motion.div}
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
                   <Link
                     href={link.href}
-                    className="text-4xl font-playfair text-[#FAF9F6] border-b border-white/5 pb-4 block"
+                    style={{ textDecoration: 'none' }}
                   >
-                    {link.label}
+                    <Typography
+                      sx={{
+                        fontSize: '2.5rem',
+                        fontFamily: 'var(--font-playfair-display), serif',
+                        color: '#FAF9F6',
+                        pb: 2,
+                        borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                        '&:hover': { color: '#D4AF37' },
+                        transition: 'color 0.3s ease'
+                      }}
+                    >
+                      {link.label}
+                    </Typography>
                   </Link>
-                </motion.div>
+                </Box>
               ))}
-            </nav>
+            </Stack>
 
-            <motion.div
+            <Box
+              component={motion.div}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="mt-auto pb-12 flex flex-col gap-6"
+              sx={{ mt: 'auto', pb: 6, display: 'flex', flexDirection: 'column', gap: 3 }}
             >
-              <a href="tel:+914422800000" className="flex items-center gap-4 text-[#D4AF37]">
-                <Phone size={20} />
-                <span className="text-sm tracking-[0.2em] font-bold">+91 422 280 0000</span>
-              </a>
-              <div className="flex gap-8 text-[#d6d3ce]/40">
+              <Box
+                component="a"
+                href="tel:+914222800000"
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2,
+                  color: '#D4AF37',
+                  textDecoration: 'none',
+                  fontSize: '0.875rem',
+                  fontWeight: 700,
+                  letterSpacing: '0.15em'
+                }}
+              >
+                <Phone size={18} />
+                +91 422 280 0000
+              </Box>
+              <Stack direction="row" spacing={4} sx={{ color: 'rgba(214, 211, 206, 0.3)' }}>
                 <Search size={22} />
                 <Heart size={22} />
-              </div>
-            </motion.div>
-          </motion.div>
+              </Stack>
+            </Box>
+          </Box>
         )}
       </AnimatePresence>
     </>
