@@ -3,7 +3,8 @@ import Navigation from '@/components/sections/Navigation';
 import Footer from '@/components/sections/Footer';
 import { MapPin, Phone, Clock } from 'lucide-react';
 import { Box, Container, Typography, Button } from '@mui/material';
-import Grid2 from '@mui/material/Grid2';
+import Grid2 from "@mui/material/Grid2";
+
 
 export const metadata: Metadata = {
   title: "Nihaa Jewels Store Locator | Coimbatore Showrooms",
