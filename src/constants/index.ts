@@ -1,43 +1,132 @@
-// Navigation links
-export const NAV_LINKS = [
-  { label: "Collections", href: "/collections" },
-  { label: "Bespoke", href: "/custom-design" },
-  { label: "Gifting", href: "/gifting" },
-  { label: "Our Story", href: "/about" },
-  { label: "Contact", href: "/contact" },
+// Mega Navigation Configuration
+export const MEGA_NAVIGATION = [
+  {
+    label: "All Jewellery",
+    href: "/collections",
+    icon: "gem",
+    columns: [
+      { title: "Category", items: ["Rings", "Bangles", "Bracelets", "Chains", "Earrings", "Pendants"] },
+      { title: "Price", items: ["Below \u20B925K", "\u20B925K - \u20B950K", "\u20B950K - \u20B91L", "\u20B91L & Above"] },
+      { title: "Occasion", items: ["Wedding", "Daily Wear", "Office Wear", "Festive"] },
+    ]
+  },
+  {
+    label: "Gold",
+    href: "/collections/gold",
+    icon: "sparkles",
+    columns: [
+      { title: "Purity", items: ["18k Gold", "22k Gold", "24k Gold"] },
+      { title: "Category", items: ["Gold Rings", "Gold Chains", "Gold Bangles", "Gold Coins"] },
+      { title: "Price", items: ["Below \u20B950K", "\u20B950K - \u20B92L", "\u20B92L & Above"] },
+      { title: "Gender", items: ["Women", "Men", "Unisex"] },
+    ]
+  },
+  {
+    label: "Rings",
+    href: "/collections/rings",
+    icon: "ring",
+    columns: [
+      { title: "Category", items: ["All Rings", "Engagement Rings", "Couple Rings", "Bridal Rings", "Daily Wear Rings"] },
+      { title: "Price", items: ["Below \u20B925K", "\u20B925K - \u20B950K", "\u20B950K - \u20B91L", "\u20B91L & Above"] },
+      { title: "Occasion", items: ["Wedding", "Office", "Daily Wear", "Modern"] },
+      { title: "Gender", items: ["Women", "Men", "Couple"] },
+    ]
+  },
+  {
+    label: "Earrings",
+    href: "/collections/earrings",
+    icon: "ear",
+    columns: [
+      { title: "Category", items: ["All Earrings", "Jhumkas", "Studs", "Drops", "Hoops"] },
+      { title: "Price", items: ["Below \u20B925K", "\u20B925K - \u20B950K", "\u20B950K - \u20B91L", "\u20B91L & Above"] },
+      { title: "Occasion", items: ["Wedding", "Daily Wear", "Festive"] },
+      { title: "Gender", items: ["Women", "Kids"] },
+    ]
+  },
+  {
+    label: "Bangles",
+    href: "/collections/bangles",
+    icon: "bangle",
+    columns: [
+      { title: "Category", items: ["Gold Bangles", "Bridal Bangles", "Daily Wear Bangles", "Lightweight Bangles"] },
+      { title: "Price", items: ["Below \u20B950K", "\u20B950K - \u20B91L", "\u20B91L & Above"] },
+      { title: "Occasion", items: ["Wedding", "Daily Wear", "Festive"] },
+    ]
+  },
+  {
+    label: "Bracelets",
+    href: "/collections/bracelets",
+    icon: "bracelet",
+    columns: [
+      { title: "Category", items: ["Gold Bracelets", "Couple Bracelets", "Modern Bracelets", "Daily Wear Bracelets"] },
+      { title: "Gender", items: ["Women", "Men", "Couple"] },
+    ]
+  },
+  {
+    label: "Wedding",
+    href: "/collections/bridal",
+    icon: "wedding",
+    columns: [
+      { title: "Category", items: ["Bridal Sets", "Wedding Rings", "Mangalsutras", "Bridal Bangles"] },
+      { title: "Set Pieces", items: ["2-Piece Sets", "3-Piece Sets", "Complete Bridal Trousseau"] },
+      { title: "Price", items: ["Below \u20B92L", "\u20B92L - \u20B95L", "\u20B95L & Above"] },
+    ]
+  },
+  {
+    label: "Daily Wear",
+    href: "/collections/daily-wear",
+    icon: "sparkle",
+    columns: [
+      { title: "Category", items: ["Daily Rings", "Daily Bangles", "Daily Bracelets", "Lightweight Jewellery"] },
+      { title: "Occasion", items: ["Office", "Casual", "Everyday"] },
+    ]
+  },
+  {
+    label: "Gifting",
+    href: "/collections/gifting",
+    icon: "gift",
+    columns: [
+      { title: "Category", items: ["Birthday Gifts", "Anniversary Gifts", "Festival Gifts", "Special Gifts"] },
+      { title: "Price", items: ["Below \u20B910K", "\u20B910K - \u20B925K", "\u20B925K - \u20B950K"] },
+      { title: "Gender", items: ["Women", "Men", "Couple"] },
+    ]
+  }
 ];
 
 // Showcase categories
 export const SHOWCASE_ITEMS = [
   {
-    id: "rings",
-    label: "Rings",
-    subtitle: "Statement Pieces",
-    description: "Sculpted in precious metals, adorned with rare stones.",
-    image:
-      "https://images.unsplash.com/photo-1605100804763-247f66156ac4?w=800&q=85&auto=format&fit=crop",
-    href: "/collections/rings",
-    span: "col-span-1 row-span-2",
-  },
-  {
     id: "necklaces",
-    label: "Necklaces",
-    subtitle: "Graceful Layers",
-    description: "From delicate chains to bold statement collars.",
+    label: "The Royal Nizam",
+    subtitle: "Necklaces",
+    description: "A tribute to regal heritage with intricate craftsmanship.",
     image:
-      "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=85&auto=format&fit=crop",
+      "/images/necklace1.webp",
     href: "/collections/necklaces",
     span: "col-span-1 row-span-1",
+    badge: "Limited Edition"
   },
   {
-    id: "bridal",
-    label: "Bridal",
-    subtitle: "Forever Collections",
-    description: "Bespoke bridal sets designed for your most precious day.",
+    id: "rings",
+    label: "Celestial Bands",
+    subtitle: "Rings",
+    description: "Ethereal gemstones capturing the essence of starlight.",
     image:
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=85&auto=format&fit=crop",
-    href: "/collections/bridal",
+      "/images/rings2.webp",
+    href: "/collections/rings",
     span: "col-span-1 row-span-1",
+    badge: "New"
+  },
+  {
+    id: "earrings",
+    label: "Legacy Jhumkas",
+    subtitle: "Earrings",
+    description: "Timeless traditions woven in pure gold.",
+    image:
+      "/images/earring1.webp",
+    href: "/collections/earrings",
+    span: "col-span-1 row-span-1",
+    badge: "Limited Edition"
   },
 ];
 

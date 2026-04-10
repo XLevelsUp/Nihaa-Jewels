@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import Navigation from '@/components/sections/Navigation';
-import Hero from '@/components/sections/Hero';
-import ShowcaseGrid from '@/components/sections/ShowcaseGrid';
-import Heritage from '@/components/sections/Heritage';
-import Newsletter from '@/components/sections/Newsletter';
+import StaticBrandHero from '@/components/sections/StaticBrandHero';
+import PromotionalHero from '@/components/sections/PromotionalHero';
+import CategoryDiscoveryGrid from '@/components/sections/CategoryDiscoveryGrid';
+import NewLaunch from '@/components/sections/NewLaunch';
+import ShopByGender from '@/components/sections/ShopByGender';
+import NihaaAssurance from '@/components/sections/NihaaAssurance';
 import Footer from '@/components/sections/Footer';
 
 export const metadata: Metadata = {
@@ -15,10 +17,12 @@ export default function Home() {
   return (
     <main className="bg-[#121212] min-h-screen">
       <Navigation />
-      <Hero />
-      <ShowcaseGrid />
-      <Heritage />
-      <Newsletter />
+      <StaticBrandHero />
+      <PromotionalHero />
+      <NewLaunch />
+      <CategoryDiscoveryGrid />
+      <ShopByGender />
+      <NihaaAssurance />
       <Footer />
     </main>
   );
