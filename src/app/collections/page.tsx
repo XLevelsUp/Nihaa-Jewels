@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Navigation from '@/components/sections/Navigation';
 import Footer from '@/components/sections/Footer';
-import ShowcaseGrid from '@/components/sections/ShowcaseGrid';
+import NewLaunch from '@/components/sections/NewLaunch';
 
 export const metadata: Metadata = {
   title: "Fine Jewellery Collections — Nihaa Jewels",
@@ -24,7 +24,7 @@ export default function CollectionsPage() {
 
         {/* Reusing Showcase component for the main view */}
         <section className="mt-16">
-            <ShowcaseGrid />
+            <NewLaunch />
         </section>
 
         <section className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-[#D4AF37]/10 pt-20">
