@@ -105,6 +105,7 @@ export default function Footer() {
             {/* ── Brand ── */}
             <Grid2 size={{ xs: 12, md: 4 }}>
               <motion.div variants={itemVariants}>
+               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
                   variant="h4"
                   component={motion.h4}
@@ -167,7 +168,7 @@ export default function Footer() {
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true }}
-                  sx={{ display: "flex", gap: 2 }}
+                  sx={{ display: "flex", gap: 2, justifyContent: "flex-start", width: "100%" }}
                 >
                   {[
                     { icon: <InstagramIcon />, label: "Instagram", href: "https://instagram.com/nihaajewels" },
@@ -216,12 +217,14 @@ export default function Footer() {
                     </motion.div>
                   ))}
                 </Box>
+               </Box>
               </motion.div>
             </Grid2>
 
             {/* ── Information links ── */}
-            <Grid2 size={{ xs: 6, md: 2 }}>
+            <Grid2 size={{ xs: 12, sm: 6, md: 2 }}>
               <motion.div variants={itemVariants}>
+               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
                   component={motion.h6}
                   whileHover={{ x: 3 }}
@@ -288,12 +291,14 @@ export default function Footer() {
                     </motion.div>
                   ))}
                 </Box>
+               </Box>
               </motion.div>
             </Grid2>
 
             {/* ── Store info ── */}
-            <Grid2 size={{ xs: 6, md: 3 }}>
+            <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
               <motion.div variants={itemVariants}>
+               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
                   component={motion.h6}
                   whileHover={{ x: 3 }}
@@ -323,7 +328,7 @@ export default function Footer() {
                 >
                   {/* Address */}
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "rgba(255,255,255,0.6)" }}>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "rgba(255,255,255,0.6)", textAlign: "left" }}>
                       <Box sx={{ mt: 0.5, width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         <MapPin size={16} strokeWidth={1.5} color="#D4AF37" />
                       </Box>
@@ -429,12 +434,14 @@ export default function Footer() {
                     </Box>
                   </motion.div>
                 </Box>
+               </Box>
               </motion.div>
             </Grid2>
 
             {/* ── Newsletter ── */}
             <Grid2 size={{ xs: 12, md: 3 }}>
               <motion.div variants={itemVariants}>
+               <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', width: '100%' }}>
                 <Typography
                   component={motion.h6}
                   whileHover={{ x: 3 }}
@@ -478,8 +485,8 @@ export default function Footer() {
                     </Typography>
                   </motion.div>
 
-                  <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1 }}>
+                  <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }} style={{ width: '100%' }}>
+                    <Box component="form" sx={{ display: "flex", flexDirection: "column", gap: 1.5, mt: 1, width: "100%" }}>
                       <TextField
                         variant="standard"
                         placeholder="Email Address"
@@ -525,6 +532,7 @@ export default function Footer() {
                     </Box>
                   </motion.div>
                 </Box>
+               </Box>
               </motion.div>
             </Grid2>
           </Grid2>

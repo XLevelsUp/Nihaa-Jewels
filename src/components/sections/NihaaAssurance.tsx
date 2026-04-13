@@ -55,7 +55,7 @@ const itemVariants: Variants = {
 
 export default function NihaaAssurance() {
   return (
-    <section className="bg-[#121212] py-24 px-12">
+    <section className="bg-[#121212] py-16 md:py-24 px-6 md:px-12">
       <div className="max-w-[1200px] mx-auto flex flex-col items-center">
         
         {/* Header */}
@@ -78,7 +78,7 @@ export default function NihaaAssurance() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-2 lg:grid-cols-4 gap-[72px] w-full"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 md:gap-[72px] w-full"
         >
           {ASSURANCE_ITEMS.map((item) => {
             const Icon = item.icon;

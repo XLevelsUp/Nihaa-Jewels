@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef } from 'react';
-import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function StaticBrandHero() {
@@ -29,14 +28,6 @@ export default function StaticBrandHero() {
         style={{ y: imageY, scale: imageScale }}
         className="absolute inset-0 w-full h-[120%] -top-[10%]"
       >
-        <Image
-          src="https://images.unsplash.com/photo-1610492103103-6059630c90c7?q=80&w=1920"
-          alt="Nihaa Jewels Coimbatore Goldsmiths Luxury Jewellery"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
         {/* Layer 1: Dark Obsidian Overlay for Contrast */}
         <div className="absolute inset-0 bg-[#050505]/40" />
         
