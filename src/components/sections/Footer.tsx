@@ -109,8 +109,6 @@ export default function Footer() {
                 <Typography
                   variant="h4"
                   component={motion.div}
-                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                  transition={{ duration: 6, ease: "linear", repeat: Infinity }}
                   sx={{
                     fontFamily: "var(--font-playfair-display)",
                     fontWeight: 700,
