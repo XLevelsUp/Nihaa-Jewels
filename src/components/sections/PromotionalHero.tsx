@@ -127,13 +127,12 @@ export default function Hero() {
               transition={{ duration: 0.5, ease: 'easeInOut' }}
               style={{ position: 'absolute', width: '100%', height: '100%', overflow: 'hidden' }}
             >
-              <Image
-                src={SLIDES[currentSlide].image}
-                alt={SLIDES[currentSlide].title}
-                fill
-                priority={currentSlide === 0}
-                unoptimized
-                sizes="(max-width: 1280px) 100vw, 1280px"
+                <Image
+                  src={SLIDES[currentSlide].image}
+                  alt={SLIDES[currentSlide].title}
+                  fill
+                  priority={currentSlide === 0}
+                  sizes="(max-width: 1280px) 100vw, 1280px"
                 style={{
                   objectFit: SLIDES[currentSlide].objectFit || 'cover',
                   objectPosition: SLIDES[currentSlide].objectPosition || 'center',
