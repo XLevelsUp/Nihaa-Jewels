@@ -108,7 +108,7 @@ export default function Footer() {
                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
                   variant="h4"
-                  component={motion.h4}
+                  component={motion.div}
                   animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
                   transition={{ duration: 6, ease: "linear", repeat: Infinity }}
                   sx={{
@@ -226,7 +226,7 @@ export default function Footer() {
               <motion.div variants={itemVariants}>
                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
-                  component={motion.h6}
+                  component={motion.div}
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
@@ -300,7 +300,7 @@ export default function Footer() {
               <motion.div variants={itemVariants}>
                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
                 <Typography
-                  component={motion.h6}
+                  component={motion.div}
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
@@ -443,7 +443,7 @@ export default function Footer() {
               <motion.div variants={itemVariants}>
                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left', width: '100%' }}>
                 <Typography
-                  component={motion.h6}
+                  component={motion.div}
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
