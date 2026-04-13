@@ -55,9 +55,9 @@ export default function StaticBrandHero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+          initial={{ y: 15 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           {/* H1: Playfair Display, 500 weight, 5vw size */}
           <h1 className="font-playfair font-medium text-5xl md:text-6xl lg:text-[5vw] leading-[1.1] pb-2 max-w-[90vw]">
