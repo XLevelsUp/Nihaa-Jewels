@@ -1,23 +1,23 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import TempleClient from './TempleClient';
+import DailyWearClient from './DailyWearClient';
 
 export const metadata: Metadata = {
-  title: "Sacred Temple Jewellery Coimbatore | Nihaa Jewels",
-  description: "Discover our collection of sacred, heritage temple jewellery in Coimbatore. Exquisite handcrafted bridal pieces inspired by classic ancient art at Nihaa Jewels.",
-  keywords: ["temple jewellery Coimbatore", "bridal jewellery Coimbatore", "traditional gold set", "antique jewellery"],
+  title: "Lightweight Gold Jewellery Daily Wear | Everyday Gold | Nihaa Jewels",
+  description: "Explore lightweight gold jewellery daily wear in Coimbatore. Elevate your everyday style with office wear gold, handcrafted by Nihaa Jewels.",
+  keywords: ["lightweight gold jewellery", "everyday gold", "office wear gold", "Lightweight gold jewellery daily wear"],
   alternates: {
-    canonical: "/collections/temple",
+    canonical: "/collections/daily-wear",
   },
 };
 
-export default function TemplePage() {
+export default function DailyWearPage() {
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "Nihaa Jewels Sacred Temple Jewellery",
-    "image": "https://nihaajewels.com/images/temple.webp",
-    "description": "Discover our collection of sacred, heritage temple jewellery in Coimbatore. Exquisite handcrafted bridal pieces inspired by classic ancient art at Nihaa Jewels.",
+    "name": "Nihaa Jewels Daily Wear Collection",
+    "image": "https://nihaajewels.com/images/dailywear_image.webp",
+    "description": "Explore lightweight gold jewellery daily wear in Coimbatore. Elevate your everyday style with office wear gold, handcrafted by Nihaa Jewels.",
     "brand": {
       "@type": "Brand",
       "name": "Nihaa Jewels"
@@ -25,16 +25,16 @@ export default function TemplePage() {
     "offers": {
       "@type": "AggregateOffer",
       "priceCurrency": "INR",
-      "lowPrice": "75000",
-      "highPrice": "950000",
-      "offerCount": "12"
+      "lowPrice": "8000",
+      "highPrice": "95000",
+      "offerCount": "28"
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5",
       "bestRating": "5",
       "worstRating": "1",
-      "ratingCount": "14"
+      "ratingCount": "41"
     }
   };
 
@@ -57,8 +57,8 @@ export default function TemplePage() {
       {
         "@type": "ListItem",
         "position": 3,
-        "name": "Temple Jewellery",
-        "item": "https://nihaajewels.com/collections/temple"
+        "name": "Daily Wear",
+        "item": "https://nihaajewels.com/collections/daily-wear"
       }
     ]
   };
@@ -66,16 +66,16 @@ export default function TemplePage() {
   return (
     <>
       <Script
-        id="temple-product-schema"
+        id="daily-wear-product-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       <Script
-        id="temple-breadcrumb-schema"
+        id="daily-wear-breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <TempleClient />
+      <DailyWearClient />
     </>
   );
 }

@@ -287,7 +287,11 @@ export default function Navigation() {
               </Box>
 
               {/* Mobile Menu Toggle */}
-              <IconButton sx={{ display: { lg: 'none' }, color: '#FAF9F6' }} onClick={() => setMenuOpen(!menuOpen)}>
+              <IconButton 
+                sx={{ display: { lg: 'none' }, color: '#FAF9F6' }} 
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label="Toggle navigation menu"
+              >
                 {menuOpen ? <X size={26} /> : <Menu size={26} />}
               </IconButton>
             </Box>

@@ -11,7 +11,7 @@ const SEGMENTS = [
     description: 'Timeless elegance for the modern matriarch. From bridal heirlooms to everyday grace.',
     href: '/collections/women',
     image: '/images/women1.webp',
-    image_alt: 'Sophisticated gold and diamond jewellery for women',
+    image_alt: 'bridal gold jewellery set Coimbatore - Nihaa Jewels luxury gold jewellery',
   },
   { 
     id: 'men',
@@ -19,7 +19,7 @@ const SEGMENTS = [
     description: 'Bold craftsmanship for the discerning gentleman. Refined rings, chains, and kadas.',
     href: '/collections/men',
     image: '/images/menimage.webp',
-    image_alt: 'Handcrafted masculine gold jewellery',
+    image_alt: 'luxury gold jewellery and gold rings Coimbatore for men - Nihaa Jewels',
   },
   {
     id: 'kids',
@@ -27,7 +27,7 @@ const SEGMENTS = [
     description: 'Delicate first steps into a lifetime of legacy. Safe, charming, and BIS hallmarked.',
     href: '/collections/kids',
     image: '/images/kidimage.webp', 
-    image_alt: 'Lightweight and safe gold jewellery for children',
+    image_alt: 'lightweight gold jewellery daily wear for children - BIS hallmarked at Nihaa Jewels',
   },
 ];
 

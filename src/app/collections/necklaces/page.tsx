@@ -1,83 +1,81 @@
-'use client';
+import type { Metadata } from 'next';
+import Script from 'next/script';
+import NecklacesClient from './NecklacesClient';
 
-import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  alpha, 
-  useTheme 
-} from '@mui/material';
-import Navigation from '@/components/sections/Navigation';
-import Footer from '@/components/sections/Footer';
-
-// Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)
-// export const metadata = { ... };
+export const metadata: Metadata = {
+  title: "Gold & Diamond Necklaces Coimbatore | Nihaa Jewels",
+  description: "Explore our collection of exquisite gold necklaces and premium diamond necklaces in Coimbatore. Handcrafted masterpieces with BIS hallmarked gold & certified diamonds.",
+  keywords: ["gold necklaces Coimbatore", "diamond necklaces Coimbatore", "luxury gold jewellery", "diamond necklaces"],
+  alternates: {
+    canonical: "/collections/necklaces",
+  },
+};
 
 export default function NecklacesPage() {
-  const theme = useTheme();
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Nihaa Jewels Sculpted Necklaces",
+    "image": "https://nihaajewels.com/images/necklace1.webp",
+    "description": "Explore our collection of exquisite gold necklaces and premium diamond necklaces in Coimbatore. Handcrafted masterpieces with BIS hallmarked gold & certified diamonds.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Nihaa Jewels"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "INR",
+      "lowPrice": "45000",
+      "highPrice": "650000",
+      "offerCount": "15"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "21"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://nihaajewels.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": "https://nihaajewels.com/collections"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Necklaces",
+        "item": "https://nihaajewels.com/collections/necklaces"
+      }
+    ]
+  };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <Navigation />
-      <Container component="main" maxWidth="lg" sx={{ pt: 20, pb: 12, px: 3 }}>
-        <Box component="header" sx={{ mb: 10 }}>
-          <Typography 
-            variant="overline" 
-            sx={{ 
-              display: 'block',
-              mb: 1, 
-              color: alpha(theme.palette.primary.main, 0.6),
-              letterSpacing: '0.2em'
-            }}
-          >
-            Collection
-          </Typography>
-          <Typography 
-            variant="h1" 
-            sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
-              color: 'text.primary',
-              fontFamily: 'var(--font-playfair-display), serif'
-            }}
-          >
-            Sculpted{" "}
-            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
-              Necklaces
-            </Box>
-          </Typography>
-          <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3 }} />
-        </Box>
-
-        <Box 
-          component="section" 
-          sx={{ 
-            py: 10, 
-            px: 3, 
-            textAlign: 'center', 
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '300px'
-          }}
-        >
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: 'text.secondary', 
-              fontFamily: 'var(--font-playfair-display), serif',
-              fontStyle: 'italic',
-              fontSize: '1.25rem',
-              opacity: 0.5
-            }}
-          >
-            The full collection is being curated and will be unveiled shortly.
-          </Typography>
-        </Box>
-      </Container>
-      <Footer />
-    </Box>
+    <>
+      <Script
+        id="necklaces-product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <Script
+        id="necklaces-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <NecklacesClient />
+    </>
   );
 }

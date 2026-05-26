@@ -1,23 +1,23 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import TempleClient from './TempleClient';
+import BanglesClient from './BanglesClient';
 
 export const metadata: Metadata = {
-  title: "Sacred Temple Jewellery Coimbatore | Nihaa Jewels",
-  description: "Discover our collection of sacred, heritage temple jewellery in Coimbatore. Exquisite handcrafted bridal pieces inspired by classic ancient art at Nihaa Jewels.",
-  keywords: ["temple jewellery Coimbatore", "bridal jewellery Coimbatore", "traditional gold set", "antique jewellery"],
+  title: "Gold Bangles Coimbatore | Bridal & Impon Bangles | Nihaa Jewels",
+  description: "Buy gold bangles in Coimbatore. Discover stunning bridal bangles and traditional impon bangles, handcrafted to perfection at Nihaa Jewels.",
+  keywords: ["gold bangles Coimbatore", "bridal bangles", "impon bangles", "buy gold bangles Coimbatore"],
   alternates: {
-    canonical: "/collections/temple",
+    canonical: "/collections/bangles",
   },
 };
 
-export default function TemplePage() {
+export default function BanglesPage() {
   const productSchema = {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "Nihaa Jewels Sacred Temple Jewellery",
-    "image": "https://nihaajewels.com/images/temple.webp",
-    "description": "Discover our collection of sacred, heritage temple jewellery in Coimbatore. Exquisite handcrafted bridal pieces inspired by classic ancient art at Nihaa Jewels.",
+    "name": "Nihaa Jewels Signature Bangles",
+    "image": "https://nihaajewels.com/images/bangles1.webp",
+    "description": "Buy gold bangles in Coimbatore. Discover stunning bridal bangles and traditional impon bangles, handcrafted to perfection at Nihaa Jewels.",
     "brand": {
       "@type": "Brand",
       "name": "Nihaa Jewels"
@@ -25,16 +25,16 @@ export default function TemplePage() {
     "offers": {
       "@type": "AggregateOffer",
       "priceCurrency": "INR",
-      "lowPrice": "75000",
-      "highPrice": "950000",
-      "offerCount": "12"
+      "lowPrice": "40000",
+      "highPrice": "450000",
+      "offerCount": "16"
     },
     "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": "5",
       "bestRating": "5",
       "worstRating": "1",
-      "ratingCount": "14"
+      "ratingCount": "22"
     }
   };
 
@@ -57,8 +57,8 @@ export default function TemplePage() {
       {
         "@type": "ListItem",
         "position": 3,
-        "name": "Temple Jewellery",
-        "item": "https://nihaajewels.com/collections/temple"
+        "name": "Bangles",
+        "item": "https://nihaajewels.com/collections/bangles"
       }
     ]
   };
@@ -66,16 +66,16 @@ export default function TemplePage() {
   return (
     <>
       <Script
-        id="temple-product-schema"
+        id="bangles-product-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       <Script
-        id="temple-breadcrumb-schema"
+        id="bangles-breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <TempleClient />
+      <BanglesClient />
     </>
   );
 }

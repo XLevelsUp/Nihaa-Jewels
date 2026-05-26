@@ -99,9 +99,10 @@ export const SHOWCASE_ITEMS = [
     id: "necklaces",
     label: "The Royal Nizam",
     subtitle: "Necklaces",
-    description: "A tribute to regal heritage with intricate craftsmanship.",
+    description: "A tribute to regal heritage with diamond necklaces and bespoke jewellery design.",
     image:
       "/images/necklace1.webp",
+    alt: "IGI certified diamond necklace Nihaa Jewels - luxury gold jewellery Coimbatore",
     href: "/collections/necklaces",
     span: "col-span-1 row-span-1",
     badge: "Limited Edition"
@@ -110,9 +111,10 @@ export const SHOWCASE_ITEMS = [
     id: "rings",
     label: "Celestial Bands",
     subtitle: "Rings",
-    description: "Ethereal gemstones capturing the essence of starlight.",
+    description: "Ethereal gold rings Coimbatore capturing the essence of starlight.",
     image:
       "/images/rings2.webp",
+    alt: "gold rings Coimbatore - IGI certified diamonds engagement ring Nihaa Jewels",
     href: "/collections/rings",
     span: "col-span-1 row-span-1",
     badge: "New"
@@ -121,9 +123,10 @@ export const SHOWCASE_ITEMS = [
     id: "earrings",
     label: "Legacy Jhumkas",
     subtitle: "Earrings",
-    description: "Timeless traditions woven in pure gold.",
+    description: "Timeless gold earrings Coimbatore and jhumkas Coimbatore traditions woven in pure gold.",
     image:
       "/images/earring1.webp",
+    alt: "gold earrings Coimbatore and jhumkas Coimbatore - BIS hallmarked gold Nihaa Jewels",
     href: "/collections/earrings",
     span: "col-span-1 row-span-1",
     badge: "Limited Edition"

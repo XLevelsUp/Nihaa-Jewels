@@ -11,21 +11,24 @@ const SLIDES = [
     id: 1,
     image: '/images/dailywear_image.webp',
     badge: 'New Launch',
-    title: 'Elegant Gold Daily Wear Collection',
+    title: 'Lightweight Gold Jewellery Daily Wear',
+    alt: 'Lightweight gold jewellery daily wear and everyday gold rings Coimbatore',
     cta: 'Explore Collection',
   },
   {
     id: 2,
     image: '/images/bridaljewel.webp',
     badge: 'Limited Offer',
-    title: 'Wedding Jewellery Collection',
+    title: 'Bridal Gold Jewellery Set Coimbatore',
+    alt: 'Bridal gold jewellery set Coimbatore - BIS hallmarked wedding gold set at Nihaa Jewels',
     cta: 'View Wedding Collection',
   },
   {
     id: 3,
     image: '/images/braceletpromo.webp',
     badge: 'Trending',
-    title: 'Modern Gold Bracelets',
+    title: 'Modern Gold Bracelets & Luxury Jewels',
+    alt: 'Modern gold bracelets and bespoke jewellery design Coimbatore at Nihaa Jewels',
     cta: 'Shop Bracelets',
     // Tip: Change 'cover' to 'contain' if you want the entire bracelet visible without cropping, 
     // or adjust 'center' to 'top', 'bottom', or percentages like 'center 80%' to shift the crop!
@@ -36,14 +39,16 @@ const SLIDES = [
     id: 4,
     image: '/images/ring_promo.webp',
     badge: 'Best Seller',
-    title: 'Premium Gold Rings',
+    title: 'Premium Gold Rings & Certified Diamonds',
+    alt: 'Premium gold rings and IGI certified diamonds Coimbatore at Nihaa Jewels',
     cta: 'Explore Rings',
   },
   {
     id: 5,
     image: '/images/fesitive_offer.webp',
     badge: 'Exclusive',
-    title: 'Festive Jewellery Collection',
+    title: 'Festive Gold Gifting Coimbatore',
+    alt: 'Gold gifting Coimbatore - Festive gold jewellery collections at Nihaa Jewels',
     cta: 'Shop Now',
   },
 ];
@@ -96,8 +101,8 @@ export default function Hero() {
     <Box ref={sectionRef} component="section" sx={{ py: { xs: 4, md: 6 }, bgcolor: '#050505', position: 'relative' }}>
       {/* Hidden SEO elements */}
       <Box sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
-        <Typography variant="h1">Premium Gold Jewellery Collection</Typography>
-        <Typography variant="h2">Daily Wear, Wedding and Gifting Jewellery</Typography>
+        <Typography variant="h1">The best jewellery shop in Coimbatore — fine jewellery & bespoke goldsmiths</Typography>
+        <Typography variant="h2">Handcrafted gold jewellery, diamond necklaces & bridal jewellery in Coimbatore — all BIS hallmarked.</Typography>
       </Box>
 
       <Container maxWidth="xl" sx={{ px: { xs: 2, sm: 3, md: 4 } }}>
@@ -129,7 +134,7 @@ export default function Hero() {
             >
                 <Image
                   src={SLIDES[currentSlide].image}
-                  alt={SLIDES[currentSlide].title}
+                  alt={SLIDES[currentSlide].alt}
                   fill
                   priority={currentSlide === 0}
                   sizes="(max-width: 1280px) 100vw, 1280px"

@@ -1,83 +1,81 @@
-'use client';
+import type { Metadata } from 'next';
+import Script from 'next/script';
+import RingsClient from './RingsClient';
 
-import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  alpha, 
-  useTheme 
-} from '@mui/material';
-import Navigation from '@/components/sections/Navigation';
-import Footer from '@/components/sections/Footer';
-
-// Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)
-// export const metadata = { ... };
+export const metadata: Metadata = {
+  title: "Gold & Diamond Rings Coimbatore | Nihaa Jewels",
+  description: "Discover exquisite gold rings in Coimbatore, stunning diamond rings, and engagement rings. Handcrafted with BIS hallmarked gold & IGI certified diamonds.",
+  keywords: ["gold rings Coimbatore", "diamond rings Coimbatore", "engagement ring"],
+  alternates: {
+    canonical: "/collections/rings",
+  },
+};
 
 export default function RingsPage() {
-  const theme = useTheme();
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Nihaa Jewels Signature Rings",
+    "image": "https://nihaajewels.com/images/rings.webp",
+    "description": "Explore our stunning collection of gold rings in Coimbatore, elegant diamond rings, and engagement rings. Handcrafted with BIS hallmarked gold & IGI certified diamonds.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Nihaa Jewels"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "INR",
+      "lowPrice": "15000",
+      "highPrice": "250000",
+      "offerCount": "18"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "24"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://nihaajewels.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": "https://nihaajewels.com/collections"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Rings",
+        "item": "https://nihaajewels.com/collections/rings"
+      }
+    ]
+  };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <Navigation />
-      <Container component="main" maxWidth="lg" sx={{ pt: 20, pb: 12, px: 3 }}>
-        <Box component="header" sx={{ mb: 10 }}>
-          <Typography 
-            variant="overline" 
-            sx={{ 
-              display: 'block',
-              mb: 1, 
-              color: alpha(theme.palette.primary.main, 0.6),
-              letterSpacing: '0.2em'
-            }}
-          >
-            Collection
-          </Typography>
-          <Typography 
-            variant="h1" 
-            sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
-              color: 'text.primary',
-              fontFamily: 'var(--font-playfair-display), serif'
-            }}
-          >
-            Signature{" "}
-            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
-              Rings
-            </Box>
-          </Typography>
-          <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3 }} />
-        </Box>
-
-        <Box 
-          component="section" 
-          sx={{ 
-            py: 10, 
-            px: 3, 
-            textAlign: 'center', 
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '300px'
-          }}
-        >
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: 'text.secondary', 
-              fontFamily: 'var(--font-playfair-display), serif',
-              fontStyle: 'italic',
-              fontSize: '1.25rem',
-              opacity: 0.5
-            }}
-          >
-            The full collection is being curated and will be unveiled shortly.
-          </Typography>
-        </Box>
-      </Container>
-      <Footer />
-    </Box>
+    <>
+      <Script
+        id="rings-product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <Script
+        id="rings-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <RingsClient />
+    </>
   );
 }
