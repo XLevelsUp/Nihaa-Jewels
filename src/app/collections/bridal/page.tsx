@@ -1,83 +1,81 @@
-'use client';
+import type { Metadata } from 'next';
+import Script from 'next/script';
+import BridalClient from './BridalClient';
 
-import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  alpha, 
-  useTheme 
-} from '@mui/material';
-import Navigation from '@/components/sections/Navigation';
-import Footer from '@/components/sections/Footer';
-
-// Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)
-// export const metadata = { ... };
+export const metadata: Metadata = {
+  title: "Bridal Jewellery Coimbatore | Wedding Gold Set & Bridal Necklace",
+  description: "Explore bridal jewellery in Coimbatore at Nihaa Jewels. Find the perfect wedding gold set and bridal necklace, beautifully handcrafted by master goldsmiths.",
+  keywords: ["bridal jewellery Coimbatore", "wedding gold set", "bridal necklace"],
+  alternates: {
+    canonical: "/collections/bridal",
+  },
+};
 
 export default function BridalPage() {
-  const theme = useTheme();
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Nihaa Jewels Bridal Collection",
+    "image": "https://nihaajewels.com/images/bridaljewel.webp",
+    "description": "Explore bridal jewellery in Coimbatore at Nihaa Jewels. Find the perfect wedding gold set and bridal necklace, beautifully handcrafted by master goldsmiths.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Nihaa Jewels"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "INR",
+      "lowPrice": "150000",
+      "highPrice": "1200000",
+      "offerCount": "25"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "32"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://nihaajewels.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": "https://nihaajewels.com/collections"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Bridal",
+        "item": "https://nihaajewels.com/collections/bridal"
+      }
+    ]
+  };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <Navigation />
-      <Container component="main" maxWidth="lg" sx={{ pt: 20, pb: 12, px: 3 }}>
-        <Box component="header" sx={{ mb: 10 }}>
-          <Typography 
-            variant="overline" 
-            sx={{ 
-              display: 'block',
-              mb: 1, 
-              color: alpha(theme.palette.primary.main, 0.6),
-              letterSpacing: '0.2em'
-            }}
-          >
-            Signature
-          </Typography>
-          <Typography 
-            variant="h1" 
-            sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
-              color: 'text.primary',
-              fontFamily: 'var(--font-playfair-display), serif'
-            }}
-          >
-            Bridal{" "}
-            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
-              Edit
-            </Box>
-          </Typography>
-          <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3 }} />
-        </Box>
-
-        <Box 
-          component="section" 
-          sx={{ 
-            py: 10, 
-            px: 3, 
-            textAlign: 'center', 
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '300px'
-          }}
-        >
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: 'text.secondary', 
-              fontFamily: 'var(--font-playfair-display), serif',
-              fontStyle: 'italic',
-              fontSize: '1.25rem',
-              opacity: 0.5
-            }}
-          >
-            The full bridal collection is being curated and will be unveiled shortly.
-          </Typography>
-        </Box>
-      </Container>
-      <Footer />
-    </Box>
+    <>
+      <Script
+        id="bridal-product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <Script
+        id="bridal-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <BridalClient />
+    </>
   );
 }

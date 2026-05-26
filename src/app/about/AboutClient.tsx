@@ -19,7 +19,7 @@ export default function AboutClient() {
   return (
     <>
       <Box component="section" sx={{ position: 'relative', height: { xs: '60vh', md: '70vh' }, minHeight: '520px', display: 'flex', alignItems: 'end', justifyContent: 'center', overflow: 'hidden' }}>
-        <Image src="https://images.unsplash.com/photo-1599643478524-fb506461a4fb?w=1600&q=85&auto=format&fit=crop" alt="Artisan goldsmith" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
+        <Image src="https://images.unsplash.com/photo-1599643478524-fb506461a4fb?w=1600&q=85&auto=format&fit=crop" alt="bespoke jewellery design - four generations of master goldsmiths Nihaa Jewels" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
         <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #121212, rgba(18, 18, 18, 0.4), transparent)' }} />
         <Box sx={{ position: 'relative', zIndex: 10, textAlign: 'center', pb: 12, px: 2 }}>
           <Typography variant="overline" sx={{ display: 'block', mb: 2, color: 'primary.main', fontWeight: 500, letterSpacing: '0.28em', fontSize: '0.75rem' }}>Est. 1986 · Coimbatore, India</Typography>
@@ -39,7 +39,7 @@ export default function AboutClient() {
           </Grid2>
           <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ position: 'relative', height: { xs: 400, md: 600 }, width: '100%', overflow: 'hidden' }}>
-              <Image src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=900&q=85&auto=format&fit=crop" alt="Craftsmanship" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
+              <Image src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=900&q=85&auto=format&fit=crop" alt="BIS Hallmarked gold and IGI certified diamonds craftsmanship Nihaa Jewels Coimbatore" fill sizes="(max-width: 768px) 100vw, 50vw" style={{ objectFit: 'cover' }} />
               <Box sx={{ position: 'absolute', inset: 0, border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`, m: 2 }} />
             </Box>
           </Grid2>

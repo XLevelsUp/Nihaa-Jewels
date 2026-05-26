@@ -1,83 +1,81 @@
-'use client';
+import type { Metadata } from 'next';
+import Script from 'next/script';
+import EarringsClient from './EarringsClient';
 
-import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  alpha, 
-  useTheme 
-} from '@mui/material';
-import Navigation from '@/components/sections/Navigation';
-import Footer from '@/components/sections/Footer';
-
-// Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)
-// export const metadata = { ... };
+export const metadata: Metadata = {
+  title: "Gold & Diamond Earrings Coimbatore | Jhumkas | Nihaa Jewels",
+  description: "Browse our collection of gold earrings in Coimbatore, exquisite jhumkas, and premium diamond earrings. All pieces are BIS hallmarked or IGI certified.",
+  keywords: ["gold earrings Coimbatore", "jhumkas Coimbatore", "diamond earrings"],
+  alternates: {
+    canonical: "/collections/earrings",
+  },
+};
 
 export default function EarringsPage() {
-  const theme = useTheme();
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "Nihaa Jewels Sculpted Earrings",
+    "image": "https://nihaajewels.com/images/earring2.webp",
+    "description": "Browse our collection of gold earrings in Coimbatore, exquisite jhumkas, and premium diamond earrings. All pieces are BIS hallmarked or IGI certified.",
+    "brand": {
+      "@type": "Brand",
+      "name": "Nihaa Jewels"
+    },
+    "offers": {
+      "@type": "AggregateOffer",
+      "priceCurrency": "INR",
+      "lowPrice": "12000",
+      "highPrice": "180000",
+      "offerCount": "22"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "bestRating": "5",
+      "worstRating": "1",
+      "ratingCount": "19"
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://nihaajewels.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Collections",
+        "item": "https://nihaajewels.com/collections"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Earrings",
+        "item": "https://nihaajewels.com/collections/earrings"
+      }
+    ]
+  };
 
   return (
-    <Box sx={{ bgcolor: 'background.default', minHeight: '100vh' }}>
-      <Navigation />
-      <Container component="main" maxWidth="lg" sx={{ pt: 20, pb: 12, px: 3 }}>
-        <Box component="header" sx={{ mb: 10 }}>
-          <Typography 
-            variant="overline" 
-            sx={{ 
-              display: 'block',
-              mb: 1, 
-              color: alpha(theme.palette.primary.main, 0.6),
-              letterSpacing: '0.2em'
-            }}
-          >
-            Artistry
-          </Typography>
-          <Typography 
-            variant="h1" 
-            sx={{ 
-              fontSize: { xs: '2.5rem', md: '3.5rem' }, 
-              color: 'text.primary',
-              fontFamily: 'var(--font-playfair-display), serif'
-            }}
-          >
-            Sculpted{" "}
-            <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>
-              Earrings
-            </Box>
-          </Typography>
-          <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3 }} />
-        </Box>
-
-        <Box 
-          component="section" 
-          sx={{ 
-            py: 10, 
-            px: 3, 
-            textAlign: 'center', 
-            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
-            borderRadius: 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '300px'
-          }}
-        >
-          <Typography 
-            variant="body1" 
-            sx={{ 
-              color: 'text.secondary', 
-              fontFamily: 'var(--font-playfair-display), serif',
-              fontStyle: 'italic',
-              fontSize: '1.25rem',
-              opacity: 0.5
-            }}
-          >
-            The full collection is being curated and will be unveiled shortly.
-          </Typography>
-        </Box>
-      </Container>
-      <Footer />
-    </Box>
+    <>
+      <Script
+        id="earrings-product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <Script
+        id="earrings-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <EarringsClient />
+    </>
   );
 }

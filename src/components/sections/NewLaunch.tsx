@@ -120,7 +120,7 @@ function ShowcaseCard({
           >
             <Image
               src={item.image}
-              alt={`${item.label} — Nihaa Jewels`}
+              alt={(item as any).alt || `${item.label} — Nihaa Jewels`}
               fill
               sizes="(max-width: 768px) 100vw, 33vw"
               style={{ objectFit: 'cover' }}

@@ -44,38 +44,36 @@ export default function StaticBrandHero() {
         className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10"
       >
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
-          {/* Eyebrow: Montserrat, 0.5em letter-spacing */}
-          <span className="block font-montserrat uppercase tracking-[0.5em] text-[#D4AF37] text-xs md:text-sm font-semibold mb-6">
+          {/* Eyebrow: Montserrat, 0.4em letter-spacing */}
+          <span className="block font-montserrat uppercase tracking-[0.4em] text-[#D4AF37]/90 text-xs md:text-sm font-semibold mb-6">
             Est. 2026 | Coimbatore
           </span>
         </motion.div>
 
-        <motion.div
-          initial={{ y: 15 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 1.2, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-        >
-          {/* H1: Playfair Display, 500 weight, 5vw size */}
-          <h1 className="font-playfair font-medium text-5xl md:text-6xl lg:text-[5vw] leading-[1.1] pb-2 max-w-[90vw]">
-            <span className="text-[#FAF9F6] drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">Hand-Forged</span>{' '}
-            <em className="text-[#D4AF37] drop-shadow-[0_4px_12px_rgba(212,175,55,0.4)] italic">Legacies</em>
+        <div>
+          {/* Static H1: Refined Inter font style, completely static with zero animation for instant loading & SEO */}
+          <h1 className="font-inter font-light text-3xl md:text-4xl lg:text-[3vw] leading-[1.3] text-[#FAF9F6] pb-2 max-w-[95vw]">
+            The Best <span className="text-[#D4AF37] font-medium">Jewellery Shop</span> in Coimbatore
+            <span className="block text-[0.75rem] md:text-xs font-light tracking-[0.3em] uppercase text-[#FAF9F6]/50 mt-4 normal-case font-inter">
+              Fine Jewellery & Bespoke Goldsmiths
+            </span>
           </h1>
-        </motion.div>
+        </div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
+          transition={{ duration: 1.0, delay: 0.5, ease: "easeOut" }}
           className="mt-8"
         >
-          {/* Heritage Story: Small, high-tracking text */}
-          <p className="font-inter text-[#FAF9F6]/70 text-[0.8rem] md:text-[0.9rem] font-light tracking-widest uppercase max-w-2xl mx-auto leading-relaxed">
-            Preserving the ancient art of the master goldsmith. <br className="hidden md:block" /> Every piece a dialogue between heritage and the modern connoisseur.
-          </p>
+          {/* H2: Inter, contemporary luxury sentence-case tracking */}
+          <h2 className="font-inter text-[#E5D5B8] text-sm md:text-base font-light tracking-[0.12em] max-w-3xl mx-auto leading-relaxed px-6">
+            Handcrafted gold jewellery, diamond necklaces & bridal jewellery in Coimbatore — all BIS hallmarked.
+          </h2>
         </motion.div>
       </motion.div>
     </section>

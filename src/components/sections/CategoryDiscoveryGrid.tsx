@@ -6,13 +6,13 @@ import { motion, Variants } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 
 const CATEGORIES = [
-  { id: '1', label: 'Rings', href: '/collections/rings', image: '/images/rings.webp' },
-  { id: '2', label: 'Bracelets', href: '/collections/bracelets', image: '/images/bracelet2.webp' },
-  { id: '3', label: 'Chains', href: '/collections/chains', image: '/images/chain1.webp' },
-  { id: '4', label: 'Pendants', href: '/collections/pendants', image: '/images/pendant1.webp' },
-  { id: '5', label: 'Mangalsutras', href: '/collections/mangalsutras', image: '/images/mangalsutra1.webp' },
-  { id: '6', label: 'Bangles', href: '/collections/bangles', image: '/images/bangles1.webp' },
-  { id: '7', label: 'Earrings', href: '/collections/earrings', image: '/images/earring2.webp' },
+  { id: '1', label: 'Rings', href: '/collections/rings', image: '/images/rings.webp', alt: 'gold rings Coimbatore and diamond rings Coimbatore - Nihaa Jewels' },
+  { id: '2', label: 'Bracelets', href: '/collections/bracelets', image: '/images/bracelet2.webp', alt: 'luxury gold bracelets and luxury jewels Coimbatore - Nihaa Jewels' },
+  { id: '3', label: 'Chains', href: '/collections/chains', image: '/images/chain1.webp', alt: 'BIS hallmarked gold chains Coimbatore - Nihaa Jewels' },
+  { id: '4', label: 'Pendants', href: '/collections/pendants', image: '/images/pendant1.webp', alt: 'fine jewellery pendants and IGI certified diamonds Coimbatore - Nihaa Jewels' },
+  { id: '5', label: 'Mangalsutras', href: '/collections/mangalsutras', image: '/images/mangalsutra1.webp', alt: 'traditional bridal jewellery Coimbatore mangalsutras - Nihaa Jewels' },
+  { id: '6', label: 'Bangles', href: '/collections/bangles', image: '/images/bangles1.webp', alt: 'BIS hallmarked gold bangles Coimbatore - Nihaa Jewels' },
+  { id: '7', label: 'Earrings', href: '/collections/earrings', image: '/images/earring2.webp', alt: 'gold earrings Coimbatore and jhumkas Coimbatore - Nihaa Jewels' },
   { id: '8', label: 'Explore All', subtext: '10+ More Collections', href: '/collections', type: 'cta_card' },
 ];
 
@@ -97,7 +97,7 @@ export default function CategoryDiscoveryGrid() {
                   <div className="relative aspect-4/5 overflow-hidden rounded-sm bg-[#1a1a1a]">
                     <Image
                       src={category.image!}
-                      alt={`Luxury ${category.label} Coimbatore - Nihaa Jewels`}
+                      alt={category.alt || `Luxury ${category.label} Coimbatore - Nihaa Jewels`}
                       fill
                       sizes="(max-width: 1024px) 50vw, 25vw"
                       className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
