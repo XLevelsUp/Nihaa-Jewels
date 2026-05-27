@@ -122,6 +122,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+
   return (
     <html
       lang="en"
@@ -129,19 +131,23 @@ export default function RootLayout({
     >
       <body className="min-h-screen antialiased">
         <ThemeRegistry>
-          <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-KCNV24698R"
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
+          {gaId && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
 
-              gtag('config', 'G-KCNV24698R');
-            `}
-          </Script>
+                  gtag('config', '${gaId}');
+                `}
+              </Script>
+            </>
+          )}
           <Script
             id="structured-data"
             type="application/ld+json"
