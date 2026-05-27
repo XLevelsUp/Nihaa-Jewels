@@ -130,6 +130,19 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <ThemeRegistry>
           <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-KCNV24698R"
+            strategy="afterInteractive"
+          />
+          <Script id="google-analytics" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+
+              gtag('config', 'G-KCNV24698R');
+            `}
+          </Script>
+          <Script
             id="structured-data"
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
