@@ -2,9 +2,8 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import Navigation from '@/components/sections/Navigation';
 import StaticBrandHero from '@/components/sections/StaticBrandHero';
-import PromotionalHero from '@/components/sections/PromotionalHero';
 import dynamic from 'next/dynamic';
-
+const PromotionalHero = dynamic(() => import('@/components/sections/PromotionalHero'));
 const NewLaunch = dynamic(() => import('@/components/sections/NewLaunch'));
 const CategoryDiscoveryGrid = dynamic(() => import('@/components/sections/CategoryDiscoveryGrid'));
 const ShopByGender = dynamic(() => import('@/components/sections/ShopByGender'));

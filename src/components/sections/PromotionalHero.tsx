@@ -136,7 +136,6 @@ export default function Hero() {
                   src={SLIDES[currentSlide].image}
                   alt={SLIDES[currentSlide].alt}
                   fill
-                  priority={currentSlide === 0}
                   sizes="(max-width: 1280px) 100vw, 1280px"
                 style={{
                   objectFit: SLIDES[currentSlide].objectFit || 'cover',

@@ -106,24 +106,18 @@ export default function Footer() {
             <Grid2 size={{ xs: 12, md: 4 }}>
               <motion.div variants={itemVariants}>
                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-                <Typography
-                  variant="h4"
-                  component={motion.div}
+                <Box
+                  component={motion.img}
+                  src="/logo.svg"
+                  alt="Nihaa Jewels Logo"
                   sx={{
-                    fontFamily: "var(--font-playfair-display)",
-                    fontWeight: 700,
+                    height: "44px",
+                    width: "auto",
                     mb: 1,
-                    letterSpacing: "0.05em",
-                    background: "linear-gradient(90deg, #D4AF37, #FBF5B7, #D4AF37)",
-                    backgroundSize: "200% auto",
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    display: "inline-block",
-                    textShadow: "0 2px 15px rgba(212,175,55,0.2)"
+                    objectFit: "contain",
+                    filter: "drop-shadow(0 2px 15px rgba(212,175,55,0.2))"
                   }}
-                >
-                  Nihaa Jewels
-                </Typography>
+                />
 
                 <Typography
                   variant="body2"

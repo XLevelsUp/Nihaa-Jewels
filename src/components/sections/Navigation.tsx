@@ -16,19 +16,16 @@ import { MEGA_NAVIGATION } from '@/constants';
 
 const Logo = () => (
   <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', flexShrink: 0 }}>
-    <Box sx={{ position: 'relative' }}>
-      <Box sx={{ color: '#D4AF37', filter: 'drop-shadow(0 0 8px rgba(212, 175, 55, 0.4))', display: 'flex', alignItems: 'center' }}>
-        <Gem size={20} strokeWidth={1.5} />
-      </Box>
-    </Box>
-    <Box sx={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
-      <Typography variant="h6" sx={{ color: '#D4AF37', fontSize: '1.25rem', fontWeight: 700, fontFamily: 'var(--font-playfair-display), serif', letterSpacing: '-0.02em', textShadow: '0 0 12px rgba(212, 175, 55, 0.2)' }}>
-        Nihaa
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'rgba(250, 249, 246, 0.4)', fontSize: '0.35rem', letterSpacing: '0.5em', textTransform: 'uppercase', fontWeight: 500, mt: -0.5, ml: 0.1 }}>
-        Jewels
-      </Typography>
-    </Box>
+    <Box
+      component="img"
+      src="/logo.svg"
+      alt="Nihaa Jewels Logo"
+      sx={{
+        height: { xs: '36px', md: '44px' },
+        width: 'auto',
+        objectFit: 'contain'
+      }}
+    />
   </Box>
 );
 
@@ -230,7 +227,7 @@ export default function Navigation() {
       >
         <Container maxWidth="xl">
           {/* ================= UPPER HEADER ================= */}
-          <Toolbar disableGutters sx={{ minHeight: { xs: '44px !important', md: '48px !important' }, py: 0.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.3s ease' }}>
+          <Toolbar disableGutters sx={{ minHeight: { xs: '76px !important', md: '92px !important' }, py: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.3s ease' }}>
             
             {/* Left: Brand */}
             <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', transform: 'scale(1)', transition: 'transform 0.3s ease', transformOrigin: 'left center' }}>
@@ -320,7 +317,7 @@ export default function Navigation() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
-                    py: 0.5,
+                    py: 1,
                     px: { lg: 2, xl: 3 },
                     color: activeMega === category.label ? '#D4AF37' : 'rgba(255,255,255,0.85)',
                     textDecoration: 'none',
