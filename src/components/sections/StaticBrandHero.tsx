@@ -39,8 +39,7 @@ export default function StaticBrandHero() {
       </motion.div>
 
       {/* Absolute-positioned Text Layers */}
-      <motion.div 
-        style={{ opacity: textOpacity, y: textY }}
+      <div 
         className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 z-10"
       >
         <motion.div
@@ -75,7 +74,7 @@ export default function StaticBrandHero() {
             Handcrafted gold jewellery, diamond necklaces & bridal jewellery in Coimbatore — all BIS hallmarked.
           </h2>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

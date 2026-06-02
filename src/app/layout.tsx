@@ -131,6 +131,21 @@ export default function RootLayout({
     >
       <body className="min-h-screen antialiased">
         <ThemeRegistry>
+          <script>
+            {`
+              if (typeof window !== 'undefined' && window.trustedTypes && window.trustedTypes.createPolicy) {
+                try {
+                  window.trustedTypes.createPolicy('default', {
+                    createHTML: function(s) { return s; },
+                    createScriptURL: function(s) { return s; },
+                    createScript: function(s) { return s; }
+                  });
+                } catch (e) {
+                  console.warn('Trusted Types default policy already exists.');
+                }
+              }
+            `}
+          </script>
           {gaId && (
             <>
               <Script
