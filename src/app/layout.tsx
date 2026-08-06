@@ -74,6 +74,9 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
+  other: {
+    'p:domain_verify': 'f03d3f2bb52681970ca5897915465c57',
+  },
 };
 
 const jsonLd = {
