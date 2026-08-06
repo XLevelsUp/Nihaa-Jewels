@@ -166,6 +166,7 @@ export default function RootLayout({
               </Script>
             </>
           )}
+          {/* Meta Pixel Code */}
           <Script id="meta-pixel" strategy="afterInteractive">
             {`
               !function(f,b,e,v,n,t,s)
@@ -190,6 +191,7 @@ export default function RootLayout({
               alt=""
             />
           </noscript>
+          {/* End Meta Pixel Code */}
           <Script
             id="structured-data"
             type="application/ld+json"
