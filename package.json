@@ -1,39 +1,18 @@
 {
-  "name": "nihaa-jewels-temp",
+  "name": "nihaa-jewels",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.13.3",
-    "@emotion/styled": "^11.13.0",
-    "@mui/material": "^6.1.0",
-    "@mui/material-nextjs": "^6.1.0",
-    "framer-motion": "^12.38.0",
-    "lucide-react": "^1.7.0",
-    "next": "^15.3.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.5",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "^15.3.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  },
-  "browserslist": [
-  ">0.3%",
-  "not dead",
-  "not op_mini all"
-  ]
-
+    "dev:marketing": "npm run dev --workspace=marketing",
+    "dev:admin": "npm run dev --workspace=admin",
+    "build:marketing": "npm run build --workspace=marketing",
+    "build:admin": "npm run build --workspace=admin",
+    "start:marketing": "npm run start --workspace=marketing",
+    "start:admin": "npm run start --workspace=admin",
+    "lint:marketing": "npm run lint --workspace=marketing",
+    "lint:admin": "npm run lint --workspace=admin"
+  }
 }
