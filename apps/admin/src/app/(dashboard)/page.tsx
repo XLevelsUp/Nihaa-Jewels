@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Box, Chip, Paper, Typography } from '@mui/material';
 
 import { createAdminClient } from '@/lib/supabase-server';
@@ -98,7 +99,14 @@ export default async function DashboardPage() {
           <Typography variant="h2" sx={{ fontSize: '1.05rem' }}>
             Today&rsquo;s gold rate
           </Typography>
-          <Chip label="Rate editing coming next" size="small" variant="outlined" />
+          <Chip
+            label="Update rates"
+            size="small"
+            variant="outlined"
+            component={Link}
+            href="/gold-rates"
+            clickable
+          />
         </Box>
 
         {stats.rates.size === 0 ? (
