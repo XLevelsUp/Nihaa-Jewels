@@ -24,8 +24,8 @@ const theme = createTheme({
       contrastText: PALETTE.ivory,
     },
     background: {
-      default: PALETTE.ivory,
-      paper: '#FFFFFF',
+      default: PALETTE.sageTint,
+      paper: PALETTE.ivory,
     },
     text: {
       primary: PALETTE.ink,
@@ -51,7 +51,7 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        body: { backgroundColor: PALETTE.ivory, color: PALETTE.ink },
+        body: { backgroundColor: PALETTE.sageTint, color: PALETTE.ink },
       },
     },
     MuiButton: {

@@ -13,8 +13,14 @@ import PriceBreakdownTable from '@/components/catalogue/PriceBreakdownTable';
 import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton';
 import { getProductBySlug } from '@/lib/catalogue';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
+import { productImageUrl } from '@/lib/supabase';
 
 const BASE_URL = 'https://nihaajewels.com';
+
+function absoluteImageUrl(storagePath: string): string {
+  const url = productImageUrl(storagePath);
+  return url.startsWith('http') ? url : `${BASE_URL}${url}`;
+}
 
 export const revalidate = 3600;
 
@@ -43,7 +49,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       title,
       description,
       type: 'website',
-      images: product.images[0] ? [{ url: product.images[0].storage_path }] : undefined,
+      images: product.images[0] ? [{ url: productImageUrl(product.images[0].storage_path) }] : undefined,
     },
   };
 }
@@ -62,7 +68,7 @@ export default async function ProductPage({ params }: PageProps) {
     name: product.name,
     sku: product.sku,
     description: product.description ?? undefined,
-    image: primaryImage ? `${BASE_URL}${primaryImage.storage_path}` : undefined,
+    image: primaryImage ? absoluteImageUrl(primaryImage.storage_path) : undefined,
     brand: { '@type': 'Brand', name: 'Nihaa Jewels' },
     material: `${product.karat} Gold`,
     weight: {
@@ -150,7 +156,7 @@ export default async function ProductPage({ params }: PageProps) {
               >
                 {primaryImage ? (
                   <Image
-                    src={primaryImage.storage_path}
+                    src={productImageUrl(primaryImage.storage_path)}
                     alt={primaryImage.alt_text || product.name}
                     fill
                     priority
@@ -190,7 +196,7 @@ export default async function ProductPage({ params }: PageProps) {
                       }}
                     >
                       <Image
-                        src={img.storage_path}
+                        src={productImageUrl(img.storage_path)}
                         alt={img.alt_text || product.name}
                         fill
                         sizes="72px"

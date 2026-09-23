@@ -28,6 +28,16 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      // Product photography uploaded through admin; without this next/image refuses to load it.
+      ...(supabaseOrigin
+        ? [
+            {
+              protocol: "https" as const,
+              hostname: new URL(supabaseOrigin).hostname,
+              pathname: "/storage/v1/object/public/**",
+            },
+          ]
+        : []),
     ],
   },
   async headers() {

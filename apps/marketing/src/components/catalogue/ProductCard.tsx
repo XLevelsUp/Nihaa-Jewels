@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { Box, Typography, alpha, useTheme } from '@mui/material';
 
 import { formatRupees } from '@/lib/pricing';
+import { productImageUrl } from '@/lib/supabase';
 import type { PricedProduct } from '@/lib/catalogue';
 
 interface ProductCardProps {
@@ -47,7 +48,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           {image ? (
             <Image
               className="product-image"
-              src={image.storage_path}
+              src={productImageUrl(image.storage_path)}
               alt={image.alt_text || product.name}
               fill
               sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"

@@ -47,7 +47,7 @@ export default function LoginClient() {
         alignItems: 'center',
         justifyContent: 'center',
         px: 2,
-        background: `linear-gradient(160deg, ${PALETTE.blush} 0%, ${PALETTE.icing} 40%, ${PALETTE.ivory} 100%)`,
+        background: `linear-gradient(160deg, ${PALETTE.blush} 0%, ${PALETTE.icing} 40%, ${PALETTE.sageTint} 100%)`,
       }}
     >
       <Paper variant="outlined" sx={{ width: '100%', maxWidth: 400, p: { xs: 3, sm: 5 } }}>

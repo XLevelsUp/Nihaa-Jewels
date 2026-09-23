@@ -19,6 +19,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   },
 });
 
+// Seeded rows hold site-relative paths (/images/x.webp); admin uploads hold a storage key.
 export function productImageUrl(storagePath: string): string {
+  if (storagePath.startsWith('/') || storagePath.startsWith('http')) return storagePath;
   return supabase.storage.from('product-images').getPublicUrl(storagePath).data.publicUrl;
 }

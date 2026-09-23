@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Box, Chip, Paper, Typography } from '@mui/material';
+import { TriangleAlert } from 'lucide-react';
 
 import { createAdminClient } from '@/lib/supabase-server';
 import { PALETTE } from '@/constants/palette';
@@ -140,15 +141,30 @@ export default async function DashboardPage() {
         )}
       </Paper>
 
-      <Paper variant="outlined" sx={{ p: 3, bgcolor: PALETTE.sageWash }}>
-        <Typography variant="h3" sx={{ fontSize: '0.95rem', mb: 1 }}>
-          Seeded prices are placeholders
-        </Typography>
-        <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', lineHeight: 1.75 }}>
-          The gold rates and product weights currently in the catalogue are sample values, not real
-          ones. They are already driving the prices shown on the public site, so replace them with
-          the shop&rsquo;s actual figures before launch.
-        </Typography>
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 3,
+          pl: 3.5,
+          bgcolor: PALETTE.icing,
+          borderColor: PALETTE.icingDeep,
+          borderLeft: `5px solid ${PALETTE.icingDeep}`,
+          display: 'flex',
+          gap: 2,
+          alignItems: 'flex-start',
+        }}
+      >
+        <TriangleAlert size={20} color={PALETTE.icingDeep} style={{ flexShrink: 0, marginTop: 2 }} />
+        <Box>
+          <Typography variant="h3" sx={{ fontSize: '0.95rem', mb: 1 }}>
+            Seeded prices are placeholders
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', lineHeight: 1.75 }}>
+            The gold rates and product weights currently in the catalogue are sample values, not real
+            ones. They are already driving the prices shown on the public site, so replace them with
+            the shop&rsquo;s actual figures before launch.
+          </Typography>
+        </Box>
       </Paper>
     </Box>
   );

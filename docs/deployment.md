@@ -16,12 +16,17 @@ files" below).
 
 ```bash
 npm install                # once, from repo root — installs both workspaces
-npm run dev:marketing       # http://localhost:3000
-npm run dev:admin           # http://localhost:3001
+npm run dev:marketing
+npm run dev:admin
 ```
 
-Ports are pinned in each app's own `package.json` (`admin` uses `-p 3001`)
-so both can run side by side without colliding.
+Neither app pins a port. Next starts on 3000 and moves to the next free
+port if it is taken, so whichever app you start second lands on 3001 —
+check the URL Next prints on startup rather than assuming.
+
+Both can run at the same time, which is the usual way to work: add a
+product in admin, then reload the collection page on the marketing app to
+see it appear.
 
 ## Environment variables
 
