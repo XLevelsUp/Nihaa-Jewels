@@ -1,11 +1,17 @@
 import type { NextConfig } from "next";
 
+// Read at BUILD time, so changing the Supabase project needs a rebuild, not just an env change.
+const supabaseOrigin = process.env.NEXT_PUBLIC_SUPABASE_URL
+  ? new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).origin
+  : '';
+
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https://images.unsplash.com https://www.google-analytics.com;
+    img-src 'self' blob: data: https://images.unsplash.com https://www.google-analytics.com ${supabaseOrigin};
     font-src 'self' data:;
+    connect-src 'self' https://www.google-analytics.com https://script.google.com ${supabaseOrigin};
     object-src 'none';
     base-uri 'self';
     form-action 'self';

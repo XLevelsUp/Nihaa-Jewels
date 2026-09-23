@@ -31,13 +31,43 @@ so both can run side by side without colliding.
 |---|---|
 | `NEXT_PUBLIC_GOOGLE_SHEET_URL` | Contact/custom-design form submission endpoint (Google Apps Script webhook) |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics measurement ID |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon/publishable key |
 
 ### apps/admin/.env.local
 
-None yet. Admin is currently a placeholder app with no backend wiring.
-When the catalogue/auth backend (Supabase) is added in a later pass, this
-file will need at minimum a Supabase project URL and anon/service key —
-documented here once that work happens.
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Same project URL as marketing |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Same anon key as marketing |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Secret.** Bypasses RLS. Admin only, server-side only, never `NEXT_PUBLIC_`-prefixed |
+
+> The CSP in `apps/marketing/next.config.ts` derives the Supabase origin
+> from `NEXT_PUBLIC_SUPABASE_URL` **at build time**. Changing the project
+> requires a rebuild, not just an env change, or the browser will block
+> every Supabase request.
+
+## Database
+
+Schema and seed data live in `supabase/migrations/`. To apply them:
+
+```bash
+npx supabase link --project-ref <project-ref>   # asks for the DB password
+npx supabase db push
+```
+
+Conventions worth knowing before changing the schema:
+
+- **`gold_rates` is append-only.** Never `UPDATE` a rate; insert a new row.
+  The current rate is the newest `effective_from` per karat, which gives a
+  free audit trail of what was quoted when.
+- **`appointments` has no public SELECT policy.** It holds customer phone
+  numbers, and the marketing app's anon key is public. Insert-only is
+  deliberate — do not add a read policy for `anon`.
+- **Categories are database rows, not routes.** `/collections/[category]`
+  renders any active category, so staff add collections without a deploy.
+
+See [e-catalogue-plan.md](e-catalogue-plan.md) for the full module plan.
 
 ## Hosting
 
