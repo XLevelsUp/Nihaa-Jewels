@@ -27,14 +27,14 @@ export default async function GoldRateStrip() {
         gap: { xs: 2, md: 4 },
         py: 1.5,
         px: 3,
-        bgcolor: alpha('#D4AF37', 0.06),
-        borderTop: `1px solid ${alpha('#D4AF37', 0.15)}`,
-        borderBottom: `1px solid ${alpha('#D4AF37', 0.15)}`,
+        bgcolor: alpha('#5F6440', 0.06),
+        borderTop: `1px solid ${alpha('#5F6440', 0.15)}`,
+        borderBottom: `1px solid ${alpha('#5F6440', 0.15)}`,
       }}
     >
       <Typography
         sx={{
-          color: alpha('#D4AF37', 0.75),
+          color: alpha('#5F6440', 0.75),
           fontSize: '0.6rem',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
@@ -51,7 +51,7 @@ export default async function GoldRateStrip() {
           <Typography sx={{ color: 'primary.main', fontSize: '0.85rem', fontWeight: 600 }}>
             {formatRupees(rates[karat])}
           </Typography>
-          <Typography sx={{ color: 'text.secondary', fontSize: '0.65rem', opacity: 0.6 }}>
+          <Typography sx={{ color: 'text.secondary', fontSize: '0.65rem', opacity: 0.85 }}>
             /g
           </Typography>
         </Box>

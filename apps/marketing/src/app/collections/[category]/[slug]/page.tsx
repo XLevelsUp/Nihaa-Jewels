@@ -149,8 +149,8 @@ export default async function ProductPage({ params }: PageProps) {
                 sx={{
                   position: 'relative',
                   aspectRatio: '1 / 1',
-                  bgcolor: '#0E0E0E',
-                  border: '1px solid rgba(212,175,55,0.12)',
+                  bgcolor: '#55524A',
+                  border: '1px solid rgba(95, 100, 64,0.12)',
                   overflow: 'hidden',
                 }}
               >
@@ -171,7 +171,7 @@ export default async function ProductPage({ params }: PageProps) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: 'rgba(212,175,55,0.3)',
+                      color: 'rgba(95, 100, 64, 0.55)',
                       fontSize: '0.7rem',
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
@@ -191,7 +191,7 @@ export default async function ProductPage({ params }: PageProps) {
                         position: 'relative',
                         width: 72,
                         height: 72,
-                        border: '1px solid rgba(212,175,55,0.15)',
+                        border: '1px solid rgba(95, 100, 64,0.15)',
                         overflow: 'hidden',
                       }}
                     >
@@ -213,7 +213,7 @@ export default async function ProductPage({ params }: PageProps) {
                 variant="overline"
                 sx={{
                   display: 'block',
-                  color: 'rgba(212,175,55,0.6)',
+                  color: 'rgba(95, 100, 64,0.6)',
                   letterSpacing: '0.2em',
                   fontSize: '0.65rem',
                   mb: 1,
@@ -251,8 +251,8 @@ export default async function ProductPage({ params }: PageProps) {
                   m: 0,
                   mb: 4,
                   py: 3,
-                  borderTop: '1px solid rgba(212,175,55,0.12)',
-                  borderBottom: '1px solid rgba(212,175,55,0.12)',
+                  borderTop: '1px solid rgba(95, 100, 64,0.12)',
+                  borderBottom: '1px solid rgba(95, 100, 64,0.12)',
                 }}
               >
                 {[
@@ -265,7 +265,7 @@ export default async function ProductPage({ params }: PageProps) {
                     <Box
                       component="dt"
                       sx={{
-                        color: 'rgba(212,175,55,0.6)',
+                        color: 'rgba(95, 100, 64,0.6)',
                         fontSize: '0.6rem',
                         letterSpacing: '0.15em',
                         textTransform: 'uppercase',

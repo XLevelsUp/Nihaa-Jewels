@@ -57,7 +57,7 @@ const cardVariants: Variants = {
 
 export default function ShopByGender() {
   return (
-    <section className="py-24 bg-[#121212] flex flex-col items-center">
+    <section className="py-24 bg-[#FFFFF0] flex flex-col items-center">
       {/* Title Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -66,11 +66,11 @@ export default function ShopByGender() {
         transition={{ duration: 0.8 }}
         className="text-center mb-16 px-6"
       >
-        <h2 className="text-[#FAF9F6] text-4xl md:text-5xl font-playfair tracking-wide mb-5">
+        <h2 className="text-[#2A2520] text-4xl md:text-5xl font-playfair tracking-wide mb-5">
           Curated For You
         </h2>
-        <div className="w-12 h-px bg-linear-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-6 opacity-60" />
-        <p className="text-[#d6d3ce]/80 font-inter font-light text-[0.95rem] md:text-base max-w-md mx-auto italic">
+        <div className="w-12 h-px bg-linear-to-r from-transparent via-[#5F6440] to-transparent mx-auto mb-6 opacity-60" />
+        <p className="text-[#55524A]/80 font-inter font-light text-[0.95rem] md:text-base max-w-md mx-auto italic">
           Discover collections tailored to every story.
         </p>
       </motion.div>
@@ -92,7 +92,7 @@ export default function ShopByGender() {
                 className="group block relative w-full h-full"
               >
                 {/* Image Container */}
-                <div className="relative aspect-3/4 overflow-hidden rounded-sm bg-[#1a1a1a] shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all duration-700 ease-out group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)] group-hover:-translate-y-2">
+                <div className="relative aspect-3/4 overflow-hidden rounded-sm bg-[#FFFFFF] shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all duration-700 ease-out group-hover:shadow-[0_20px_40px_rgba(42,37,32,0.12)] group-hover:-translate-y-2">
                   <Image
                     src={segment.image}
                     alt={segment.image_alt}
@@ -102,15 +102,15 @@ export default function ShopByGender() {
                   />
                   
                   {/* Subtle inner shadow/gradient */}
-                  <div className="absolute inset-0 bg-linear-to-t from-[#121212]/90 via-[#121212]/20 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-60" />
+                  <div className="absolute inset-0 bg-linear-to-t from-[#FFFFF0]/90 via-[#FFFFF0]/20 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-60" />
                   
                   {/* Content positioned over image */}
                   <div className="absolute inset-0 p-8 flex flex-col justify-end text-center z-10 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:-translate-y-1">
-                    <h3 className="font-playfair text-[#D4AF37] text-[1.8rem] mb-3 leading-tight drop-shadow-md transition-all duration-500 group-hover:scale-105">
+                    <h3 className="font-playfair text-[#5F6440] text-[1.8rem] mb-3 leading-tight drop-shadow-md transition-all duration-500 group-hover:scale-105">
                       {segment.label}
                     </h3>
                     <p 
-                      className="font-inter text-[#FAF9F6]/90 text-[0.9rem] font-light leading-relaxed opacity-0 translate-y-4 transition-all duration-500 ease-out delay-100 group-hover:opacity-100 group-hover:translate-y-0"
+                      className="font-inter text-[#2A2520]/90 text-[0.9rem] font-light leading-relaxed opacity-0 translate-y-4 transition-all duration-500 ease-out delay-100 group-hover:opacity-100 group-hover:translate-y-0"
                     >
                       {segment.description}
                     </p>

@@ -53,10 +53,15 @@ export default async function DashboardPage() {
   const stats = await getStats();
 
   const tiles = [
-    { label: 'Active products', value: stats.products },
-    { label: 'Collections', value: stats.categories },
-    { label: 'Booking requests', value: stats.appointments },
-    { label: 'Awaiting response', value: stats.newAppointments, highlight: stats.newAppointments > 0 },
+    { label: 'Active products', value: stats.products, href: '/products' },
+    { label: 'Collections', value: stats.categories, href: '/categories' },
+    { label: 'Booking requests', value: stats.appointments, href: '/appointments' },
+    {
+      label: 'Awaiting response',
+      value: stats.newAppointments,
+      href: '/appointments?status=new',
+      highlight: stats.newAppointments > 0,
+    },
   ];
 
   return (
@@ -77,7 +82,19 @@ export default async function DashboardPage() {
         }}
       >
         {tiles.map((tile) => (
-          <Paper key={tile.label} variant="outlined" sx={{ p: 2.5 }}>
+          <Paper
+            key={tile.label}
+            variant="outlined"
+            component={Link}
+            href={tile.href}
+            sx={{
+              p: 2.5,
+              display: 'block',
+              textDecoration: 'none',
+              transition: 'border-color 0.2s',
+              '&:hover': { borderColor: PALETTE.sage },
+            }}
+          >
             <Typography sx={{ color: 'text.secondary', fontSize: '0.75rem', mb: 1 }}>
               {tile.label}
             </Typography>

@@ -22,14 +22,14 @@ export default async function CollectionsPage() {
   }
 
   return (
-    <div className="bg-[#121212] min-h-screen">
+    <div className="bg-[#FFFFF0] min-h-screen">
       <Navigation />
       <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
         <header className="mb-12 text-center flex flex-col items-center">
-          <p className="section-label mb-2 text-[#D4AF37]/60">Artistry &amp; Grace</p>
-          <h1 className="text-4xl md:text-6xl text-[#FAF9F6] font-playfair">Our <em className="text-gradient-gold not-italic">Collections</em></h1>
+          <p className="section-label mb-2 text-[#5F6440]">Artistry &amp; Grace</p>
+          <h1 className="text-4xl md:text-6xl text-[#2A2520] font-playfair">Our <em className="text-gradient-gold not-italic">Collections</em></h1>
           <div className="divider-gold" />
-          <p className="text-[#d6d3ce] max-w-2xl font-light mt-8 leading-relaxed">
+          <p className="text-[#55524A] max-w-2xl font-light mt-8 leading-relaxed">
             Discover the pinnacle of jewellery craftsmanship. Each of our collections is a tribute to heritage, designed for the modern connoisseur of fine gold and precious stones.
           </p>
         </header>
@@ -40,9 +40,9 @@ export default async function CollectionsPage() {
               <Link
                 key={category.id}
                 href={`/collections/${category.slug}`}
-                className="group block bg-[#1A1A1A] border border-[#D4AF37]/10 hover:border-[#D4AF37]/40 transition-colors overflow-hidden"
+                className="group block bg-[#FFFFFF] border border-[#5F6440]/10 hover:border-[#5F6440]/40 transition-colors overflow-hidden"
               >
-                <div className="relative aspect-[4/3] bg-[#0E0E0E] overflow-hidden">
+                <div className="relative aspect-[4/3] bg-[#F4DFCC] overflow-hidden">
                   {category.hero_image_path ? (
                     <Image
                       src={category.hero_image_path}
@@ -52,18 +52,18 @@ export default async function CollectionsPage() {
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-[#D4AF37]/30 text-[0.65rem] tracking-[0.15em] uppercase">
+                    <div className="absolute inset-0 flex items-center justify-center text-[#5F6440] text-[0.65rem] tracking-[0.15em] uppercase">
                       {category.name}
                     </div>
                   )}
                 </div>
                 <div className="p-6">
-                  <p className="text-[0.6rem] tracking-[0.2em] uppercase text-[#D4AF37]/60 mb-2">
+                  <p className="text-[0.6rem] tracking-[0.2em] uppercase text-[#5F6440] mb-2">
                     {category.hero_eyebrow || 'Collection'}
                   </p>
-                  <h2 className="text-xl text-[#FAF9F6] font-playfair mb-2">{category.name}</h2>
+                  <h2 className="text-xl text-[#2A2520] font-playfair mb-2">{category.name}</h2>
                   {category.description && (
-                    <p className="text-[#d6d3ce] text-sm font-light leading-relaxed">
+                    <p className="text-[#55524A] text-sm font-light leading-relaxed">
                       {category.description}
                     </p>
                   )}
@@ -73,15 +73,15 @@ export default async function CollectionsPage() {
           </section>
         )}
 
-        <section className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-[#D4AF37]/10 pt-20">
+        <section className="mt-32 grid grid-cols-1 md:grid-cols-2 gap-12 border-t border-[#5F6440]/10 pt-20">
             <div className="space-y-6">
-                <h3 className="text-3xl text-[#FAF9F6] font-playfair">Ethical Sourcing</h3>
-                <p className="text-[#d6d3ce] font-light leading-relaxed">Every piece in our collection is backed by ethical sourcing and BIS hallmarking, ensuring your investment is as pure as our craft.</p>
+                <h3 className="text-3xl text-[#2A2520] font-playfair">Ethical Sourcing</h3>
+                <p className="text-[#55524A] font-light leading-relaxed">Every piece in our collection is backed by ethical sourcing and BIS hallmarking, ensuring your investment is as pure as our craft.</p>
             </div>
             <div className="space-y-6">
-                <h3 className="text-3xl text-[#FAF9F6] font-playfair">Bespoke Requests</h3>
-                <p className="text-[#d6d3ce] font-light leading-relaxed">Need something truly unique? Our master artisans can modify any existing design or create a completely new piece just for you.</p>
-                <a href="/custom-design" className="inline-block text-[#D4AF37] border-b border-[#D4AF37]/40 pb-1 text-xs tracking-widest uppercase hover:text-[#FAF9F6] hover:border-[#FAF9F6] transition-all">Explore Bespoke</a>
+                <h3 className="text-3xl text-[#2A2520] font-playfair">Bespoke Requests</h3>
+                <p className="text-[#55524A] font-light leading-relaxed">Need something truly unique? Our master artisans can modify any existing design or create a completely new piece just for you.</p>
+                <a href="/custom-design" className="inline-block text-[#5F6440] border-b border-[#5F6440]/40 pb-1 text-xs tracking-widest uppercase hover:text-[#2A2520] hover:border-[#2A2520] transition-all">Explore Bespoke</a>
             </div>
         </section>
       </main>

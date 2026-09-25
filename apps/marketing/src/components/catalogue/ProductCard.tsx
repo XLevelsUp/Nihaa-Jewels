@@ -44,7 +44,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           '&:hover .product-image': { transform: 'scale(1.04)' },
         }}
       >
-        <Box sx={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden', bgcolor: '#0E0E0E' }}>
+        <Box sx={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden', bgcolor: '#55524A' }}>
           {image ? (
             <Image
               className="product-image"

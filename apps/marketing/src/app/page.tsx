@@ -155,7 +155,7 @@ export default function Home() {
   };
 
   return (
-    <main className="bg-[#121212] min-h-screen">
+    <main className="bg-[#FFFFF0] min-h-screen">
       <Script
         id="home-localbusiness-schema"
         type="application/ld+json"

@@ -92,6 +92,7 @@ export interface Appointment {
   preferred_date: string;
   preferred_slot: string;
   notes: string | null;
+  staff_notes: string | null;
   status: AppointmentStatus;
   quoted_price: number | null;
   quoted_at: string | null;

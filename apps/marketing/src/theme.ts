@@ -1,57 +1,46 @@
 'use client';
 
+// Light palette shared with admin; brand colours sit under 3:1 on ivory, so text uses darker shades of the same hues.
+
 import { createTheme } from '@mui/material/styles';
+
+import { PALETTE } from '@/constants/palette';
+
+export { PALETTE };
 
 const theme = createTheme({
   palette: {
-    mode: 'dark',
+    mode: 'light',
     primary: {
-      main: '#D4AF37',
-      light: '#E8C84E',
-      dark: '#B8962E',
-      contrastText: '#121212',
+      main: PALETTE.sageDeep,
+      light: PALETTE.sage,
+      dark: PALETTE.sageDeeper,
+      contrastText: PALETTE.ivory,
     },
     secondary: {
-      main: '#722F37',
-      dark: '#5B252C',
-      contrastText: '#FFFFFF',
+      main: PALETTE.blushDeep,
+      light: PALETTE.blush,
+      dark: PALETTE.blushDeeper,
+      contrastText: PALETTE.ivory,
     },
     background: {
-      default: '#121212',
-      paper: '#1A1A1A',
+      default: PALETTE.ivory,
+      paper: '#FFFFFF',
     },
     text: {
-      primary: '#FAF9F6',
-      secondary: '#D6D3CE',
+      primary: PALETTE.ink,
+      secondary: PALETTE.inkSoft,
     },
-    divider: 'rgba(212, 175, 55, 0.2)',
+    divider: PALETTE.icing,
   },
   typography: {
     fontFamily: 'var(--font-inter), var(--font-montserrat), sans-serif',
-    h1: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 700,
-    },
-    h2: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 600,
-    },
-    h3: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 600,
-    },
-    h4: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 600,
-    },
-    h5: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 600,
-    },
-    h6: {
-      fontFamily: 'var(--font-playfair-display), Georgia, serif',
-      fontWeight: 600,
-    },
+    h1: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 700 },
+    h2: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600 },
+    h3: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600 },
+    h4: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600 },
+    h5: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600 },
+    h6: { fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600 },
     button: {
       textTransform: 'uppercase',
       letterSpacing: '0.12em',
@@ -70,20 +59,19 @@ const theme = createTheme({
           transition: 'all 0.3s ease',
         },
         containedPrimary: {
-          backgroundColor: '#D4AF37',
-          color: '#121212',
+          backgroundColor: PALETTE.sageDeep,
+          color: PALETTE.ivory,
           '&:hover': {
-            backgroundColor: '#E8C84E',
-            boxShadow: '0 8px 32px rgba(212, 175, 55, 0.45)',
+            backgroundColor: PALETTE.sageDeeper,
+            boxShadow: '0 8px 32px rgba(95, 100, 64, 0.28)',
           },
         },
         outlinedPrimary: {
-          borderColor: '#D4AF37',
-          color: '#D4AF37',
+          borderColor: PALETTE.sageDeep,
+          color: PALETTE.sageDeep,
           '&:hover': {
-            backgroundColor: '#D4AF37',
-            color: '#121212',
-            boxShadow: '0 0 24px rgba(212, 175, 55, 0.4)',
+            backgroundColor: PALETTE.sageDeep,
+            color: PALETTE.ivory,
           },
         },
       },
@@ -91,21 +79,21 @@ const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundColor: '#121212',
-          color: '#FAF9F6',
-          scrollbarColor: '#D4AF37 #121212',
+          backgroundColor: PALETTE.ivory,
+          color: PALETTE.ink,
+          scrollbarColor: `${PALETTE.sage} ${PALETTE.ivory}`,
           '&::-webkit-scrollbar': {
             width: '6px',
           },
           '&::-webkit-scrollbar-track': {
-            background: '#121212',
+            background: PALETTE.ivory,
           },
           '&::-webkit-scrollbar-thumb': {
-            backgroundColor: '#D4AF37',
+            backgroundColor: PALETTE.sage,
             borderRadius: '3px',
           },
           '&::-webkit-scrollbar-thumb:hover': {
-            backgroundColor: '#E8C84E',
+            backgroundColor: PALETTE.sageDeep,
           },
         },
       },

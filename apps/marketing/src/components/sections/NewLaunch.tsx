@@ -20,7 +20,7 @@ export default function NewLaunch() {
       sx={{
         py: { xs: 12, md: 16 },
         px: 3,
-        bgcolor: '#121212'
+        bgcolor: '#2A2520'
       }}
     >
       {/* Header */}
@@ -44,7 +44,7 @@ export default function NewLaunch() {
             sx={{
               fontFamily: 'var(--font-playfair-display), serif',
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: 'var(--color-ivory-warm, #FAF9F6)',
+              color: 'var(--color-ivory-warm, #2A2520)',
               mt: 2,
               mb: 3,
               lineHeight: 1.2
@@ -148,8 +148,8 @@ function ShowcaseCard({
                 px: 2,
                 py: 0.5,
                 borderRadius: '20px',
-                backgroundColor: '#D4AF37',
-                color: '#121212',
+                backgroundColor: '#5F6440',
+                color: '#2A2520',
                 fontSize: '0.75rem',
                 fontWeight: 600,
                 textTransform: 'uppercase',
@@ -185,7 +185,7 @@ function ShowcaseCard({
               sx={{
                 fontFamily: 'var(--font-playfair-display), serif',
                 fontSize: '1.5rem',
-                color: 'var(--color-ivory-warm, #FAF9F6)',
+                color: 'var(--color-ivory-warm, #2A2520)',
                 margin: 0
               }}
             >
@@ -194,7 +194,7 @@ function ShowcaseCard({
             <Typography
               className="showcase-desc"
               sx={{
-                color: 'var(--color-ivory-warm, #FAF9F6)',
+                color: 'var(--color-ivory-warm, #2A2520)',
                 opacity: 0.9,
                 fontSize: '0.85rem',
                 fontWeight: 300,

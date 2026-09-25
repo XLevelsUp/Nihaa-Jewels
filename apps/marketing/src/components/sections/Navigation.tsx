@@ -133,11 +133,11 @@ const ChainIcon = (props: any) => (
 );
 
 const getItemIcon = (itemName: string) => {
-  const props = { size: 14, strokeWidth: 1.5, style: { marginRight: 8, opacity: 0.6 } };
+  const props = { size: 14, strokeWidth: 1.5, style: { marginRight: 8, opacity: 0.85 } };
   const lower = itemName.toLowerCase();
   
   if (lower === 'men' || lower === 'unisex') return <User {...props} />;
-  if (lower === 'women') return <User {...props} color="#D4AF37" />;
+  if (lower === 'women') return <User {...props} color="#5F6440" />;
   if (lower === 'kids') return <Baby {...props} />;
   if (lower === 'couple' || lower === 'couples') return <Heart {...props} />;
   
@@ -216,10 +216,10 @@ export default function Navigation() {
           top: 0, left: 0, right: 0, zIndex: 1100,
           background: scrolled 
             ? 'rgba(18, 18, 18, 0.95)' 
-            : (isHomePage ? 'linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%)' : '#121212'),
+            : (isHomePage ? 'linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%)' : '#FFFFF0'),
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: scrolled 
-            ? '1px solid rgba(212, 175, 55, 0.1)' 
+            ? '1px solid rgba(95, 100, 64, 0.1)' 
             : (isHomePage ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.05)'),
           transition: 'all 0.3s ease'
         }}
@@ -239,19 +239,19 @@ export default function Navigation() {
               <Box
                 sx={{
                   display: 'flex', alignItems: 'center', width: '100%', maxWidth: 500,
-                  bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  bgcolor: 'rgba(85, 82, 74, 0.03)',
+                  border: '1px solid rgba(95, 100, 64, 0.2)',
                   borderRadius: 8,
                   px: 2, py: 0.5,
                   transition: 'all 0.3s ease',
-                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.06)', borderColor: 'rgba(212, 175, 55, 0.4)' },
-                  '&:focus-within': { borderColor: '#D4AF37', boxShadow: '0 0 10px rgba(212, 175, 55, 0.1)' }
+                  '&:hover': { bgcolor: 'rgba(85, 82, 74, 0.06)', borderColor: 'rgba(95, 100, 64, 0.4)' },
+                  '&:focus-within': { borderColor: '#5F6440', boxShadow: '0 0 10px rgba(95, 100, 64, 0.1)' }
                 }}
               >
-                <Search size={18} color="rgba(212, 175, 55, 0.8)" />
+                <Search size={18} color="rgba(95, 100, 64, 0.8)" />
                 <InputBase
                   placeholder="Search Gold Jewellery, Rings, Bangles, Bracelets, Wedding Gifts"
-                  sx={{ ml: 1.5, flex: 1, color: '#fff', fontSize: '0.85rem', fontFamily: 'var(--font-inter)' }}
+                  sx={{ ml: 1.5, flex: 1, color: '#2A2520', fontSize: '0.85rem', fontFamily: 'var(--font-inter)' }}
                 />
               </Box>
             </Box>
@@ -272,9 +272,9 @@ export default function Navigation() {
                       aria-label={item.name}
                       sx={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'rgba(255,255,255,0.7)', textDecoration: 'none',
+                        color: '#2A2520', textDecoration: 'none',
                         transition: 'color 0.3s',
-                        "&:hover": { color: '#D4AF37' }
+                        "&:hover": { color: '#5F6440' }
                       }}
                     >
                       {item.icon}
@@ -285,7 +285,7 @@ export default function Navigation() {
 
               {/* Mobile Menu Toggle */}
               <IconButton 
-                sx={{ display: { lg: 'none' }, color: '#FAF9F6' }} 
+                sx={{ display: { lg: 'none' }, color: '#2A2520' }} 
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label="Toggle navigation menu"
               >
@@ -319,7 +319,7 @@ export default function Navigation() {
                     gap: 1,
                     py: 1,
                     px: { lg: 2, xl: 3 },
-                    color: activeMega === category.label ? '#D4AF37' : 'rgba(255,255,255,0.85)',
+                    color: activeMega === category.label ? '#5F6440' : '#2A2520',
                     textDecoration: 'none',
                     fontSize: '0.8rem',
                     fontWeight: 500,
@@ -335,7 +335,7 @@ export default function Navigation() {
                       left: '10%',
                       width: '80%',
                       height: '2px',
-                      background: '#D4AF37',
+                      background: '#5F6440',
                       transform: activeMega === category.label ? 'scaleX(1)' : 'scaleX(0)',
                       transition: 'transform 0.3s ease',
                       transformOrigin: 'center'
@@ -360,9 +360,9 @@ export default function Navigation() {
                         top: '100%',
                         left: 0,
                         right: 0,
-                        bgcolor: '#080808',
-                        borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.95)',
+                        bgcolor: '#2A2520',
+                        borderBottom: '1px solid rgba(95, 100, 64, 0.2)',
+                        boxShadow: '0 20px 40px rgba(42, 37, 32, 0.12)',
                         zIndex: 1000,
                         px: { lg: 6, xl: 10 },
                         py: 5,
@@ -379,7 +379,7 @@ export default function Navigation() {
                         }}>
                           <Typography
                             sx={{
-                              color: '#D4AF37',
+                              color: '#5F6440',
                               fontFamily: 'var(--font-playfair-display)',
                               fontSize: '1.05rem',
                               mb: 2,
@@ -396,7 +396,7 @@ export default function Navigation() {
                                   component={Link}
                                   href={`/collections/${item.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
                                   sx={{
-                                    color: 'rgba(255,255,255,0.55)',
+                                    color: '#2A2520',
                                     textDecoration: 'none',
                                     fontSize: '0.85rem',
                                     fontFamily: 'var(--font-inter)',
@@ -404,7 +404,7 @@ export default function Navigation() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     width: 'fit-content',
-                                    '&:hover': { color: '#fff' }
+                                    '&:hover': { color: '#2A2520' }
                                   }}
                                 >
                                   {getItemIcon(item)}
@@ -437,7 +437,7 @@ export default function Navigation() {
               position: 'fixed',
               inset: 0,
               zIndex: 1050,
-              bgcolor: '#050505',
+              bgcolor: '#2A2520',
               pt: 12,
               px: { xs: 3, sm: 5 },
               overflowY: 'auto'
@@ -453,16 +453,16 @@ export default function Navigation() {
                     sx={{
                       fontSize: '1.8rem',
                       fontFamily: 'var(--font-playfair-display)',
-                      color: '#FAF9F6',
+                      color: '#2A2520',
                       textDecoration: 'none',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1.5,
                       mb: 2,
-                      borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
+                      borderBottom: '1px solid rgba(95, 100, 64, 0.2)',
                       pb: 1.5,
                       transition: 'color 0.3s',
-                      "&:hover": { color: '#D4AF37' }
+                      "&:hover": { color: '#5F6440' }
                     }}
                   >
                     {cat.label}
@@ -475,12 +475,12 @@ export default function Navigation() {
                         href={`${cat.href}?filter=${encodeURIComponent(subItem)}`}
                         onClick={() => setMenuOpen(false)}
                         sx={{
-                          color: 'rgba(255,255,255,0.6)',
+                          color: '#2A2520',
                           textDecoration: 'none',
                           fontSize: '1rem',
                           fontFamily: 'var(--font-inter)',
                           transition: 'color 0.2s',
-                          "&:hover": { color: '#D4AF37' }
+                          "&:hover": { color: '#5F6440' }
                         }}
                       >
                         {subItem}

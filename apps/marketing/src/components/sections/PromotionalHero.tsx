@@ -98,7 +98,7 @@ export default function Hero() {
   }, [isVisible, isHovered, nextSlide]);
 
   return (
-    <Box ref={sectionRef} component="section" sx={{ py: { xs: 4, md: 6 }, bgcolor: '#050505', position: 'relative' }}>
+    <Box ref={sectionRef} component="section" sx={{ py: { xs: 4, md: 6 }, bgcolor: '#2A2520', position: 'relative' }}>
       {/* Hidden SEO elements */}
       <Box sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
         <Typography variant="h1">The best jewellery shop in Coimbatore — fine jewellery & bespoke goldsmiths</Typography>
@@ -118,8 +118,8 @@ export default function Hero() {
             mx: 'auto',
             borderRadius: '20px',
             overflow: 'hidden',
-            boxShadow: '0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(212, 175, 55, 0.05)',
-            border: '1px solid rgba(212, 175, 55, 0.15)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.4), 0 0 40px rgba(95, 100, 64, 0.05)',
+            border: '1px solid rgba(95, 100, 64, 0.15)',
             userSelect: 'none',
           }}
         >
@@ -183,14 +183,14 @@ export default function Hero() {
                         px: 2,
                         py: 0.5,
                         mb: 2,
-                        border: '1px solid #D4AF37',
+                        border: '1px solid #5F6440',
                         borderRadius: '50px',
-                        color: '#D4AF37',
+                        color: '#5F6440',
                         letterSpacing: '0.15em',
                         fontWeight: 600,
                         fontSize: '0.7rem',
                         textTransform: 'uppercase',
-                        bgcolor: alpha('#D4AF37', 0.1),
+                        bgcolor: alpha('#5F6440', 0.1),
                         backdropFilter: 'blur(10px)',
                       }}
                     >
@@ -203,7 +203,7 @@ export default function Hero() {
                       sx={{
                         fontFamily: 'var(--font-playfair-display), serif',
                         fontSize: { xs: '2rem', sm: '2.5rem', md: '3.2rem', lg: '3.8rem' },
-                        color: '#FAF9F6',
+                        color: '#2A2520',
                         lineHeight: 1.15,
                         mb: { xs: 3, md: 5 },
                         fontWeight: 600,
@@ -251,10 +251,10 @@ export default function Hero() {
                   width: currentSlide === idx ? 24 : 8,
                   height: 8,
                   borderRadius: 4,
-                  bgcolor: currentSlide === idx ? '#D4AF37' : 'rgba(255,255,255,0.3)',
+                  bgcolor: currentSlide === idx ? '#5F6440' : 'rgba(42,37,32,0.3)',
                   cursor: 'pointer',
                   transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                  '&:hover': { bgcolor: currentSlide === idx ? '#D4AF37' : '#FAF9F6' },
+                  '&:hover': { bgcolor: currentSlide === idx ? '#5F6440' : '#2A2520' },
                 }}
               />
             ))}
@@ -267,7 +267,7 @@ export default function Hero() {
               bottom: 0,
               left: 0,
               height: '3px',
-              bgcolor: 'rgba(212, 175, 55, 0.25)',
+              bgcolor: 'rgba(95, 100, 64, 0.25)',
               width: '100%',
               zIndex: 10,
             }}
@@ -279,7 +279,7 @@ export default function Hero() {
                 initial={{ width: '0%' }}
                 animate={{ width: '100%' }}
                 transition={{ duration: AUTO_PLAY_INTERVAL / 1000, ease: 'linear' }}
-                sx={{ height: '100%', bgcolor: '#D4AF37' }}
+                sx={{ height: '100%', bgcolor: '#5F6440' }}
               />
             )}
           </Box>

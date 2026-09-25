@@ -102,21 +102,21 @@ export default function Testimonials() {
 
   return (
     <section 
-      className="bg-[#0f0f0f] py-24 px-6 border-t border-[#D4AF37]/10"
+      className="bg-[#E8EAD9] py-24 px-6 border-t border-[#5F6440]/10"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="max-w-[1000px] mx-auto">
         {/* Header */}
         <div className="text-center mb-16 flex flex-col items-center">
-          <span className="font-montserrat uppercase tracking-[0.3em] text-[#D4AF37] text-xs font-semibold mb-4 block">
+          <span className="font-montserrat uppercase tracking-[0.3em] text-[#5F6440] text-xs font-semibold mb-4 block">
             Voice of Trust
           </span>
-          <h2 className="text-[#FAF9F6] text-4xl md:text-5xl font-playfair tracking-wide">
+          <h2 className="text-[#2A2520] text-4xl md:text-5xl font-playfair tracking-wide">
             Client <em className="text-gradient-gold not-italic">Testimonials</em>
           </h2>
           <div className="divider-gold" />
-          <p className="text-[#d6d3ce]/70 max-w-xl font-light mt-4 leading-relaxed font-inter text-sm md:text-base">
+          <p className="text-[#2A2520] max-w-xl font-light mt-4 leading-relaxed font-inter text-sm md:text-base">
             Discover the experiences of our valued patrons who have trusted four generations of Nihaa Jewels craftsmanship for their milestones.
           </p>
         </div>
@@ -127,7 +127,7 @@ export default function Testimonials() {
           {/* Left Arrow Button */}
           <button
             onClick={handlePrev}
-            className="absolute left-0 md:-left-16 z-20 w-12 h-12 rounded-full border border-[#D4AF37]/20 bg-[#161616]/80 text-[#D4AF37] flex items-center justify-center hover:bg-[#D4AF37] hover:text-[#121212] hover:border-[#D4AF37] hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
+            className="absolute left-0 md:-left-16 z-20 w-12 h-12 rounded-full border border-[#5F6440]/20 bg-[#FFFFFF]/80 text-[#5F6440] flex items-center justify-center hover:bg-[#5F6440] hover:text-[#2A2520] hover:border-[#5F6440] hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(42,37,32,0.12)] cursor-pointer"
             aria-label="Previous testimonial"
           >
             <ChevronLeft size={20} />
@@ -144,13 +144,13 @@ export default function Testimonials() {
                 animate="center"
                 exit="exit"
                 transition={{ duration: 0.4, ease: "easeInOut" }}
-                className="bg-[#161616] border border-[#D4AF37]/15 p-8 md:p-12 rounded-2xl flex flex-col justify-between relative shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
+                className="bg-[#FFFFFF] border border-[#5F6440]/15 p-8 md:p-12 rounded-2xl flex flex-col justify-between relative shadow-[0_12px_40px_rgba(42,37,32,0.12)]"
               >
                 {/* Decorative Top Line */}
-                <div className="absolute top-0 inset-x-0 h-[2px] bg-linear-to-r from-transparent via-[#D4AF37]/40 to-transparent" />
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-linear-to-r from-transparent via-[#5F6440]/40 to-transparent" />
                 
                 {/* Quote Icon Background */}
-                <div className="absolute top-6 right-8 text-[#D4AF37]/5 pointer-events-none">
+                <div className="absolute top-6 right-8 text-[#5F6440] pointer-events-none">
                   <Quote size={80} strokeWidth={1} />
                 </div>
 
@@ -162,35 +162,35 @@ export default function Testimonials() {
                         <Star
                           key={starIdx}
                           size={18}
-                          fill="#D4AF37"
-                          stroke="#D4AF37"
-                          className="drop-shadow-[0_0_5px_rgba(212,175,55,0.4)]"
+                          fill="#5F6440"
+                          stroke="#5F6440"
+                          className="drop-shadow-[0_0_5px_rgba(95, 100, 64,0.4)]"
                         />
                       ))}
                     </div>
-                    <span className="font-montserrat text-[0.7rem] uppercase tracking-widest text-[#D4AF37] bg-[#D4AF37]/10 px-4 py-1.5 rounded-full border border-[#D4AF37]/20 font-medium">
+                    <span className="font-montserrat text-[0.7rem] uppercase tracking-widest text-[#5F6440] bg-[#5F6440]/10 px-4 py-1.5 rounded-full border border-[#5F6440]/20 font-medium">
                       {activeReview.tag}
                     </span>
                   </div>
 
                   {/* Review Text */}
-                  <p className="font-inter text-[#FAF9F6]/90 text-sm md:text-base leading-relaxed font-light mb-10 italic">
+                  <p className="font-inter text-[#2A2520]/90 text-sm md:text-base leading-relaxed font-light mb-10 italic">
                     &ldquo;{activeReview.text}&rdquo;
                   </p>
                 </div>
 
                 {/* Author Info */}
-                <div className="flex items-center gap-4 pt-6 border-t border-[#D4AF37]/10">
-                  <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#D4AF37]/20 to-[#FAF9F6]/5 flex items-center justify-center border border-[#D4AF37]/20">
-                    <span className="font-playfair text-[#D4AF37] font-semibold text-base uppercase">
+                <div className="flex items-center gap-4 pt-6 border-t border-[#5F6440]/10">
+                  <div className="w-12 h-12 rounded-full bg-linear-to-br from-[#5F6440]/20 to-[#2A2520]/5 flex items-center justify-center border border-[#5F6440]/20">
+                    <span className="font-playfair text-[#5F6440] font-semibold text-base uppercase">
                       {activeReview.name[0]}
                     </span>
                   </div>
                   <div>
-                    <h3 className="font-montserrat text-[#FAF9F6] text-sm md:text-base font-semibold tracking-wider">
+                    <h3 className="font-montserrat text-[#2A2520] text-sm md:text-base font-semibold tracking-wider">
                       {activeReview.name}
                     </h3>
-                    <p className="font-inter text-[#FAF9F6]/75 text-[0.8rem] font-light mt-0.5">
+                    <p className="font-inter text-[#2A2520] text-[0.8rem] font-light mt-0.5">
                       Verified Client · {activeReview.location}
                     </p>
                   </div>
@@ -202,7 +202,7 @@ export default function Testimonials() {
           {/* Right Arrow Button */}
           <button
             onClick={handleNext}
-            className="absolute right-0 md:-right-16 z-20 w-12 h-12 rounded-full border border-[#D4AF37]/20 bg-[#161616]/80 text-[#D4AF37] flex items-center justify-center hover:bg-[#D4AF37] hover:text-[#121212] hover:border-[#D4AF37] hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] cursor-pointer"
+            className="absolute right-0 md:-right-16 z-20 w-12 h-12 rounded-full border border-[#5F6440]/20 bg-[#FFFFFF]/80 text-[#5F6440] flex items-center justify-center hover:bg-[#5F6440] hover:text-[#2A2520] hover:border-[#5F6440] hover:scale-105 transition-all duration-300 shadow-[0_4px_20px_rgba(42,37,32,0.12)] cursor-pointer"
             aria-label="Next testimonial"
           >
             <ChevronRight size={20} />
@@ -221,7 +221,7 @@ export default function Testimonials() {
               <span
                 className={`h-2.5 rounded-full transition-all duration-500 ${
                   currentIndex === idx 
-                    ? 'w-8 bg-[#D4AF37] shadow-[0_0_8px_rgba(212,175,55,0.6)]' 
+                    ? 'w-8 bg-[#5F6440] shadow-[0_0_8px_rgba(95, 100, 64,0.6)]' 
                     : 'w-2.5 bg-white/20 hover:bg-white/40'
                 }`}
               />

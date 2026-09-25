@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function GiftingPage() {
   return (
-    <Box sx={{ bgcolor: '#121212', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: '#2A2520', minHeight: '100vh' }}>
       <Navigation />
       <Container component="main" maxWidth="md" sx={{ pt: 32, pb: 12, px: 3, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box component="header" sx={{ mb: 12 }}>
@@ -20,7 +20,7 @@ export default function GiftingPage() {
             sx={{
               display: 'block',
               mb: 2,
-              color: 'rgba(212, 175, 55, 0.6)',
+              color: 'rgba(95, 100, 64, 0.6)',
               letterSpacing: '0.2em'
             }}
           >
@@ -30,7 +30,7 @@ export default function GiftingPage() {
             variant="h1"
             sx={{
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: '#FAF9F6',
+              color: '#2A2520',
               fontFamily: 'var(--font-playfair-display), serif',
               lineHeight: 1.2
             }}
@@ -44,7 +44,7 @@ export default function GiftingPage() {
           <Typography
             variant="body1"
             sx={{
-              color: '#d6d3ce',
+              color: '#55524A',
               fontWeight: 300,
               maxWidth: 600,
               mx: 'auto',
@@ -62,7 +62,7 @@ export default function GiftingPage() {
           sx={{
             mt: 10,
             py: 10,
-            border: '1px solid rgba(212, 175, 55, 0.1)',
+            border: '1px solid rgba(95, 100, 64, 0.1)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -77,7 +77,7 @@ export default function GiftingPage() {
             variant="h2"
             sx={{
               fontSize: '1.5rem',
-              color: '#FAF9F6',
+              color: '#2A2520',
               mb: 2,
               fontFamily: 'var(--font-playfair-display), serif'
             }}

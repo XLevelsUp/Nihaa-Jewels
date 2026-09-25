@@ -28,7 +28,7 @@ const stores = [
 
 export default function StoreLocatorPage() {
   return (
-    <Box sx={{ bgcolor: '#121212', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: '#2A2520', minHeight: '100vh' }}>
       <Navigation />
       <Container component="main" maxWidth="lg" sx={{ pt: 32, pb: 20, px: 3 }}>
         <Box component="header" sx={{ mb: 12, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -37,7 +37,7 @@ export default function StoreLocatorPage() {
             sx={{
               display: 'block',
               mb: 2,
-              color: 'rgba(212, 175, 55, 0.6)',
+              color: 'rgba(95, 100, 64, 0.6)',
               letterSpacing: '0.2em'
             }}
           >
@@ -47,7 +47,7 @@ export default function StoreLocatorPage() {
             variant="h1"
             sx={{
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: '#FAF9F6',
+              color: '#2A2520',
               fontFamily: 'var(--font-playfair-display), serif',
               lineHeight: 1.2
             }}
@@ -65,8 +65,8 @@ export default function StoreLocatorPage() {
             <Grid2 size={{ xs: 12, md: 6 }} key={store.name}>
               <Box
                 sx={{
-                  bgcolor: '#1a1a1a',
-                  border: '1px solid rgba(212, 175, 55, 0.1)',
+                  bgcolor: '#2A2520',
+                  border: '1px solid rgba(95, 100, 64, 0.1)',
                   p: 6,
                   height: '100%',
                   display: 'flex',
@@ -78,7 +78,7 @@ export default function StoreLocatorPage() {
                   variant="h2"
                   sx={{
                     fontSize: '1.75rem',
-                    color: '#FAF9F6',
+                    color: '#2A2520',
                     fontFamily: 'var(--font-playfair-display), serif'
                   }}
                 >
@@ -87,20 +87,20 @@ export default function StoreLocatorPage() {
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                   <Box sx={{ display: 'flex', alignItems: 'start', gap: 2 }}>
-                    <MapPin size={18} style={{ color: '#D4AF37', flexShrink: 0, marginTop: '4px' }} />
-                    <Typography variant="body2" sx={{ color: '#d6d3ce', lineHeight: 1.6 }}>
+                    <MapPin size={18} style={{ color: '#5F6440', flexShrink: 0, marginTop: '4px' }} />
+                    <Typography variant="body2" sx={{ color: '#55524A', lineHeight: 1.6 }}>
                       {store.address}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Phone size={18} style={{ color: '#D4AF37', flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: '#d6d3ce' }}>
+                    <Phone size={18} style={{ color: '#5F6440', flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: '#55524A' }}>
                       {store.phone}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Clock size={18} style={{ color: '#D4AF37', flexShrink: 0 }} />
-                    <Typography variant="body2" sx={{ color: '#d6d3ce' }}>
+                    <Clock size={18} style={{ color: '#5F6440', flexShrink: 0 }} />
+                    <Typography variant="body2" sx={{ color: '#55524A' }}>
                       {store.hours}
                     </Typography>
                   </Box>
@@ -112,16 +112,16 @@ export default function StoreLocatorPage() {
                   sx={{
                     mt: 'auto',
                     py: 1.5,
-                    borderColor: 'rgba(212, 175, 55, 0.2)',
-                    color: '#D4AF37',
+                    borderColor: 'rgba(95, 100, 64, 0.2)',
+                    color: '#5F6440',
                     fontSize: '0.65rem',
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase',
                     borderRadius: 0,
                     '&:hover': {
-                      bgcolor: '#D4AF37',
-                      color: '#121212',
-                      borderColor: '#D4AF37'
+                      bgcolor: '#5F6440',
+                      color: '#2A2520',
+                      borderColor: '#5F6440'
                     }
                   }}
                 >

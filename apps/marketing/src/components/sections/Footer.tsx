@@ -69,13 +69,13 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        bgcolor: "#050505",
-        color: "#fff",
+        bgcolor: "#FFFFF0",
+        color: "#2A2520",
         pt: { xs: 8, md: 10 },
         pb: 6,
         position: "relative",
         overflow: "hidden",
-        borderTop: "1px solid rgba(212,175,55,0.15)"
+        borderTop: "1px solid rgba(95, 100, 64,0.15)"
       }}
     >
       {/* Top gold glow line */}
@@ -88,8 +88,8 @@ export default function Footer() {
           width: "100%",
           maxWidth: "800px",
           height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.8), transparent)",
-          boxShadow: "0px 0px 30px 3px rgba(212, 175, 55, 0.4)"
+          background: "linear-gradient(90deg, transparent, rgba(95, 100, 64,0.8), transparent)",
+          boxShadow: "0px 0px 30px 3px rgba(95, 100, 64, 0.4)"
         }}
       />
 
@@ -115,7 +115,7 @@ export default function Footer() {
                     width: "auto",
                     mb: 1,
                     objectFit: "contain",
-                    filter: "drop-shadow(0 2px 15px rgba(212,175,55,0.2))"
+                    filter: "drop-shadow(0 2px 15px rgba(95, 100, 64,0.2))"
                   }}
                 />
 
@@ -123,7 +123,7 @@ export default function Footer() {
                   variant="body2"
                   sx={{
                     fontFamily: "var(--font-playfair-display)",
-                    color: "rgba(212,175,55,0.8)",
+                    color: "rgba(95, 100, 64,0.8)",
                     fontStyle: "italic",
                     mb: 1.5,
                     fontSize: "1rem"
@@ -135,7 +135,7 @@ export default function Footer() {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "rgba(255,255,255,0.7)",
+                    color: "#2A2520",
                     mb: 4,
                     lineHeight: 1.8,
                     pr: { md: 4 },
@@ -184,10 +184,10 @@ export default function Footer() {
                         whileHover={{
                           y: -5,
                           scale: 1.1,
-                          borderColor: "#D4AF37",
-                          color: "#111",
-                          backgroundColor: "#D4AF37",
-                          boxShadow: "0 4px 15px rgba(212,175,55,0.4)"
+                          borderColor: "#5F6440",
+                          color: "#2A2520",
+                          backgroundColor: "#5F6440",
+                          boxShadow: "0 4px 15px rgba(95, 100, 64,0.4)"
                         }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -199,7 +199,7 @@ export default function Footer() {
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color: "rgba(255,255,255,0.7)",
+                          color: "#2A2520",
                           cursor: "pointer",
                           transition: "color 0.3s ease, border-color 0.3s ease"
                         }}
@@ -222,7 +222,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "#5F6440",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -256,7 +256,7 @@ export default function Footer() {
                         component={Link}
                         href="#"
                         sx={{
-                          color: "rgba(255,255,255,0.7)",
+                          color: "#2A2520",
                           textDecoration: "none",
                           fontFamily: "var(--font-inter)",
                           fontSize: "0.95rem",
@@ -264,7 +264,7 @@ export default function Footer() {
                           transition: "color 0.3s ease",
                           position: "relative",
                           width: "fit-content",
-                          "&:hover": { color: "#D4AF37" },
+                          "&:hover": { color: "#5F6440" },
                           "&::after": {
                             content: '""',
                             position: "absolute",
@@ -272,7 +272,7 @@ export default function Footer() {
                             height: "1px",
                             bottom: -4,
                             left: 0,
-                            backgroundColor: "#D4AF37",
+                            backgroundColor: "#5F6440",
                             transition: "width 0.3s ease"
                           },
                           "&:hover::after": { width: "100%" }
@@ -296,7 +296,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "#5F6440",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -320,13 +320,13 @@ export default function Footer() {
                 >
                   {/* Address */}
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "rgba(255,255,255,0.6)", textAlign: "left" }}>
-                      <Box sx={{ mt: 0.5, width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <MapPin size={16} strokeWidth={1.5} color="#D4AF37" />
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "#2A2520", textAlign: "left" }}>
+                      <Box sx={{ mt: 0.5, width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(95, 100, 64, 0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <MapPin size={16} strokeWidth={1.5} color="#5F6440" />
                       </Box>
                       <Box>
-                        <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, lineHeight: 1.8, fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>
-                          <Box component="span" sx={{ color: "#D4AF37", display: "block", mb: 0.5, fontWeight: 500, fontFamily: "var(--font-inter)", fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, lineHeight: 1.8, fontSize: "0.9rem", color: "#2A2520" }}>
+                          <Box component="span" sx={{ color: "#5F6440", display: "block", mb: 0.5, fontWeight: 500, fontFamily: "var(--font-inter)", fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                             Nihaa Jewels
                           </Box>
                           MAHALAKSMI COMPLEX,<br />
@@ -342,7 +342,7 @@ export default function Footer() {
                           sx={{
                             display: "inline-flex",
                             alignItems: "center",
-                            color: "#D4AF37",
+                            color: "#5F6440",
                             fontFamily: "var(--font-inter)",
                             fontSize: "0.8rem",
                             mt: 1,
@@ -355,7 +355,7 @@ export default function Footer() {
                               height: "1px",
                               bottom: -2,
                               left: 0,
-                              backgroundColor: "#D4AF37",
+                              backgroundColor: "#5F6440",
                               transform: "scaleX(1)",
                               transition: "transform 0.3s ease",
                               transformOrigin: "left"
@@ -374,10 +374,10 @@ export default function Footer() {
                     <Box
                       component="a"
                       href="tel:+919047722299"
-                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#D4AF37" } }}
+                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "#2A2520", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#5F6440" } }}
                     >
-                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Phone size={16} strokeWidth={1.5} color="#D4AF37" />
+                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(95, 100, 64, 0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Phone size={16} strokeWidth={1.5} color="#5F6440" />
                       </Box>
                       <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.95rem", color: "inherit", letterSpacing: "0.05em" }}>
                         +91 9047722299
@@ -390,10 +390,10 @@ export default function Footer() {
                     <Box
                       component="a"
                       href="mailto:support@nihaajewels.com"
-                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#D4AF37" } }}
+                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "#2A2520", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#5F6440" } }}
                     >
-                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Mail size={16} strokeWidth={1.5} color="#D4AF37" />
+                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(95, 100, 64, 0.35)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Mail size={16} strokeWidth={1.5} color="#5F6440" />
                       </Box>
                       <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.95rem", color: "inherit" }}>
                         support@nihaajewels.com
@@ -403,7 +403,7 @@ export default function Footer() {
 
                   {/* Open/Closed indicator — only rendered after client hydration */}
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)" }}>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", color: "#2A2520" }}>
                       <Box sx={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         {/* FIX 2: only animate/show the dot once isOpen is known (client-side) */}
                         {isOpen !== null && (
@@ -420,7 +420,7 @@ export default function Footer() {
                           />
                         )}
                       </Box>
-                      <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.85rem", color: "rgba(255,255,255,0.6)" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.85rem", color: "#2A2520" }}>
                         Mon – Sat &bull; 10:00 AM – 8:00 PM
                       </Typography>
                     </Box>
@@ -439,7 +439,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "#5F6440",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -465,7 +465,7 @@ export default function Footer() {
                       variant="body2"
                       sx={{
                         mb: 3,
-                        color: "rgba(255,255,255,0.7)",
+                        color: "#2A2520",
                         fontFamily: "var(--font-inter)",
                         fontWeight: 300,
                         lineHeight: 1.6,
@@ -485,18 +485,18 @@ export default function Footer() {
                         fullWidth
                         sx={{
                           input: {
-                            color: "#fff",
+                            color: "#2A2520",
                             fontFamily: "var(--font-inter)",
                             px: 1,
                             py: 1.5,
                             "&:-webkit-autofill": {
-                              WebkitBoxShadow: "0 0 0 100px #050505 inset",
-                              WebkitTextFillColor: "#fff"
+                              WebkitBoxShadow: "0 0 0 100px #FFFFF0 inset",
+                              WebkitTextFillcolor: "#2A2520"
                             }
                           },
-                          "& .MuiInput-underline:before": { borderBottomColor: "rgba(255,255,255,0.2)" },
-                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "rgba(212,175,55,0.5)" },
-                          "& .MuiInput-underline:after": { borderBottomColor: "#D4AF37" }
+                          "& .MuiInput-underline:before": { borderBottomcolor: "#2A2520" },
+                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "rgba(95, 100, 64,0.5)" },
+                          "& .MuiInput-underline:after": { borderBottomColor: "#5F6440" }
                         }}
                       />
                       <Button
@@ -505,8 +505,8 @@ export default function Footer() {
                         whileTap={{ scale: 0.98 }}
                         fullWidth
                         sx={{
-                          bgcolor: "#D4AF37",
-                          color: "#050505",
+                          bgcolor: "#5F6440",
+                          color: "#FFFFF0",
                           mt: 0.5,
                           py: 1.5,
                           fontWeight: 600,
@@ -516,7 +516,7 @@ export default function Footer() {
                           fontSize: "0.8rem",
                           borderRadius: 1,
                           transition: "background-color 0.3s ease, box-shadow 0.3s ease",
-                          "&:hover": { bgcolor: "#E5C158", boxShadow: "0px 4px 15px rgba(212,175,55,0.3)" }
+                          "&:hover": { bgcolor: "#5F6440", boxShadow: "0px 4px 15px rgba(95, 100, 64,0.3)" }
                         }}
                       >
                         Subscribe
@@ -559,7 +559,7 @@ export default function Footer() {
               <Typography
                 variant="body2"
                 sx={{
-                  color: "rgba(255,255,255,0.4)",
+                  color: "#2A2520",
                   fontFamily: "var(--font-inter)",
                   fontSize: "0.85rem",
                   textAlign: { xs: "center", md: "left" }
@@ -579,12 +579,12 @@ export default function Footer() {
                     component={Link}
                     href={policy.path}
                     sx={{
-                      color: "rgba(255,255,255,0.5)",
+                      color: "#2A2520",
                       textDecoration: "none",
                       fontFamily: "var(--font-inter)",
                       fontSize: "0.85rem",
                       transition: "all 0.3s ease",
-                      "&:hover": { color: "#D4AF37", transform: "translateY(-1px)" }
+                      "&:hover": { color: "#5F6440", transform: "translateY(-1px)" }
                     }}
                   >
                     {policy.name}
@@ -598,16 +598,16 @@ export default function Footer() {
                   p: 1.5,
                   px: 2.5,
                   borderRadius: "30px",
-                  backgroundColor: "rgba(255,255,255,0.03)",
+                  backgroundColor: "rgba(85, 82, 74, 0.03)",
                   border: "1px solid rgba(255,255,255,0.05)",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                  boxShadow: "0 4px 20px rgba(42, 37, 32, 0.08)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    backgroundColor: "rgba(255,255,255,0.05)",
-                    borderColor: "rgba(255,255,255,0.1)",
+                    backgroundColor: "rgba(85, 82, 74, 0.05)",
+                    borderColor: "#2A2520",
                     transform: "translateY(-2px)"
                   }
                 }}
@@ -618,7 +618,7 @@ export default function Footer() {
                     display: "flex",
                     alignItems: "center",
                     gap: 1,
-                    color: "rgba(255,255,255,0.6)",
+                    color: "#2A2520",
                     fontFamily: "var(--font-inter)",
                     fontSize: "0.8rem",
                     letterSpacing: "0.05em"
@@ -637,11 +637,11 @@ export default function Footer() {
                     component={Link}
                     href="https://xlevelsup.com"
                     sx={{
-                      color: "#fff",
+                      color: "#2A2520",
                       textDecoration: "none",
                       fontWeight: 600,
                       transition: "color 0.3s",
-                      "&:hover": { color: "#D4AF37" }
+                      "&:hover": { color: "#5F6440" }
                     }}
                   >
                     XLevelsUp

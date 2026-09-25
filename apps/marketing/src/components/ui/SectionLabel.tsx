@@ -17,7 +17,7 @@ export default function SectionLabel({
       sx={{
         display: 'block',
         textAlign: centered ? 'center' : 'left',
-        color: '#D4AF37',
+        color: '#5F6440',
         letterSpacing: '0.28em',
         fontWeight: 500,
         textTransform: 'uppercase',

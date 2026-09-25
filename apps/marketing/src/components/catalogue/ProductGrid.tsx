@@ -39,7 +39,7 @@ export default function ProductGrid({
             fontFamily: 'var(--font-playfair-display), serif',
             fontStyle: 'italic',
             fontSize: '1.25rem',
-            opacity: 0.5,
+            opacity: 0.85,
           }}
         >
           {emptyMessage}

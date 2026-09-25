@@ -55,7 +55,7 @@ const itemVariants: Variants = {
 
 export default function NihaaAssurance() {
   return (
-    <section className="bg-[#121212] py-16 md:py-24 px-6 md:px-12">
+    <section className="bg-[#FFFFF0] py-16 md:py-24 px-6 md:px-12">
       <div className="max-w-[1200px] mx-auto flex flex-col items-center">
         
         {/* Header */}
@@ -66,10 +66,10 @@ export default function NihaaAssurance() {
           transition={{ duration: 0.8 }}
           className="text-center mb-20 flex flex-col items-center"
         >
-          <h2 className="font-playfair text-[#FAF9F6] text-3xl md:text-4xl uppercase tracking-[0.3em] mb-4">
+          <h2 className="font-playfair text-[#2A2520] text-3xl md:text-4xl uppercase tracking-[0.3em] mb-4">
             The Nihaa Assurance
           </h2>
-          <div className="w-16 h-px bg-linear-to-r from-transparent via-[#D4AF37] to-transparent opacity-80" />
+          <div className="w-16 h-px bg-linear-to-r from-transparent via-[#5F6440] to-transparent opacity-80" />
         </motion.div>
 
         {/* Grid Layout */}
@@ -93,16 +93,16 @@ export default function NihaaAssurance() {
                   <Icon 
                     size={32} 
                     strokeWidth={1.2} 
-                    color="#D4AF37" 
-                    className="drop-shadow-[0_4px_10px_rgba(212,175,55,0.3)]"
+                    color="#5F6440" 
+                    className="drop-shadow-[0_4px_10px_rgba(95, 100, 64,0.3)]"
                   />
                 </div>
                 
                 {/* Text Content */}
-                <h3 className="font-montserrat font-bold text-[#FAF9F6] text-[1.1rem] tracking-widest uppercase mb-4 transition-colors duration-300 group-hover:text-[#D4AF37]">
+                <h3 className="font-montserrat font-bold text-[#2A2520] text-[1.1rem] tracking-widest uppercase mb-4 transition-colors duration-300 group-hover:text-[#5F6440]">
                   {item.title}
                 </h3>
-                <p className="font-inter font-light text-[#d6d3ce] text-[0.85rem] leading-relaxed max-w-[240px]">
+                <p className="font-inter font-light text-[#55524A] text-[0.85rem] leading-relaxed max-w-[240px]">
                   {item.description}
                 </p>
               </motion.div>
