@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import Grid2 from "@mui/material/Grid2";
 import { Phone, Mail, MapPin, Heart, MessageCircle } from "lucide-react";
+import { STORE } from "@/constants/store";
 
 const InstagramIcon = ({ size = 18 }: { size?: number }) => (
   <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
@@ -69,13 +70,13 @@ export default function Footer() {
     <Box
       component="footer"
       sx={{
-        bgcolor: "#050505",
-        color: "#fff",
+        bgcolor: "var(--c-page)",
+        color: "var(--c-text)",
         pt: { xs: 8, md: 10 },
         pb: 6,
         position: "relative",
         overflow: "hidden",
-        borderTop: "1px solid rgba(212,175,55,0.15)"
+        borderTop: "1px solid color-mix(in srgb, var(--c-accent) 15%, transparent)"
       }}
     >
       {/* Top gold glow line */}
@@ -88,8 +89,8 @@ export default function Footer() {
           width: "100%",
           maxWidth: "800px",
           height: "1px",
-          background: "linear-gradient(90deg, transparent, rgba(212,175,55,0.8), transparent)",
-          boxShadow: "0px 0px 30px 3px rgba(212, 175, 55, 0.4)"
+          background: "linear-gradient(90deg, transparent, color-mix(in srgb, var(--c-accent) 80%, transparent), transparent)",
+          boxShadow: "0px 0px 30px 3px color-mix(in srgb, var(--c-accent) 40%, transparent)"
         }}
       />
 
@@ -115,7 +116,7 @@ export default function Footer() {
                     width: "auto",
                     mb: 1,
                     objectFit: "contain",
-                    filter: "drop-shadow(0 2px 15px rgba(212,175,55,0.2))"
+                    filter: "drop-shadow(0 2px 15px color-mix(in srgb, var(--c-accent) 20%, transparent))"
                   }}
                 />
 
@@ -123,7 +124,7 @@ export default function Footer() {
                   variant="body2"
                   sx={{
                     fontFamily: "var(--font-playfair-display)",
-                    color: "rgba(212,175,55,0.8)",
+                    color: "color-mix(in srgb, var(--c-accent) 80%, transparent)",
                     fontStyle: "italic",
                     mb: 1.5,
                     fontSize: "1rem"
@@ -135,7 +136,7 @@ export default function Footer() {
                 <Typography
                   variant="body2"
                   sx={{
-                    color: "rgba(255,255,255,0.7)",
+                    color: "var(--c-text)",
                     mb: 4,
                     lineHeight: 1.8,
                     pr: { md: 4 },
@@ -166,7 +167,7 @@ export default function Footer() {
                     { icon: <InstagramIcon />, label: "Instagram", href: "https://instagram.com/nihaajewels" },
                     { icon: <FacebookIcon />, label: "Facebook", href: "https://facebook.com/nihaajewels" },
                     { icon: <YoutubeIcon />, label: "YouTube", href: "https://youtube.com/@nihaajewels" },
-                    { icon: <MessageCircle size={18} strokeWidth={1.5} />, label: "WhatsApp", href: "https://wa.me/919047722299" },
+                    { icon: <MessageCircle size={18} strokeWidth={1.5} />, label: "WhatsApp", href: `https://wa.me/${STORE.whatsapp}` },
                   ].map((social, idx) => (
                     <motion.div
                       key={idx}
@@ -184,10 +185,10 @@ export default function Footer() {
                         whileHover={{
                           y: -5,
                           scale: 1.1,
-                          borderColor: "#D4AF37",
-                          color: "#111",
-                          backgroundColor: "#D4AF37",
-                          boxShadow: "0 4px 15px rgba(212,175,55,0.4)"
+                          borderColor: "var(--c-accent)",
+                          color: "var(--c-text)",
+                          backgroundColor: "var(--c-accent)",
+                          boxShadow: "0 4px 15px color-mix(in srgb, var(--c-accent) 40%, transparent)"
                         }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -195,11 +196,11 @@ export default function Footer() {
                           width: 44,
                           height: 44,
                           borderRadius: "50%",
-                          border: "1px solid rgba(255,255,255,0.1)",
+                          border: "1px solid color-mix(in srgb, var(--c-card) 10%, transparent)",
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
-                          color: "rgba(255,255,255,0.7)",
+                          color: "var(--c-text)",
                           cursor: "pointer",
                           transition: "color 0.3s ease, border-color 0.3s ease"
                         }}
@@ -222,7 +223,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "var(--c-accent)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -256,7 +257,7 @@ export default function Footer() {
                         component={Link}
                         href="#"
                         sx={{
-                          color: "rgba(255,255,255,0.7)",
+                          color: "var(--c-text)",
                           textDecoration: "none",
                           fontFamily: "var(--font-inter)",
                           fontSize: "0.95rem",
@@ -264,7 +265,7 @@ export default function Footer() {
                           transition: "color 0.3s ease",
                           position: "relative",
                           width: "fit-content",
-                          "&:hover": { color: "#D4AF37" },
+                          "&:hover": { color: "var(--c-accent)" },
                           "&::after": {
                             content: '""',
                             position: "absolute",
@@ -272,7 +273,7 @@ export default function Footer() {
                             height: "1px",
                             bottom: -4,
                             left: 0,
-                            backgroundColor: "#D4AF37",
+                            backgroundColor: "var(--c-accent)",
                             transition: "width 0.3s ease"
                           },
                           "&:hover::after": { width: "100%" }
@@ -296,7 +297,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "var(--c-accent)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -320,13 +321,13 @@ export default function Footer() {
                 >
                   {/* Address */}
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "rgba(255,255,255,0.6)", textAlign: "left" }}>
-                      <Box sx={{ mt: 0.5, width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <MapPin size={16} strokeWidth={1.5} color="#D4AF37" />
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "flex-start", color: "var(--c-text)", textAlign: "left" }}>
+                      <Box sx={{ mt: 0.5, width: 32, height: 32, borderRadius: "50%", bgcolor: "color-mix(in srgb, var(--c-accent) 35%, transparent)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <MapPin size={16} strokeWidth={1.5} color="var(--c-accent)" />
                       </Box>
                       <Box>
-                        <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, lineHeight: 1.8, fontSize: "0.9rem", color: "rgba(255,255,255,0.7)" }}>
-                          <Box component="span" sx={{ color: "#D4AF37", display: "block", mb: 0.5, fontWeight: 500, fontFamily: "var(--font-inter)", fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, lineHeight: 1.8, fontSize: "0.9rem", color: "var(--c-text)" }}>
+                          <Box component="span" sx={{ color: "var(--c-accent)", display: "block", mb: 0.5, fontWeight: 500, fontFamily: "var(--font-inter)", fontSize: "0.95rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                             Nihaa Jewels
                           </Box>
                           MAHALAKSMI COMPLEX,<br />
@@ -342,7 +343,7 @@ export default function Footer() {
                           sx={{
                             display: "inline-flex",
                             alignItems: "center",
-                            color: "#D4AF37",
+                            color: "var(--c-accent)",
                             fontFamily: "var(--font-inter)",
                             fontSize: "0.8rem",
                             mt: 1,
@@ -355,7 +356,7 @@ export default function Footer() {
                               height: "1px",
                               bottom: -2,
                               left: 0,
-                              backgroundColor: "#D4AF37",
+                              backgroundColor: "var(--c-accent)",
                               transform: "scaleX(1)",
                               transition: "transform 0.3s ease",
                               transformOrigin: "left"
@@ -373,14 +374,14 @@ export default function Footer() {
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
                     <Box
                       component="a"
-                      href="tel:+919047722299"
-                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#D4AF37" } }}
+                      href={STORE.phoneHref}
+                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "var(--c-text)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "var(--c-accent)" } }}
                     >
-                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Phone size={16} strokeWidth={1.5} color="#D4AF37" />
+                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "color-mix(in srgb, var(--c-accent) 35%, transparent)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Phone size={16} strokeWidth={1.5} color="var(--c-accent)" />
                       </Box>
                       <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.95rem", color: "inherit", letterSpacing: "0.05em" }}>
-                        +91 9047722299
+                        {STORE.phone}
                       </Typography>
                     </Box>
                   </motion.div>
@@ -389,11 +390,11 @@ export default function Footer() {
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
                     <Box
                       component="a"
-                      href="mailto:support@nihaajewels.com"
-                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "#D4AF37" } }}
+                      href={`mailto:${STORE.email}`}
+                      sx={{ display: "flex", gap: 2, alignItems: "center", color: "var(--c-text)", textDecoration: "none", transition: "color 0.3s", "&:hover": { color: "var(--c-accent)" } }}
                     >
-                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "rgba(212,175,55,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                        <Mail size={16} strokeWidth={1.5} color="#D4AF37" />
+                      <Box sx={{ width: 32, height: 32, borderRadius: "50%", bgcolor: "color-mix(in srgb, var(--c-accent) 35%, transparent)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                        <Mail size={16} strokeWidth={1.5} color="var(--c-accent)" />
                       </Box>
                       <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.95rem", color: "inherit" }}>
                         support@nihaajewels.com
@@ -403,7 +404,7 @@ export default function Footer() {
 
                   {/* Open/Closed indicator — only rendered after client hydration */}
                   <motion.div variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}>
-                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", color: "rgba(255,255,255,0.6)" }}>
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center", color: "var(--c-text)" }}>
                       <Box sx={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                         {/* FIX 2: only animate/show the dot once isOpen is known (client-side) */}
                         {isOpen !== null && (
@@ -414,13 +415,13 @@ export default function Footer() {
                               width: 8,
                               height: 8,
                               borderRadius: "50%",
-                              backgroundColor: isOpen ? "#4ade80" : "#ff4d4f",
-                              boxShadow: isOpen ? "0 0 12px #4ade80" : "0 0 12px #ff4d4f"
+                              backgroundColor: isOpen ? "var(--c-open)" : "var(--c-closed)",
+                              boxShadow: isOpen ? "0 0 12px var(--c-open)" : "0 0 12px var(--c-closed)"
                             }}
                           />
                         )}
                       </Box>
-                      <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.85rem", color: "rgba(255,255,255,0.6)" }}>
+                      <Typography variant="body2" sx={{ fontFamily: "var(--font-inter)", fontWeight: 300, fontSize: "0.85rem", color: "var(--c-text)" }}>
                         Mon – Sat &bull; 10:00 AM – 8:00 PM
                       </Typography>
                     </Box>
@@ -439,7 +440,7 @@ export default function Footer() {
                   whileHover={{ x: 3 }}
                   sx={{
                     mb: 4,
-                    color: "#D4AF37",
+                    color: "var(--c-accent)",
                     fontWeight: 600,
                     letterSpacing: "0.15em",
                     fontFamily: "var(--font-montserrat)",
@@ -465,7 +466,7 @@ export default function Footer() {
                       variant="body2"
                       sx={{
                         mb: 3,
-                        color: "rgba(255,255,255,0.7)",
+                        color: "var(--c-text)",
                         fontFamily: "var(--font-inter)",
                         fontWeight: 300,
                         lineHeight: 1.6,
@@ -485,18 +486,18 @@ export default function Footer() {
                         fullWidth
                         sx={{
                           input: {
-                            color: "#fff",
+                            color: "var(--c-text)",
                             fontFamily: "var(--font-inter)",
                             px: 1,
                             py: 1.5,
                             "&:-webkit-autofill": {
-                              WebkitBoxShadow: "0 0 0 100px #050505 inset",
-                              WebkitTextFillColor: "#fff"
+                              WebkitBoxShadow: "0 0 0 100px var(--c-page) inset",
+                              WebkitTextFillcolor: "var(--c-text)"
                             }
                           },
-                          "& .MuiInput-underline:before": { borderBottomColor: "rgba(255,255,255,0.2)" },
-                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "rgba(212,175,55,0.5)" },
-                          "& .MuiInput-underline:after": { borderBottomColor: "#D4AF37" }
+                          "& .MuiInput-underline:before": { borderBottomcolor: "var(--c-text)" },
+                          "& .MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: "color-mix(in srgb, var(--c-accent) 50%, transparent)" },
+                          "& .MuiInput-underline:after": { borderBottomColor: "var(--c-accent)" }
                         }}
                       />
                       <Button
@@ -505,8 +506,8 @@ export default function Footer() {
                         whileTap={{ scale: 0.98 }}
                         fullWidth
                         sx={{
-                          bgcolor: "#D4AF37",
-                          color: "#050505",
+                          bgcolor: "var(--c-accent)",
+                          color: "var(--c-page)",
                           mt: 0.5,
                           py: 1.5,
                           fontWeight: 600,
@@ -516,7 +517,7 @@ export default function Footer() {
                           fontSize: "0.8rem",
                           borderRadius: 1,
                           transition: "background-color 0.3s ease, box-shadow 0.3s ease",
-                          "&:hover": { bgcolor: "#E5C158", boxShadow: "0px 4px 15px rgba(212,175,55,0.3)" }
+                          "&:hover": { bgcolor: "var(--c-accent)", boxShadow: "0px 4px 15px color-mix(in srgb, var(--c-accent) 30%, transparent)" }
                         }}
                       >
                         Subscribe
@@ -551,7 +552,7 @@ export default function Footer() {
                   left: 0,
                   right: 0,
                   height: "1px",
-                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)"
+                  background: "linear-gradient(90deg, transparent, color-mix(in srgb, var(--c-card) 8%, transparent), transparent)"
                 }}
               />
 
@@ -559,7 +560,7 @@ export default function Footer() {
               <Typography
                 variant="body2"
                 sx={{
-                  color: "rgba(255,255,255,0.4)",
+                  color: "var(--c-text)",
                   fontFamily: "var(--font-inter)",
                   fontSize: "0.85rem",
                   textAlign: { xs: "center", md: "left" }
@@ -579,12 +580,12 @@ export default function Footer() {
                     component={Link}
                     href={policy.path}
                     sx={{
-                      color: "rgba(255,255,255,0.5)",
+                      color: "var(--c-text)",
                       textDecoration: "none",
                       fontFamily: "var(--font-inter)",
                       fontSize: "0.85rem",
                       transition: "all 0.3s ease",
-                      "&:hover": { color: "#D4AF37", transform: "translateY(-1px)" }
+                      "&:hover": { color: "var(--c-accent)", transform: "translateY(-1px)" }
                     }}
                   >
                     {policy.name}
@@ -598,16 +599,16 @@ export default function Footer() {
                   p: 1.5,
                   px: 2.5,
                   borderRadius: "30px",
-                  backgroundColor: "rgba(255,255,255,0.03)",
-                  border: "1px solid rgba(255,255,255,0.05)",
+                  backgroundColor: "color-mix(in srgb, var(--c-text-soft) 3%, transparent)",
+                  border: "1px solid color-mix(in srgb, var(--c-card) 5%, transparent)",
                   display: "flex",
                   alignItems: "center",
                   gap: 1,
-                  boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+                  boxShadow: "0 4px 20px color-mix(in srgb, var(--c-text) 8%, transparent)",
                   transition: "all 0.3s ease",
                   "&:hover": {
-                    backgroundColor: "rgba(255,255,255,0.05)",
-                    borderColor: "rgba(255,255,255,0.1)",
+                    backgroundColor: "color-mix(in srgb, var(--c-text-soft) 5%, transparent)",
+                    borderColor: "var(--c-text)",
                     transform: "translateY(-2px)"
                   }
                 }}
@@ -618,7 +619,7 @@ export default function Footer() {
                     display: "flex",
                     alignItems: "center",
                     gap: 1,
-                    color: "rgba(255,255,255,0.6)",
+                    color: "var(--c-text)",
                     fontFamily: "var(--font-inter)",
                     fontSize: "0.8rem",
                     letterSpacing: "0.05em"
@@ -630,18 +631,18 @@ export default function Footer() {
                     transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     style={{ display: "flex", marginTop: 1 }}
                   >
-                    <Heart size={14} color="#ff4d4f" fill="#ff4d4f" />
+                    <Heart size={14} color="var(--c-closed)" fill="var(--c-closed)" />
                   </motion.div>
                   by{" "}
                   <Box
                     component={Link}
                     href="https://xlevelsup.com"
                     sx={{
-                      color: "#fff",
+                      color: "var(--c-text)",
                       textDecoration: "none",
                       fontWeight: 600,
                       transition: "color 0.3s",
-                      "&:hover": { color: "#D4AF37" }
+                      "&:hover": { color: "var(--c-accent)" }
                     }}
                   >
                     XLevelsUp

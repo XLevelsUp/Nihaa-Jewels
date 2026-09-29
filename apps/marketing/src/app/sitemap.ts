@@ -1,98 +1,58 @@
+// Generated from the database so a category added in admin appears without a code change.
+
 import { MetadataRoute } from 'next';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://nihaajewels.com';
+import { getCategories, getProducts } from '@/lib/catalogue';
 
-  return [
-    {
-      url: `${baseUrl}/`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/collections`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/collections/rings`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/collections/necklaces`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/collections/bridal`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/collections/temple`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.85,
-    },
-    {
-      url: `${baseUrl}/collections/earrings`,
-      lastModified: new Date(),
+const BASE_URL = 'https://nihaajewels.com';
+
+export const revalidate = 3600;
+
+const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
+  { path: '/', changeFrequency: 'daily', priority: 1 },
+  { path: '/collections', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/about', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/contact', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/custom-design', changeFrequency: 'monthly', priority: 0.7 },
+  { path: '/gifting', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/stores', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/care-guide', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/privacy-policy', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/terms-and-conditions', changeFrequency: 'yearly', priority: 0.3 },
+];
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
+  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
+    url: `${BASE_URL}${route.path}`,
+    lastModified: now,
+    changeFrequency: route.changeFrequency,
+    priority: route.priority,
+  }));
+
+  try {
+    const [categories, products] = await Promise.all([getCategories(), getProducts()]);
+
+    const categoryEntries: MetadataRoute.Sitemap = categories.map((category) => ({
+      url: `${BASE_URL}/collections/${category.slug}`,
+      lastModified: new Date(category.updated_at),
       changeFrequency: 'weekly',
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/collections/bangles`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/collections/daily-wear`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/contact`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/custom-design`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/gifting`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/stores`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/care-guide`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-  ];
+    }));
+
+    const productEntries: MetadataRoute.Sitemap = products
+      .filter((product) => product.category?.slug)
+      .map((product) => ({
+        url: `${BASE_URL}/collections/${product.category!.slug}/${product.slug}`,
+        lastModified: new Date(product.updated_at),
+        changeFrequency: 'weekly',
+        priority: product.is_featured ? 0.75 : 0.65,
+      }));
+
+    return [...staticEntries, ...categoryEntries, ...productEntries];
+  } catch (error) {
+    console.error('[sitemap] Falling back to static routes:', error);
+    return staticEntries;
+  }
 }

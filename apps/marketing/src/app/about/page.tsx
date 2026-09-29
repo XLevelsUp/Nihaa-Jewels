@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Navigation from "@/components/sections/Navigation";
+import Navigation from "@/components/sections/NavigationServer";
 import Footer from "@/components/sections/Footer";
 import AboutClient from "./AboutClient";
 import { Box } from "@mui/material";
