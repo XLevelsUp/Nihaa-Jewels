@@ -17,6 +17,7 @@ import {
 import { Upload, Trash2, Star } from 'lucide-react';
 
 import { uploadProductImage, deleteProductImage, setPrimaryImage } from '@/app/actions/products';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
 import type { ProductImage } from '@/types/database';
 
@@ -37,6 +38,7 @@ export default function ImageManager({ productId, images }: ImageManagerProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [toast, setToast] = useState<{ ok: boolean; message: string } | null>(null);
+  const [confirmRemove, setConfirmRemove] = useState<ProductImage | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
   const handleUpload = (file: File) => {
@@ -160,7 +162,7 @@ export default function ImageManager({ productId, images }: ImageManagerProps) {
                     <IconButton
                       size="small"
                       disabled={pending}
-                      onClick={() => run(() => deleteProductImage(image.id))}
+                      onClick={() => setConfirmRemove(image)}
                     >
                       <Trash2 size={14} />
                     </IconButton>
@@ -171,6 +173,33 @@ export default function ImageManager({ productId, images }: ImageManagerProps) {
           </Box>
         )}
       </Paper>
+
+      <ConfirmDialog
+        open={Boolean(confirmRemove)}
+        title="Remove this photograph?"
+        body={
+          <>
+            {confirmRemove?.alt_text
+              ? <><strong>{confirmRemove.alt_text}</strong> will be deleted</>
+              : 'This photograph will be deleted'}{' '}
+            from the website and from storage. The original upload is not kept, so it cannot be
+            recovered.
+          </>
+        }
+        hint={
+          confirmRemove?.is_primary
+            ? 'This is the main photograph. The next image in the list will take its place.'
+            : undefined
+        }
+        confirmLabel="Remove photograph"
+        pending={pending}
+        onConfirm={() => {
+          const target = confirmRemove;
+          setConfirmRemove(null);
+          if (target) run(() => deleteProductImage(target.id));
+        }}
+        onCancel={() => setConfirmRemove(null)}
+      />
 
       <Snackbar
         open={Boolean(toast)}

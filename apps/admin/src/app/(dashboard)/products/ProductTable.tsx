@@ -6,12 +6,7 @@ import { useRouter } from 'next/navigation';
 import {
   Alert,
   Box,
-  Button,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   IconButton,
   InputAdornment,
   Paper,
@@ -31,6 +26,7 @@ import { Search, Pencil, Trash2, Star } from 'lucide-react';
 
 import { toggleProductActive, deleteProduct } from '@/app/actions/products';
 import { calculatePrice, formatRupees, type Karat } from '@/lib/pricing';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
 import type { ProductRow } from '@/lib/catalogue';
 
@@ -211,25 +207,21 @@ export default function ProductTable({ products, rates, initialSearch }: Product
         </Table>
       </TableContainer>
 
-      <Dialog open={Boolean(confirmDelete)} onClose={() => setConfirmDelete(null)}>
-        <DialogTitle sx={{ fontSize: '1.1rem' }}>Delete this product?</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontSize: '0.9rem' }}>
-            <strong>{confirmDelete?.name}</strong> and its photographs will be permanently removed.
-            This cannot be undone.
-          </Typography>
-          <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', mt: 1.5 }}>
-            To take it off the website without losing it, switch &ldquo;On website&rdquo; off
-            instead.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setConfirmDelete(null)}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained" disabled={pending}>
-            Delete permanently
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <ConfirmDialog
+        open={Boolean(confirmDelete)}
+        title="Delete this product?"
+        body={
+          <>
+            <strong>{confirmDelete?.name}</strong> and its photographs will be permanently
+            removed. This cannot be undone.
+          </>
+        }
+        hint={'To take it off the website without losing it, switch "On website" off instead.'}
+        confirmLabel="Delete permanently"
+        pending={pending}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDelete(null)}
+      />
 
       <Snackbar
         open={Boolean(toast)}

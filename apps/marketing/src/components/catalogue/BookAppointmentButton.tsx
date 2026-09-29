@@ -7,6 +7,7 @@ import { Box, Button, alpha, useTheme } from '@mui/material';
 import { CalendarCheck, MessageCircle } from 'lucide-react';
 
 import BookAppointmentDialog from './BookAppointmentDialog';
+import { STORE } from '@/constants/store';
 
 interface BookAppointmentButtonProps {
   productId?: string | null;
@@ -19,7 +20,7 @@ export default function BookAppointmentButton({
   productId = null,
   productName,
   quotedPrice = null,
-  whatsappNumber = '914228000000',
+  whatsappNumber = STORE.whatsapp,
 }: BookAppointmentButtonProps) {
   const theme = useTheme();
   const [open, setOpen] = useState(false);

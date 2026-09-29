@@ -32,19 +32,21 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         sx={{
           display: 'block',
           textDecoration: 'none',
-          bgcolor: 'background.paper',
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+          bgcolor: 'var(--c-product-card)',
+          // Fill is near-invisible on the ivory page, so the border defines the card edge.
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.22)}`,
           overflow: 'hidden',
           height: '100%',
-          transition: 'border-color 0.3s ease, box-shadow 0.3s ease',
+          transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.3s ease, box-shadow 0.35s ease',
           '&:hover': {
+            transform: 'translateY(-3px)',
             borderColor: alpha(theme.palette.primary.main, 0.4),
             boxShadow: `0 12px 40px ${alpha(theme.palette.primary.main, 0.12)}`,
           },
           '&:hover .product-image': { transform: 'scale(1.04)' },
         }}
       >
-        <Box sx={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden', bgcolor: '#55524A' }}>
+        <Box sx={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden', bgcolor: 'var(--c-page)' }}>
           {image ? (
             <Image
               className="product-image"

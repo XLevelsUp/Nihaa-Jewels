@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
@@ -36,6 +36,7 @@ import {
 
 import { ADMIN_NAVIGATION, type NavItem } from '@/constants/navigation';
 import { logout } from '@/app/actions/auth';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/theme';
 
 const DRAWER_WIDTH = 248;
@@ -118,6 +119,8 @@ export default function AdminShell({
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const [signingOut, startSignOut] = useTransition();
 
   const brand = (
     <Box sx={{ px: 3, py: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
@@ -166,7 +169,10 @@ export default function AdminShell({
               <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>Signed in</Typography>
             </Box>
             <Divider />
-            <MenuItem onClick={() => logout()} sx={{ gap: 1.5, fontSize: '0.85rem', mt: 0.5 }}>
+            <MenuItem
+              onClick={() => { setAnchorEl(null); setConfirmLogout(true); }}
+              sx={{ gap: 1.5, fontSize: '0.85rem', mt: 0.5 }}
+            >
               <LogOut size={16} strokeWidth={1.75} />
               Sign out
             </MenuItem>
@@ -202,6 +208,23 @@ export default function AdminShell({
         <Toolbar />
         {children}
       </Box>
+
+      <ConfirmDialog
+        open={confirmLogout}
+        title="Sign out?"
+        body={
+          <>
+            You are signed in as <strong>{userEmail}</strong>. Anything you have typed but not
+            saved will be lost.
+          </>
+        }
+        confirmLabel={signingOut ? 'Signing out…' : 'Sign out'}
+        cancelLabel="Stay signed in"
+        destructive={false}
+        pending={signingOut}
+        onConfirm={() => startSignOut(() => logout())}
+        onCancel={() => setConfirmLogout(false)}
+      />
     </Box>
   );
 }

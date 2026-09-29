@@ -18,6 +18,7 @@ import {
 import { Phone, Mail, Calendar, Gem, StickyNote } from 'lucide-react';
 
 import { updateAppointmentStatus, saveStaffNotes } from '@/app/actions/appointments';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
 import type { AppointmentRow } from '@/lib/appointments';
 import type { AppointmentStatus } from '@/types/database';
@@ -73,15 +74,47 @@ function isPast(dateStr: string): boolean {
   return d < today;
 }
 
+// The day itself counts as arrived, so this is strictly after today.
+function isFuture(dateStr: string): boolean {
+  const d = new Date(`${dateStr}T00:00:00`);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return d > today;
+}
+
 export default function AppointmentList({ appointments, counts, activeStatus }: AppointmentListProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [toast, setToast] = useState<{ ok: boolean; message: string } | null>(null);
   const [noteDrafts, setNoteDrafts] = useState<Record<string, string>>({});
+  const [confirmCancel, setConfirmCancel] = useState<AppointmentRow | null>(null);
+  // Remembers the last change so the toast can offer to put it back.
+  const [undo, setUndo] = useState<{ id: string; to: AppointmentStatus } | null>(null);
 
   const run = (fn: () => Promise<{ ok: boolean; message: string }>) => {
     startTransition(async () => {
       setToast(await fn());
+      router.refresh();
+    });
+  };
+
+  // Records where the booking came from, so a misclick can be reversed.
+  const move = (a: AppointmentRow, to: AppointmentStatus) => {
+    const from = a.status as AppointmentStatus;
+    startTransition(async () => {
+      const res = await updateAppointmentStatus(a.id, to);
+      setToast(res);
+      setUndo(res.ok ? { id: a.id, to: from } : null);
+      router.refresh();
+    });
+  };
+
+  const runUndo = () => {
+    if (!undo) return;
+    const target = undo;
+    setUndo(null);
+    startTransition(async () => {
+      setToast(await updateAppointmentStatus(target.id, target.to, { undo: true }));
       router.refresh();
     });
   };
@@ -267,45 +300,58 @@ export default function AppointmentList({ appointments, counts, activeStatus }: 
                 )}
 
                 <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1.5 }}>
-                  {a.status !== 'confirmed' && (
+                  {a.status === 'new' && (
                     <Button
                       size="small"
                       variant="contained"
                       disabled={pending}
-                      onClick={() => run(() => updateAppointmentStatus(a.id, 'confirmed'))}
+                      onClick={() => move(a, 'confirmed')}
                     >
                       Confirm
                     </Button>
                   )}
-                  {a.status !== 'completed' && (
+
+                  {/* Only a confirmed booking can be marked visited, and not before the
+                      day itself — a visit cannot have happened yet. */}
+                  {a.status === 'confirmed' && (
                     <Button
                       size="small"
-                      variant="outlined"
-                      disabled={pending}
-                      onClick={() => run(() => updateAppointmentStatus(a.id, 'completed'))}
+                      variant="contained"
+                      disabled={pending || isFuture(a.preferred_date)}
+                      title={isFuture(a.preferred_date) ? 'This booking is still in the future' : undefined}
+                      onClick={() => move(a, 'completed')}
                     >
                       Mark visited
                     </Button>
                   )}
-                  {a.status !== 'cancelled' && (
+
+                  {(a.status === 'new' || a.status === 'confirmed') && (
                     <Button
                       size="small"
                       variant="outlined"
                       color="secondary"
                       disabled={pending}
-                      onClick={() => run(() => updateAppointmentStatus(a.id, 'cancelled'))}
+                      onClick={() => setConfirmCancel(a)}
                     >
                       Cancel
                     </Button>
                   )}
-                  {a.status !== 'new' && (
+
+                  {a.status === 'cancelled' && (
                     <Button
                       size="small"
+                      variant="outlined"
                       disabled={pending}
-                      onClick={() => run(() => updateAppointmentStatus(a.id, 'new'))}
+                      onClick={() => move(a, 'new')}
                     >
-                      Move back to new
+                      Reopen
                     </Button>
+                  )}
+
+                  {a.status === 'completed' && (
+                    <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', alignSelf: 'center' }}>
+                      Visit recorded &mdash; no further changes.
+                    </Typography>
                   )}
                 </Box>
 
@@ -334,13 +380,43 @@ export default function AppointmentList({ appointments, counts, activeStatus }: 
         </Box>
       )}
 
+      <ConfirmDialog
+        open={Boolean(confirmCancel)}
+        title="Cancel this booking?"
+        body={
+          <>
+            <strong>{confirmCancel?.name}</strong>&rsquo;s appointment on{' '}
+            {confirmCancel && formatDate(confirmCancel.preferred_date)} will be marked cancelled.
+          </>
+        }
+        hint="Let them know first if they are expecting to visit. You can undo this straight after."
+        confirmLabel="Cancel booking"
+        cancelLabel="Keep booking"
+        pending={pending}
+        onConfirm={() => {
+          if (confirmCancel) move(confirmCancel, 'cancelled');
+          setConfirmCancel(null);
+        }}
+        onCancel={() => setConfirmCancel(null)}
+      />
+
       <Snackbar
         open={Boolean(toast)}
-        autoHideDuration={4000}
-        onClose={() => setToast(null)}
+        autoHideDuration={8000}
+        onClose={() => { setToast(null); setUndo(null); }}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       >
-        <Alert severity={toast?.ok ? 'success' : 'error'} onClose={() => setToast(null)}>
+        <Alert
+          severity={toast?.ok ? 'success' : 'error'}
+          onClose={() => { setToast(null); setUndo(null); }}
+          action={
+            toast?.ok && undo ? (
+              <Button color="inherit" size="small" onClick={runUndo} disabled={pending}>
+                Undo
+              </Button>
+            ) : undefined
+          }
+        >
           {toast?.message}
         </Alert>
       </Snackbar>

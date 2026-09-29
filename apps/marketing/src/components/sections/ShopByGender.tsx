@@ -1,126 +1,76 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
-import { motion, Variants } from 'framer-motion';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 
-const SEGMENTS = [
+const AUDIENCES = [
   {
-    id: 'women',
-    label: 'Women',
-    description: 'Timeless elegance for the modern matriarch. From bridal heirlooms to everyday grace.',
-    href: '/collections/women',
-    image: '/images/women1.webp',
-    image_alt: 'bridal gold jewellery set Coimbatore - Nihaa Jewels luxury gold jewellery',
-  },
-  { 
-    id: 'men',
-    label: 'Men',
-    description: 'Bold craftsmanship for the discerning gentleman. Refined rings, chains, and kadas.',
-    href: '/collections/men',
-    image: '/images/menimage.webp',
-    image_alt: 'luxury gold jewellery and gold rings Coimbatore for men - Nihaa Jewels',
+    label: 'For Women',
+    href: '/collections?gender=women',
+    src: '/images/audience-women.webp',
+    alt: 'Woman in a green silk saree wearing temple gold jewellery',
   },
   {
-    id: 'kids',
-    label: 'Kids',
-    description: 'Delicate first steps into a lifetime of legacy. Safe, charming, and BIS hallmarked.',
-    href: '/collections/kids',
-    image: '/images/kidimage.webp', 
-    image_alt: 'lightweight gold jewellery daily wear for children - BIS hallmarked at Nihaa Jewels',
+    label: 'For Men',
+    href: '/collections?gender=men',
+    src: '/images/audience-men.webp',
+    alt: 'Man in a cream kurta wearing a gold chain and bracelet',
+  },
+  {
+    label: 'For Kids',
+    href: '/collections?gender=kids',
+    src: '/images/audience-kids.webp',
+    alt: 'Young girl wearing a fine gold chain and bangles',
   },
 ];
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-      delayChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 40 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
-    transition: { 
-      type: 'tween',
-      ease: 'easeOut',
-      duration: 0.8
-    } 
-  },
-};
-
 export default function ShopByGender() {
   return (
-    <section className="py-24 bg-[#FFFFF0] flex flex-col items-center">
-      {/* Title Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8 }}
-        className="text-center mb-16 px-6"
-      >
-        <h2 className="text-[#2A2520] text-4xl md:text-5xl font-playfair tracking-wide mb-5">
-          Curated For You
-        </h2>
-        <div className="w-12 h-px bg-linear-to-r from-transparent via-[#5F6440] to-transparent mx-auto mb-6 opacity-60" />
-        <p className="text-[#55524A]/80 font-inter font-light text-[0.95rem] md:text-base max-w-md mx-auto italic">
-          Discover collections tailored to every story.
-        </p>
-      </motion.div>
+    <section className="surface-alt section">
+      <div className="container-page">
 
-      {/* Navigation Grid */}
-      <nav aria-label="Shop by Persona" className="w-full max-w-[1100px] px-6">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12"
-        >
-          {SEGMENTS.map((segment) => (
-            <motion.div key={segment.id} variants={cardVariants}>
-              <Link 
-                href={segment.href} 
-                aria-label={`Shop ${segment.label} collection`}
-                className="group block relative w-full h-full"
-              >
-                {/* Image Container */}
-                <div className="relative aspect-3/4 overflow-hidden rounded-sm bg-[#FFFFFF] shadow-[0_8px_30px_rgba(0,0,0,0.3)] transition-all duration-700 ease-out group-hover:shadow-[0_20px_40px_rgba(42,37,32,0.12)] group-hover:-translate-y-2">
+        <header className="mb-10 text-center">
+          <span className="eyebrow mb-3">Shop By</span>
+          <h2 className="heading-lg text-body">Who it&rsquo;s for</h2>
+        </header>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          {AUDIENCES.map((a, i) => (
+            <motion.div
+              key={a.href}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.45, delay: i * 0.08 }}
+            >
+              <Link href={a.href} className="card group block">
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{ aspectRatio: '3 / 4', background: 'var(--c-icing)' }}
+                >
                   <Image
-                    src={segment.image}
-                    alt={segment.image_alt}
+                    src={a.src}
+                    alt={a.alt}
                     fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover grayscale transition-all duration-1000 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:grayscale-0 group-hover:scale-105"
+                    loading="lazy"
+                    sizes="(max-width: 640px) 100vw, 33vw"
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    style={{ objectPosition: '50% 20%' }}
                   />
-                  
-                  {/* Subtle inner shadow/gradient */}
-                  <div className="absolute inset-0 bg-linear-to-t from-[#FFFFF0]/90 via-[#FFFFF0]/20 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-60" />
-                  
-                  {/* Content positioned over image */}
-                  <div className="absolute inset-0 p-8 flex flex-col justify-end text-center z-10 transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] group-hover:-translate-y-1">
-                    <h3 className="font-playfair text-[#5F6440] text-[1.8rem] mb-3 leading-tight drop-shadow-md transition-all duration-500 group-hover:scale-105">
-                      {segment.label}
-                    </h3>
-                    <p 
-                      className="font-inter text-[#2A2520]/90 text-[0.9rem] font-light leading-relaxed opacity-0 translate-y-4 transition-all duration-500 ease-out delay-100 group-hover:opacity-100 group-hover:translate-y-0"
-                    >
-                      {segment.description}
-                    </p>
-                  </div>
+                </div>
+                <div className="flex items-center justify-between p-4">
+                  <span className="text-body text-[0.95rem] font-medium">{a.label}</span>
+                  <span className="text-accent text-[0.7rem] uppercase tracking-[0.15em]">
+                    Browse
+                  </span>
                 </div>
               </Link>
             </motion.div>
           ))}
-        </motion.div>
-      </nav>
+        </div>
+
+      </div>
     </section>
   );
 }

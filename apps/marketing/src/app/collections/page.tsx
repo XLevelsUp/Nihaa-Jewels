@@ -2,18 +2,37 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationServer';
 import Footer from '@/components/sections/Footer';
-import { getCategories } from '@/lib/catalogue';
+import ProductGrid from '@/components/catalogue/ProductGrid';
+import { getCategories, getProducts } from '@/lib/catalogue';
+import { AUDIENCES, isAudience } from '@/constants/filters';
 
-export const metadata: Metadata = {
-  title: "Fine Jewellery Collections — Nihaa Jewels",
-  description: "Browse our curated collections of gold, diamond, and heritage temple jewellery. Craftsmanship that lasts for generations.",
-};
+interface PageProps {
+  searchParams: Promise<{ gender?: string }>;
+}
+
+export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
+  const { gender } = await searchParams;
+  if (isAudience(gender)) {
+    const a = AUDIENCES[gender];
+    // The root layout appends "| Nihaa Jewels", so the brand is not repeated here.
+    return { title: a.heading, description: a.blurb };
+  }
+  return {
+    title: 'Fine Jewellery Collections',
+    description: 'Browse our curated collections of gold, diamond, and heritage temple jewellery. Craftsmanship that lasts for generations.',
+  };
+}
 
 export const revalidate = 3600;
 
-export default async function CollectionsPage() {
+export default async function CollectionsPage({ searchParams }: PageProps) {
+  const { gender } = await searchParams;
+  const audience = isAudience(gender) ? gender : undefined;
+
+  if (audience) return <AudienceView audience={audience} />;
+
   let categories: Awaited<ReturnType<typeof getCategories>> = [];
   try {
     categories = await getCategories();
@@ -24,7 +43,7 @@ export default async function CollectionsPage() {
   return (
     <div className="bg-[#FFFFF0] min-h-screen">
       <Navigation />
-      <main className="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+      <main className="container-page pb-20 pt-28 md:pt-32">
         <header className="mb-12 text-center flex flex-col items-center">
           <p className="section-label mb-2 text-[#5F6440]">Artistry &amp; Grace</p>
           <h1 className="text-4xl md:text-6xl text-[#2A2520] font-playfair">Our <em className="text-gradient-gold not-italic">Collections</em></h1>
@@ -84,6 +103,53 @@ export default async function CollectionsPage() {
                 <a href="/custom-design" className="inline-block text-[#5F6440] border-b border-[#5F6440]/40 pb-1 text-xs tracking-widest uppercase hover:text-[#2A2520] hover:border-[#2A2520] transition-all">Explore Bespoke</a>
             </div>
         </section>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
+async function AudienceView({ audience }: { audience: keyof typeof AUDIENCES }) {
+  const { heading, blurb } = AUDIENCES[audience];
+
+  let products: Awaited<ReturnType<typeof getProducts>> = [];
+  try {
+    // No categoryIds — this spans every category, unlike a category page.
+    products = await getProducts({ gender: audience });
+  } catch (error) {
+    console.error('[collections] Failed to load products for', audience, error);
+  }
+
+  return (
+    <div className="bg-[#FFFFF0] min-h-screen">
+      <Navigation />
+      <main className="container-page pb-20 pt-28 md:pt-32">
+        <header className="mb-12 flex flex-col items-center text-center">
+          <p className="section-label mb-2 text-[#5F6440]">Shop By</p>
+          <h1 className="font-playfair text-4xl text-[#2A2520] md:text-6xl">{heading}</h1>
+          <div className="divider-gold" />
+          <p className="mt-8 max-w-2xl font-light leading-relaxed text-[#55524A]">{blurb}</p>
+        </header>
+
+        {products.length > 0 && (
+          <p className="mb-8 text-center text-sm font-light text-[#55524A]">
+            {products.length === 1 ? '1 piece' : `${products.length} pieces`}
+          </p>
+        )}
+
+        <ProductGrid
+          products={products}
+          emptyMessage={`We don't have ${audience === 'kids' ? "children's" : audience + "'s"} pieces in the online catalogue just yet. Our Coimbatore showroom carries more than we list here — book an appointment and we'll show you what's in stock.`}
+        />
+
+        <div className="mt-20 border-t border-[#5F6440]/10 pt-10 text-center">
+          <Link
+            href="/collections"
+            className="inline-block border-b border-[#5F6440]/40 pb-1 text-xs uppercase tracking-widest text-[#5F6440] transition-all hover:border-[#2A2520] hover:text-[#2A2520]"
+          >
+            Browse all collections
+          </Link>
+        </div>
       </main>
       <Footer />
     </div>

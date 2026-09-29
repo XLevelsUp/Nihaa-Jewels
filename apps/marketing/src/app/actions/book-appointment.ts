@@ -5,6 +5,7 @@
 import { z } from 'zod';
 
 import { supabase } from '@/lib/supabase';
+import { STORE } from '@/constants/store';
 
 const SLOTS = ['morning', 'afternoon', 'evening'] as const;
 
@@ -86,7 +87,7 @@ export async function bookAppointment(formData: FormData): Promise<BookingResult
     console.error('[book-appointment] insert failed:', error.message);
     return {
       ok: false,
-      message: 'Something went wrong on our end. Please call us on +91 422 800 0000.',
+      message: `Something went wrong on our end. Please call us on ${STORE.phone}.`,
     };
   }
 

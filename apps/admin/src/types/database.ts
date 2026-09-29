@@ -18,6 +18,8 @@ export interface Category {
   meta_keywords: string[];
   hero_eyebrow: string | null;
   hero_image_path: string | null;
+  badge: string | null;
+  show_in_nav: boolean;
   created_at: string;
   updated_at: string;
 }

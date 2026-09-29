@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, Montserrat } from "next/font/google";
 import Script from "next/script";
 import ThemeRegistry from "@/components/ThemeRegistry";
+import { STORE } from "@/constants/store";
+import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
 import "./globals.css";
 
 /* ── Font loading ─────────────────────────────────────── */
@@ -86,14 +88,14 @@ const jsonLd = {
   "image": "https://nihaajewels.com/og-image.jpg",
   "@id": "https://nihaajewels.com",
   "url": "https://nihaajewels.com",
-  "telephone": "+914222800000",
+  "telephone": STORE.phoneSchema,
   "priceRange": "$$$",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "42, Jewellers Street, RS Puram",
+    "streetAddress": "Mahalaksmi Complex, 23 D Chokkampudur Road, Krishna Nagar, RS Puram",
     "addressLocality": "Coimbatore",
     "addressRegion": "TN",
-    "postalCode": "641002",
+    "postalCode": "641001",
     "addressCountry": "IN"
   },
   "geo": {
@@ -203,6 +205,7 @@ export default function RootLayout({
           <main id="main-content">
             {children}
           </main>
+          <WhatsAppFloat />
         </ThemeRegistry>
       </body>
     </html>

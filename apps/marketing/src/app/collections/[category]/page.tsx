@@ -5,7 +5,8 @@ import Script from 'next/script';
 import { notFound } from 'next/navigation';
 
 import CategoryClient from './CategoryClient';
-import { getCategoryBySlug, getCategories, getProducts } from '@/lib/catalogue';
+import { getCategoryBySlug, getCategories, getCategoryWithChildren, getProducts } from '@/lib/catalogue';
+import { PRICE_BANDS, OCCASIONS, titleCase } from '@/constants/filters';
 
 const BASE_URL = 'https://nihaajewels.com';
 
@@ -15,6 +16,7 @@ export const dynamicParams = true;
 
 interface PageProps {
   params: Promise<{ category: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 export async function generateStaticParams() {
@@ -47,13 +49,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function CategoryPage({ params }: PageProps) {
+export default async function CategoryPage({ params, searchParams }: PageProps) {
   const { category: slug } = await params;
+  const sp = await searchParams;
 
-  const category = await getCategoryBySlug(slug);
-  if (!category) notFound();
+  const result = await getCategoryWithChildren(slug);
+  if (!result) notFound();
+  const { category, children } = result;
 
-  const products = await getProducts({ categorySlug: slug });
+  const band = PRICE_BANDS.find((b) => b.label === sp.price);
+
+  const products = await getProducts({
+    categoryIds: [category.id, ...children.map((c) => c.id)],
+    karat: sp.karat as never,
+    gender: sp.gender,
+    occasion: sp.occasion,
+    minPrice: band?.min,
+    maxPrice: band?.max,
+  });
 
   const itemListSchema = {
     '@context': 'https://schema.org',
@@ -96,7 +109,7 @@ export default async function CategoryPage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <CategoryClient category={category} products={products} />
+      <CategoryClient category={category} products={products} subCategories={children} />
     </>
   );
 }

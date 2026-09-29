@@ -184,3 +184,23 @@ check enough? Affects Phase E.
   for the same reason — they violate Google's structured-data policy.
 - **Types are duplicated** between the two apps (`src/types/database.ts`).
   There is no shared package. Change one, change the other.
+
+## Known limitation: cross-deployment cache
+
+Admin and marketing are separate deployments, so a save in admin cannot clear
+marketing's cache directly. Catalogue changes appear on the public site within
+the hour, not instantly.
+
+Gold rates are the exception — `revalidateTag('gold-rate')` runs inside the
+marketing app itself, so a rate correction is live in seconds.
+
+To make catalogue edits instant, marketing would need a revalidation route that
+admin calls after a save, authenticated with a shared secret:
+
+```
+POST /api/revalidate?tag=navigation
+Authorization: Bearer <REVALIDATE_SECRET>
+```
+
+Worth building if staff find the delay confusing; the hourly refresh is
+acceptable for a catalogue that changes a few times a week.

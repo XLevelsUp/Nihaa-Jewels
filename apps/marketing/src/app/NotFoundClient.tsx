@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationClient';
 import Footer from '@/components/sections/Footer';
 import GoldButton from '@/components/ui/GoldButton';
 import type { Category } from '@/types/database';

@@ -28,8 +28,8 @@ const theme = createTheme({
       paper: '#FFFFFF',
     },
     text: {
-      primary: PALETTE.ink,
-      secondary: PALETTE.inkSoft,
+      primary: PALETTE.text,
+      secondary: PALETTE.textSoft,
     },
     divider: PALETTE.icing,
   },
@@ -80,7 +80,7 @@ const theme = createTheme({
       styleOverrides: {
         body: {
           backgroundColor: PALETTE.ivory,
-          color: PALETTE.ink,
+          color: PALETTE.text,
           scrollbarColor: `${PALETTE.sage} ${PALETTE.ivory}`,
           '&::-webkit-scrollbar': {
             width: '6px',

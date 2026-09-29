@@ -17,6 +17,7 @@ import {
   DialogTitle,
   FormControlLabel,
   IconButton,
+  MenuItem,
   Paper,
   Snackbar,
   Switch,
@@ -32,6 +33,7 @@ import {
 import { Plus, Pencil, Trash2, ChevronDown } from 'lucide-react';
 
 import { saveCategory, toggleCategoryActive, deleteCategory } from '@/app/actions/categories';
+import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
 import type { Category } from '@/types/database';
 
@@ -50,6 +52,9 @@ const EMPTY = {
   metaTitle: '',
   metaDescription: '',
   metaKeywords: '',
+  parentId: '',
+  badge: '',
+  showInNav: true,
   displayOrder: '0',
   isActive: true,
 };
@@ -79,6 +84,9 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
       metaTitle: c.meta_title ?? '',
       metaDescription: c.meta_description ?? '',
       metaKeywords: c.meta_keywords?.join(', ') ?? '',
+      parentId: c.parent_id ?? '',
+      badge: c.badge ?? '',
+      showInNav: c.show_in_nav,
       displayOrder: String(c.display_order),
       isActive: c.is_active,
     });
@@ -143,7 +151,10 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
               categories.map((c) => (
                 <TableRow key={c.id} hover>
                   <TableCell>
-                    <Typography sx={{ fontSize: '0.86rem', fontWeight: 500 }}>{c.name}</Typography>
+                    <Typography sx={{ fontSize: '0.86rem', fontWeight: 500, pl: c.parent_id ? 2.5 : 0 }}>
+                      {c.parent_id && <Box component="span" sx={{ color: 'text.secondary', mr: 0.75 }}>↳</Box>}
+                      {c.name}
+                    </Typography>
                     {c.description && (
                       <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
                         {c.description}
@@ -240,6 +251,34 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
               />
             </Box>
 
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2.5 }}>
+              <TextField
+                select
+                label="Sits under"
+                value={editing?.parentId ?? ''}
+                onChange={(e) => set('parentId', e.target.value)}
+                error={Boolean(errors.parentId)}
+                helperText={errors.parentId || 'Makes this a sub-collection'}
+              >
+                <MenuItem value="">Top level (its own menu item)</MenuItem>
+                {categories
+                  .filter((c) => !c.parent_id && c.id !== editing?.id)
+                  .map((c) => (
+                    <MenuItem key={c.id} value={c.id}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+              </TextField>
+
+              <TextField
+                label="Menu badge"
+                value={editing?.badge ?? ''}
+                onChange={(e) => set('badge', e.target.value)}
+                placeholder="NEW ARRIVAL"
+                helperText="Small label on the menu card"
+              />
+            </Box>
+
             <Accordion variant="outlined" disableGutters sx={{ '&:before': { display: 'none' } }}>
               <AccordionSummary expandIcon={<ChevronDown size={16} />}>
                 <Typography sx={{ fontSize: '0.85rem' }}>Search engine settings</Typography>
@@ -291,6 +330,23 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
               label={<Typography sx={{ fontSize: '0.88rem' }}>Show on website</Typography>}
             />
 
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={editing?.showInNav ?? true}
+                  onChange={(e) => set('showInNav', e.target.checked)}
+                />
+              }
+              label={
+                <Box>
+                  <Typography sx={{ fontSize: '0.88rem' }}>Show in menu</Typography>
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Off keeps the page live but hides it from the main menu
+                  </Typography>
+                </Box>
+              }
+            />
+
             {toast && !toast.ok && <Alert severity="error">{toast.message}</Alert>}
           </DialogContent>
 
@@ -305,32 +361,24 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
         </Box>
       </Dialog>
 
-      <Dialog open={Boolean(confirmDelete)} onClose={() => setConfirmDelete(null)}>
-        <DialogTitle sx={{ fontSize: '1.1rem' }}>Delete this collection?</DialogTitle>
-        <DialogContent>
-          <Typography sx={{ fontSize: '0.9rem' }}>
+      <ConfirmDialog
+        open={Boolean(confirmDelete)}
+        title="Delete this collection?"
+        body={
+          <>
             <strong>{confirmDelete?.name}</strong> and its page will be removed from the website.
-          </Typography>
-          <Typography sx={{ fontSize: '0.85rem', color: 'text.secondary', mt: 1.5 }}>
-            To hide it without deleting, switch &ldquo;On website&rdquo; off instead.
-          </Typography>
-        </DialogContent>
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={() => setConfirmDelete(null)}>Cancel</Button>
-          <Button
-            color="error"
-            variant="contained"
-            disabled={pending}
-            onClick={() => {
-              const target = confirmDelete;
-              setConfirmDelete(null);
-              if (target) run(() => deleteCategory(target.id));
-            }}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+          </>
+        }
+        hint={'To hide it without deleting, switch "On website" off instead.'}
+        confirmLabel="Delete permanently"
+        pending={pending}
+        onConfirm={() => {
+          const target = confirmDelete;
+          setConfirmDelete(null);
+          if (target) run(() => deleteCategory(target.id));
+        }}
+        onCancel={() => setConfirmDelete(null)}
+      />
 
       <Snackbar
         open={Boolean(toast?.ok)}

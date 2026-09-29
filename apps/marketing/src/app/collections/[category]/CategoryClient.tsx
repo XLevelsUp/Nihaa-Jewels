@@ -2,9 +2,11 @@
 
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationClient';
 import Footer from '@/components/sections/Footer';
 import ProductGrid from '@/components/catalogue/ProductGrid';
+import FilterBar from '@/components/catalogue/FilterBar';
+import SubCategoryNav from '@/components/catalogue/SubCategoryNav';
 import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
 import type { PricedProduct } from '@/lib/catalogue';
@@ -13,9 +15,10 @@ import type { Category } from '@/types/database';
 interface CategoryClientProps {
   category: Category;
   products: PricedProduct[];
+  subCategories: Category[];
 }
 
-export default function CategoryClient({ category, products }: CategoryClientProps) {
+export default function CategoryClient({ category, products, subCategories }: CategoryClientProps) {
   const theme = useTheme();
 
   const words = category.name.trim().split(' ');
@@ -70,6 +73,17 @@ export default function CategoryClient({ category, products }: CategoryClientPro
             </Typography>
           )}
         </Box>
+
+        {subCategories.length > 0 && (
+          <SubCategoryNav parentSlug={category.slug} items={subCategories} />
+        )}
+
+        <FilterBar
+          occasions={[...new Set(products.flatMap((p) => p.occasion ?? []))].sort()}
+          genders={[...new Set(products.map((p) => p.gender).filter(Boolean) as string[])].sort()}
+          karats={[...new Set(products.map((p) => p.karat))].sort()}
+          resultCount={products.length}
+        />
 
         <ProductGrid products={products} />
 

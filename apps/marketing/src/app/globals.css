@@ -1,38 +1,68 @@
 @import "tailwindcss";
 
-/* Light sage palette shared with the admin app. Variable NAMES are kept so the
-   202 existing references keep working; only their values changed. --color-gold
-   is now deepened sage, --color-black is now ivory. */
+/* Single source of colour. Every contrast pairing below passes WCAG AA — the
+   brand colours are pale, so ivory and icing are only ever text ON a sage or
+   blush fill, never on a light surface. */
 
 :root {
-  /* ── Primary: sage replaces gold ── */
-  --color-gold:          #5F6440;
-  --color-gold-light:    #ACB087;
-  --color-gold-dark:     #4C5133;
+  /* ── Brand ── */
+  --c-sage:        #ACB087;
+  --c-icing:       #F4DFCC;
+  --c-blush:       #F4E1E0;
+  --c-ivory:       #FFFFF0;
 
-  /* ── Surfaces: light replaces dark ── */
-  --color-black:         #FFFFF0;
-  --color-black-soft:    #FFFFFF;
-  --color-black-mid:     #F4DFCC;
+  /* ── Derived: dark enough to carry text ── */
+  --c-sage-deep:   #5F6440;
+  --c-sage-deeper: #4C5133;
+  --c-blush-deep:  #7E5653;
+  --c-icing-deep:  #A87840;
+  --c-sage-tint:   #E8EAD9;
 
-  /* ── Secondary: blush replaces maroon ── */
-  --color-maroon:        #7E5653;
+  /* ── Surfaces ── */
+  --c-page:        var(--c-ivory);
+  --c-surface:     var(--c-sage-tint);
+  --c-card:        #FFFFFF;
+  --c-product-card: #FBFAF6;          /* product tiles only, not dialogs or forms */
+  --c-panel:       var(--c-icing);
+  --c-block-sage:  var(--c-sage-deep);
+  --c-block-blush: var(--c-blush-deep);
+
+  /* ── Text. The pairing decides the colour, never preference. ── */
+  --c-text:        #2A2520;            /* on page/surface/card  15.0:1 */
+  --c-text-soft:   #55524A;            /* on page/surface/card   7.7:1 */
+  --c-on-sage:     var(--c-ivory);     /* on --c-block-sage      6.2:1 */
+  --c-on-blush:    var(--c-icing);     /* on --c-block-blush     4.8:1 */
+
+  /* ── Status. Not brand colours: these must read as open/closed at a glance. ── */
+  --c-open:        #2E7D53;
+  --c-closed:      #B3261E;
+
+  /* ── Accent ── */
+  --c-accent:      var(--c-sage-deep);
+  --c-accent-hover:var(--c-sage-deeper);
+  --c-border:      var(--c-icing);
+  --c-border-firm: var(--c-sage);
+
+  /* ── Aliases kept until every file is migrated off inline colour ── */
+  --color-gold:          var(--c-accent);
+  --color-gold-light:    var(--c-sage);
+  --color-gold-dark:     var(--c-sage-deeper);
+  --color-black:         var(--c-page);
+  --color-black-soft:    var(--c-card);
+  --color-black-mid:     var(--c-panel);
+  --color-maroon:        var(--c-blush-deep);
   --color-maroon-dark:   #6F4B48;
-  --color-rose-gold:     #F4E1E0;
-  --color-rose-gold-light: #F4DFCC;
-
-  /* ── Neutral: dark text on light ── */
-  --color-ivory:         #2A2520;
-  --color-ivory-warm:    #2A2520;
-  --color-ivory-muted:   #55524A;
-  --color-text-body:     #55524A;
-
-  /* ── Palette tokens by name ── */
-  --color-sage:          #ACB087;
-  --color-icing:         #F4DFCC;
-  --color-blush:         #F4E1E0;
-  --color-ivory-bg:      #FFFFF0;
-  --color-sage-tint:     #E8EAD9;
+  --color-rose-gold:     var(--c-blush);
+  --color-rose-gold-light: var(--c-icing);
+  --color-ivory:         var(--c-text);
+  --color-ivory-warm:    var(--c-text);
+  --color-ivory-muted:   var(--c-text-soft);
+  --color-text-body:     var(--c-text-soft);
+  --color-sage:          var(--c-sage);
+  --color-icing:         var(--c-icing);
+  --color-blush:         var(--c-blush);
+  --color-ivory-bg:      var(--c-ivory);
+  --color-sage-tint:     var(--c-sage-tint);
 
   /* ── Typography ── */
   --font-heading:        var(--font-playfair-display), Georgia, serif;
@@ -42,12 +72,23 @@
   /* ── Spacing ── */
   --section-padding-y: 6rem;
   --container-max:     1280px;
+
+  /* Gutter grows with the viewport so content never sits against the edge on a
+     phone, and is not pinched on a wide monitor. */
+  --gutter: 1.25rem;
 }
+
+@media (min-width: 640px)  { :root { --gutter: 2rem; } }
+@media (min-width: 1024px) { :root { --gutter: 3rem; } }
+@media (min-width: 1536px) { :root { --gutter: 4rem; } }
+
+/* Section padding shrinks on small screens, where 6rem is too much. */
+@media (max-width: 640px) { :root { --section-padding-y: 3.5rem; } }
 
 /* ── Tailwind theme tokens ─────────────────────────────── */
 @theme inline {
   --color-primary:       var(--color-gold);
-  --color-primary-dark:  var(--color-gold-dark);
+  --color-primary-dark:  var(--c-accent-hover);
   --color-secondary:     var(--color-maroon);
   --color-secondary-alt: var(--color-rose-gold);
   --color-surface:       var(--color-black);
@@ -117,6 +158,169 @@ a { color: inherit; text-decoration: none; }
   }
 }
 
+/* ════ Design system ══════════════════════════════════════
+   Use these instead of inline colour. A surface class sets its own text
+   colour, so text is never left unreadable when a section changes fill. */
+
+/* ── Landing background ───────────────────────────────────
+   Three stacked layers on the landing page only: a kolam lattice (the South
+   Indian floor motif, drawn as SVG so it costs no request), soft colour glows
+   and a warm base wash. Everything sits far below text contrast so photography
+   and copy stay dominant. */
+
+.landing-bg {
+  position: relative;
+  background-color: var(--c-page);
+  isolation: isolate;
+}
+
+.landing-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    /* Fine gold pinstripe, like the guard lines on a hallmark certificate.
+       Two thin rules per 96px tile, so it reads as texture, not as a grid. */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg stroke='%23A87840' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M0 0.5h96M0.5 0v96'/%3E%3C/g%3E%3Cg fill='%23A87840' fill-opacity='0.09'%3E%3Ccircle cx='48' cy='48' r='1.1'/%3E%3C/g%3E%3C/svg%3E"),
+    /* Whisper-level glows. Kept low so the page stays close to ivory even
+       where two of them overlap. */
+    radial-gradient(ellipse 75% 50% at 10% 0%, color-mix(in srgb, var(--c-icing) 20%, transparent), transparent 68%),
+    radial-gradient(ellipse 65% 45% at 95% 30%, color-mix(in srgb, var(--c-blush) 14%, transparent), transparent 70%),
+    radial-gradient(ellipse 85% 40% at 50% 100%, color-mix(in srgb, var(--c-sage-tint) 18%, transparent), transparent 68%),
+    linear-gradient(175deg, var(--c-ivory) 0%, color-mix(in srgb, var(--c-icing) 7%, var(--c-ivory)) 100%);
+  background-size: 96px 96px, auto, auto, auto, auto;
+}
+
+/* A hairline of gold along the top edge, the one place the metal appears flat. */
+.landing-bg::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--c-icing-deep) 30%, transparent) 25%,
+    color-mix(in srgb, var(--c-icing-deep) 70%, transparent) 50%,
+    color-mix(in srgb, var(--c-icing-deep) 30%, transparent) 75%,
+    transparent
+  );
+}
+
+/* Page-fill sections turn transparent here so the layers below show through;
+   they keep their text colour. Sections with their own fill stay opaque. */
+.landing-bg .surface-page { background: transparent; }
+
+.landing-bg .surface-alt,
+.landing-bg .block-sage,
+.landing-bg .block-blush { position: relative; z-index: 0; }
+
+/* The pinstripe is fine detail — drop it on small screens where it only adds noise. */
+@media (max-width: 640px) {
+  .landing-bg::before { background-image: none, radial-gradient(ellipse 100% 35% at 50% 0%, color-mix(in srgb, var(--c-icing) 18%, transparent), transparent 70%), radial-gradient(ellipse 100% 35% at 50% 100%, color-mix(in srgb, var(--c-sage-tint) 16%, transparent), transparent 70%), linear-gradient(175deg, var(--c-ivory), color-mix(in srgb, var(--c-icing) 6%, var(--c-ivory))); }
+}
+
+/* Surfaces — each sets the correct text colour for its own background */
+.surface-page    { background: var(--c-page);        color: var(--c-text); }
+.surface-alt     { background: var(--c-surface);     color: var(--c-text); }
+.surface-card    { background: var(--c-card);        color: var(--c-text); }
+.surface-panel   { background: var(--c-panel);       color: var(--c-text); }
+.block-sage      { background: var(--c-block-sage);  color: var(--c-on-sage); }
+.block-blush     { background: var(--c-block-blush); color: var(--c-on-blush); }
+
+.block-sage  .text-soft,
+.block-blush .text-soft { color: inherit; opacity: 0.85; }
+
+/* Text */
+.text-body    { color: var(--c-text); }
+.text-soft    { color: var(--c-text-soft); }
+.text-accent  { color: var(--c-accent); }
+
+/* Borders */
+.border-soft  { border: 1px solid var(--c-border); }
+.border-firm  { border: 1px solid var(--c-border-firm); }
+.divider-soft { border-top: 1px solid var(--c-border); }
+
+/* Section rhythm — alternating fills so sections read as separate bands */
+.section        { padding-block: var(--section-padding-y); }
+.section-tight  { padding-block: calc(var(--section-padding-y) * 0.6); }
+
+/* WhatsApp floater. #25D366 is WhatsApp's own brand green and is deliberately
+   outside the palette — recolouring it to sage would make it unrecognisable. */
+.whatsapp-float {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(42, 37, 32, 0.15);
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+}
+.whatsapp-float:hover { background: #20BD5A; box-shadow: 0 8px 26px rgba(37, 211, 102, 0.45); }
+.whatsapp-float:focus-visible { outline: 3px solid var(--c-accent); outline-offset: 3px; }
+
+@media (min-width: 768px) {
+  .whatsapp-float { right: 1.5rem; bottom: 1.5rem; width: 58px; height: 58px; }
+}
+
+/* One container for the whole site, so the nav and every section share a grid
+   and text never sits flush against the viewport edge. */
+.container-page {
+  width: 100%;
+  max-width: calc(var(--container-max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* A wider variant for full-bleed-ish rows like the category scroller. */
+.container-wide {
+  width: 100%;
+  max-width: calc(1440px + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Eyebrow label above a heading */
+.eyebrow {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+.block-sage .eyebrow,
+.block-blush .eyebrow { color: inherit; opacity: 0.8; }
+
+/* Headings */
+.heading-xl { font-family: var(--font-heading); font-size: clamp(2.25rem, 5vw, 3.5rem); line-height: 1.15; }
+.heading-lg { font-family: var(--font-heading); font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.2; }
+.heading-md { font-family: var(--font-heading); font-size: clamp(1.25rem, 2.5vw, 1.6rem); line-height: 1.3; }
+
+/* Cards */
+.card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  color: var(--c-text);
+  overflow: hidden;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  border-color: var(--c-border-firm);
+  box-shadow: 0 12px 32px rgba(42, 37, 32, 0.08);
+}
+
 /* ── Premium Effects ──────────────────────────────────── */
 
 /* Metallic Shine Animation */
@@ -157,10 +361,13 @@ a { color: inherit; text-decoration: none; }
 
 /* ── Buttons ──────────────────────────────────────────── */
 /* Primary: gold fill, black text */
+/* .btn-gold-* names kept so existing call sites keep working; .btn-primary and
+   friends are the names to use from here on. */
+.btn-primary,
 .btn-gold-shimmer {
   position: relative;
-  background: var(--color-gold);
-  color:         var(--color-ivory-bg);
+  background: var(--c-accent);
+  color:         var(--c-on-sage);
   font-weight:   600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -169,16 +376,33 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
   transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
+.btn-secondary {
+  background: var(--c-block-blush);
+  color: var(--c-on-blush);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-secondary:hover {
+  background: #6F4B48;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(126, 86, 83, 0.25);
+}
+.btn-primary:hover,
 .btn-gold-shimmer:hover {
-  background: var(--color-gold-dark);
+  background: var(--c-accent-hover);
   transform:  translateY(-2px);
   box-shadow: 0 8px 24px rgba(95, 100, 64, 0.28);
 }
 
 /* Outline: gold border, gold text → fills on hover */
+.btn-outline,
 .btn-gold-outline {
-  border:      1px solid var(--color-gold);
-  color:       var(--color-gold);
+  border:      1px solid var(--c-accent);
+  color:       var(--c-accent);
   background:  transparent;
   font-weight: 500;
   letter-spacing: 0.12em;
@@ -186,6 +410,7 @@ a { color: inherit; text-decoration: none; }
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
+.btn-outline:hover,
 .btn-gold-outline:hover {
   background:  var(--color-gold);
   color:       var(--color-ivory-bg);
@@ -256,3 +481,25 @@ a { color: inherit; text-decoration: none; }
   border-bottom-color: var(--color-gold) !important;
   box-shadow:          0 2px 0 rgba(95,100,64,0.45);
 }
+
+/* Reduced motion means a gentler equivalent, not the absence of feedback. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.15s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --c-text-soft: var(--c-text);
+    --c-border: var(--c-sage);
+  }
+}
+
+/* Native scroll-snap carousels: hide the bar, keep the scrolling. */
+.surface-page [style*="scroll-snap-type"]::-webkit-scrollbar { display: none; }

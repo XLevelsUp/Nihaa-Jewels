@@ -6,6 +6,10 @@ import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase-server';
 import { getCurrentUser } from '@/lib/supabase-auth';
 import { slugify } from '@/lib/pricing';
+
+// Admin and marketing deploy separately, so this cannot clear the public site's
+// cache. The menu and collection pages pick up changes within the hour; see
+// docs/e-catalogue-plan.md for the webhook that would make it instant.
 import type { ActionResult } from './products';
 
 const categorySchema = z.object({
@@ -18,6 +22,9 @@ const categorySchema = z.object({
   metaTitle: z.string().trim().max(200).optional().or(z.literal('')),
   metaDescription: z.string().trim().max(500).optional().or(z.literal('')),
   metaKeywords: z.string().trim().max(500).optional().or(z.literal('')),
+  parentId: z.string().uuid().optional().or(z.literal('')),
+  badge: z.string().trim().max(30).optional().or(z.literal('')),
+  showInNav: z.coerce.boolean().optional(),
   displayOrder: z.coerce.number().int().min(0).max(999),
   isActive: z.coerce.boolean().optional(),
 });
@@ -36,6 +43,9 @@ export async function saveCategory(formData: FormData): Promise<ActionResult> {
     metaTitle: (formData.get('metaTitle') as string) ?? '',
     metaDescription: (formData.get('metaDescription') as string) ?? '',
     metaKeywords: (formData.get('metaKeywords') as string) ?? '',
+    parentId: (formData.get('parentId') as string) ?? '',
+    badge: (formData.get('badge') as string) ?? '',
+    showInNav: formData.get('showInNav') === 'true',
     displayOrder: formData.get('displayOrder') || 0,
     isActive: formData.get('isActive') === 'true',
   });
@@ -53,6 +63,47 @@ export async function saveCategory(formData: FormData): Promise<ActionResult> {
   const supabase = createAdminClient();
   const slug = slugify(input.slug || input.name);
 
+  // One level only: a sub-category cannot itself be a parent, and nothing may
+  // parent itself. Either would produce a menu that recurses forever.
+  if (input.parentId) {
+    if (input.parentId === input.id) {
+      return {
+        ok: false,
+        message: 'A collection cannot be its own parent.',
+        fieldErrors: { parentId: 'Choose a different parent' },
+      };
+    }
+
+    const { data: parent } = await supabase
+      .from('categories')
+      .select('parent_id')
+      .eq('id', input.parentId)
+      .maybeSingle();
+
+    if (parent?.parent_id) {
+      return {
+        ok: false,
+        message: 'That collection is already a sub-collection. Only one level of nesting is supported.',
+        fieldErrors: { parentId: 'Pick a top-level collection' },
+      };
+    }
+
+    if (input.id) {
+      const { count } = await supabase
+        .from('categories')
+        .select('*', { count: 'exact', head: true })
+        .eq('parent_id', input.id);
+
+      if ((count ?? 0) > 0) {
+        return {
+          ok: false,
+          message: 'This collection already has sub-collections, so it cannot become one itself.',
+          fieldErrors: { parentId: 'Move its sub-collections first' },
+        };
+      }
+    }
+  }
+
   const row = {
     name: input.name,
     slug,
@@ -64,6 +115,9 @@ export async function saveCategory(formData: FormData): Promise<ActionResult> {
     meta_keywords: input.metaKeywords
       ? input.metaKeywords.split(',').map((s) => s.trim()).filter(Boolean)
       : [],
+    parent_id: input.parentId || null,
+    badge: input.badge || null,
+    show_in_nav: input.showInNav ?? true,
     display_order: input.displayOrder,
     is_active: input.isActive ?? false,
   };

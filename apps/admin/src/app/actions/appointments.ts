@@ -8,10 +8,24 @@ import { getCurrentUser } from '@/lib/supabase-auth';
 import type { ActionResult } from './products';
 
 const statusSchema = z.enum(['new', 'confirmed', 'completed', 'cancelled']);
+export type AppointmentStatus = z.infer<typeof statusSchema>;
+
+// Which moves are allowed from each status. Enforced here rather than only in the UI,
+// so a stale page or a crafted request cannot record a visit on a cancelled booking.
+const ALLOWED: Record<AppointmentStatus, AppointmentStatus[]> = {
+  new: ['confirmed', 'cancelled'],
+  confirmed: ['completed', 'cancelled'],
+  // A visit that happened is a fact; it is only reversible through an explicit undo.
+  completed: [],
+  // The customer rang back and rebooked — reopening is a real case.
+  cancelled: ['new'],
+};
 
 export async function updateAppointmentStatus(
   id: string,
   status: string,
+  // Undo replays a known previous status, so it bypasses the forward-only rules.
+  options?: { undo?: boolean },
 ): Promise<ActionResult> {
   const user = await getCurrentUser();
   if (!user) return { ok: false, message: 'Your session has expired. Please sign in again.' };
@@ -20,10 +34,34 @@ export async function updateAppointmentStatus(
   if (!parsed.success) return { ok: false, message: 'Unknown status.' };
 
   const supabase = createAdminClient();
+
+  const { data: current, error: readError } = await supabase
+    .from('appointments')
+    .select('status')
+    .eq('id', id)
+    .single();
+
+  if (readError || !current) {
+    console.error('[updateAppointmentStatus] read', readError);
+    return { ok: false, message: 'Could not find that booking.' };
+  }
+
+  const from = current.status as AppointmentStatus;
+  if (from === parsed.data) return { ok: true, message: 'Already set.' };
+
+  if (!options?.undo && !ALLOWED[from].includes(parsed.data)) {
+    return {
+      ok: false,
+      message: `A ${from} booking cannot be marked ${parsed.data}.`,
+    };
+  }
+
   const { error } = await supabase
     .from('appointments')
     .update({ status: parsed.data })
-    .eq('id', id);
+    .eq('id', id)
+    // Guards against two staff acting on the same booking at once.
+    .eq('status', from);
 
   if (error) {
     console.error('[updateAppointmentStatus]', error);
@@ -33,9 +71,9 @@ export async function updateAppointmentStatus(
   revalidatePath('/appointments');
   revalidatePath('/');
 
-  const wording: Record<string, string> = {
-    new: 'Moved back to new.',
-    confirmed: 'Marked as confirmed.',
+  const wording: Record<AppointmentStatus, string> = {
+    new: options?.undo ? 'Change undone.' : 'Reopened as new.',
+    confirmed: options?.undo ? 'Change undone.' : 'Marked as confirmed.',
     completed: 'Marked as visited.',
     cancelled: 'Marked as cancelled.',
   };

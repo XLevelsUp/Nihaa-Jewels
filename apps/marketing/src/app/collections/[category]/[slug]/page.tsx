@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Box, Container, Typography } from '@mui/material';
 
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationServer';
 import Footer from '@/components/sections/Footer';
 import PriceBreakdownTable from '@/components/catalogue/PriceBreakdownTable';
 import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton';
@@ -149,7 +149,7 @@ export default async function ProductPage({ params }: PageProps) {
                 sx={{
                   position: 'relative',
                   aspectRatio: '1 / 1',
-                  bgcolor: '#55524A',
+                  bgcolor: 'var(--c-icing)',
                   border: '1px solid rgba(95, 100, 64,0.12)',
                   overflow: 'hidden',
                 }}
@@ -213,7 +213,7 @@ export default async function ProductPage({ params }: PageProps) {
                 variant="overline"
                 sx={{
                   display: 'block',
-                  color: 'rgba(95, 100, 64,0.6)',
+                  color: 'var(--c-accent)',
                   letterSpacing: '0.2em',
                   fontSize: '0.65rem',
                   mb: 1,
@@ -265,7 +265,7 @@ export default async function ProductPage({ params }: PageProps) {
                     <Box
                       component="dt"
                       sx={{
-                        color: 'rgba(95, 100, 64,0.6)',
+                        color: 'var(--c-accent)',
                         fontSize: '0.6rem',
                         letterSpacing: '0.15em',
                         textTransform: 'uppercase',

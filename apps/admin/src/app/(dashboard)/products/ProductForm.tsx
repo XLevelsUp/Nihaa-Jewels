@@ -6,6 +6,7 @@ import {
   Alert,
   Box,
   Button,
+  Chip,
   CircularProgress,
   Divider,
   FormControlLabel,
@@ -21,6 +22,7 @@ import {
 import { saveProduct } from '@/app/actions/products';
 import { calculatePrice, formatRupees, type Karat, type MakingChargeType } from '@/lib/pricing';
 import { PALETTE } from '@/constants/palette';
+import { OCCASIONS, GENDERS } from '@/constants/filters';
 import type { Category } from '@/types/database';
 import type { ProductRow } from '@/lib/catalogue';
 
@@ -304,23 +306,55 @@ export default function ProductForm({ product, categories, rates }: ProductFormP
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
                 <TextField
+                  select
                   label="Occasions"
-                  value={form.occasion}
-                  onChange={(e) => set('occasion', e.target.value)}
-                  placeholder="wedding, daily-wear"
-                  helperText="Separate with commas"
-                />
+                  value={form.occasion ? form.occasion.split(',').map((s) => s.trim()).filter(Boolean) : []}
+                  onChange={(e) => {
+                    const v = e.target.value as unknown as string[];
+                    set('occasion', v.join(', '));
+                  }}
+                  slotProps={{
+                    select: {
+                      multiple: true,
+                      renderValue: (selected) => {
+                        const values = selected as string[];
+                        if (values.length === 0) return <span style={{ opacity: 0.6 }}>None selected</span>;
+                        return (
+                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                            {values.map((v) => (
+                              <Chip
+                                key={v}
+                                size="small"
+                                label={OCCASIONS.find((o) => o.value === v)?.label ?? v}
+                                sx={{ height: 20, fontSize: '0.7rem' }}
+                              />
+                            ))}
+                          </Box>
+                        );
+                      },
+                    },
+                  }}
+                  helperText="Choose any that apply"
+                >
+                  {OCCASIONS.map((o) => (
+                    <MenuItem key={o.value} value={o.value}>
+                      {o.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
                 <TextField
                   select
                   label="Worn by"
                   value={form.gender}
                   onChange={(e) => set('gender', e.target.value)}
+                  helperText="Unisex covers both women and men"
                 >
                   <MenuItem value="">Not specified</MenuItem>
-                  <MenuItem value="women">Women</MenuItem>
-                  <MenuItem value="men">Men</MenuItem>
-                  <MenuItem value="unisex">Unisex</MenuItem>
-                  <MenuItem value="kids">Kids</MenuItem>
+                  {GENDERS.map((g) => (
+                    <MenuItem key={g.value} value={g.value}>
+                      {g.label}
+                    </MenuItem>
+                  ))}
                 </TextField>
               </Box>
 
