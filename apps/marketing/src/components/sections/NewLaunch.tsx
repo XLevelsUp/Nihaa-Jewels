@@ -36,7 +36,7 @@ export default function NewLaunch() {
             style={{ aspectRatio: '3 / 2', background: 'var(--c-icing)' }}
           >
             <Image
-              src="/images/ring-promo.webp"
+              src="/images/sections/ring-promo.webp"
               alt="Emerald and gold rings worn with a green silk saree"
               fill
               loading="lazy"

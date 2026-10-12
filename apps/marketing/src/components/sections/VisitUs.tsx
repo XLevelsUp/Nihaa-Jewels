@@ -28,7 +28,7 @@ export default function VisitUs() {
             style={{ aspectRatio: '4 / 3', background: 'var(--c-page)' }}
           >
             <Image
-              src="/images/visit-us-storefront.webp"
+              src="/images/sections/visit-us-storefront.webp"
               alt="Nihaa Jewels showroom, RS Puram, Coimbatore"
               fill
               loading="lazy"

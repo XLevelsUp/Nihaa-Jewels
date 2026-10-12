@@ -15,9 +15,9 @@ const ROTATING_WORDS = ['Heritage', 'Elegance', 'Craftsmanship', 'Devotion'];
 const WORD_MS = 2600;
 
 const FRAMES = [
-  { src: '/images/hero-frame-1-bridal.webp', label: 'Bridal temple necklace', ratio: '4 / 5' },
-  { src: '/images/hero-frame-2-craft.webp', label: 'Our goldsmiths at work', ratio: '1 / 1' },
-  { src: '/images/hero-frame-3-flatlay.webp', label: 'Temple jewellery collection', ratio: '1 / 1' },
+  { src: '/images/hero/hero-frame-1-bridal.webp', label: 'Bridal temple necklace', ratio: '4 / 5' },
+  { src: '/images/hero/hero-frame-2-craft.webp', label: 'Our goldsmiths at work', ratio: '1 / 1' },
+  { src: '/images/hero/hero-frame-3-flatlay.webp', label: 'Temple jewellery collection', ratio: '1 / 1' },
 ];
 
 export default function StaticBrandHero() {
