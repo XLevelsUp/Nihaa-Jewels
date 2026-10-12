@@ -8,19 +8,19 @@ const AUDIENCES = [
   {
     label: 'For Women',
     href: '/collections?gender=women',
-    src: '/images/audience-women.webp',
+    src: '/images/sections/audience-women.webp',
     alt: 'Woman in a green silk saree wearing temple gold jewellery',
   },
   {
     label: 'For Men',
     href: '/collections?gender=men',
-    src: '/images/audience-men.webp',
+    src: '/images/sections/audience-men.webp',
     alt: 'Man in a cream kurta wearing a gold chain and bracelet',
   },
   {
     label: 'For Kids',
     href: '/collections?gender=kids',
-    src: '/images/audience-kids.webp',
+    src: '/images/sections/audience-kids.webp',
     alt: 'Young girl wearing a fine gold chain and bangles',
   },
 ];

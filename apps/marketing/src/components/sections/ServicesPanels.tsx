@@ -14,7 +14,7 @@ const PANELS = [
     body: 'Bring us a sketch, an heirloom, or just an idea. Our goldsmiths will draw it, quote it and make it in our own workshop.',
     cta: 'Commission a Piece',
     href: '/custom-design',
-    image: '/images/hero-frame-2-craft.webp',
+    image: '/images/hero/hero-frame-2-craft.webp',
     block: 'block-sage',
   },
   {
@@ -23,7 +23,7 @@ const PANELS = [
     body: 'Birthdays, anniversaries, the first gold of a new marriage. We will help you choose, and wrap it properly.',
     cta: 'Explore Gifting',
     href: '/gifting',
-    image: '/images/hero-frame-3-flatlay.webp',
+    image: '/images/hero/hero-frame-3-flatlay.webp',
     block: 'block-blush',
   },
 ];

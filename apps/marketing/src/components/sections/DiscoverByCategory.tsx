@@ -109,7 +109,7 @@ export default function DiscoverByCategory({ categories }: DiscoverByCategoryPro
                     style={{ aspectRatio: '1 / 1', background: 'var(--c-icing)' }}
                   >
                     <Image
-                      src={c.heroImagePath ?? '/images/hero-frame-3-flatlay.webp'}
+                      src={c.heroImagePath ?? '/images/hero/hero-frame-3-flatlay.webp'}
                       alt={`${c.name} — Nihaa Jewels Coimbatore`}
                       fill
                       loading="lazy"
