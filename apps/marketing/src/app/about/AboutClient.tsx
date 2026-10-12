@@ -20,7 +20,7 @@ export default function AboutClient() {
     <>
       <Box component="section" sx={{ position: 'relative', height: { xs: '60vh', md: '70vh' }, minHeight: '520px', display: 'flex', alignItems: 'end', justifyContent: 'center', overflow: 'hidden' }}>
         <Image src="https://images.unsplash.com/photo-1599643478524-fb506461a4fb?w=1600&q=85&auto=format&fit=crop" alt="bespoke jewellery design - four generations of master goldsmiths Nihaa Jewels" fill priority sizes="100vw" style={{ objectFit: 'cover' }} />
-        <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #121212, rgba(18, 18, 18, 0.4), transparent)' }} />
+        <Box sx={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, #FFFFF0, rgba(18, 18, 18, 0.4), transparent)' }} />
         <Box sx={{ position: 'relative', zIndex: 10, textAlign: 'center', pb: 12, px: 2 }}>
           <Typography variant="overline" sx={{ display: 'block', mb: 2, color: 'primary.main', fontWeight: 500, letterSpacing: '0.28em', fontSize: '0.75rem' }}>Est. 1986 · Coimbatore, India</Typography>
           <Typography variant="h1" sx={{ fontSize: { xs: '2.75rem', md: '5rem' }, color: 'text.primary', lineHeight: 1.1, fontFamily: 'var(--font-playfair-display), serif' }}>A Legacy Written <Box component="em" className="text-gradient-gold" sx={{ fontStyle: 'normal' }}>in Gold</Box></Typography>
@@ -45,7 +45,7 @@ export default function AboutClient() {
           </Grid2>
         </Grid2>
       </Container>
-      <Box component="section" sx={{ py: { xs: 10, md: 15 }, px: 3, bgcolor: '#0d0d0d' }}>
+      <Box component="section" sx={{ py: { xs: 10, md: 15 }, px: 3, bgcolor: '#E8EAD9' }}>
         <Container maxWidth="md">
           <Box sx={{ textAlign: 'center', display: 'flex', flexDirection: 'column', gap: 4 }}>
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: '0.2em' }}>Responsibility</Typography>

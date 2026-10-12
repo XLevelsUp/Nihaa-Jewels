@@ -1,11 +1,14 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationServer';
 import StaticBrandHero from '@/components/sections/StaticBrandHero';
+import VisitUs from '@/components/sections/VisitUs';
 import dynamic from 'next/dynamic';
-const PromotionalHero = dynamic(() => import('@/components/sections/PromotionalHero'));
+import { STORE } from '@/constants/store';
 const NewLaunch = dynamic(() => import('@/components/sections/NewLaunch'));
-const CategoryDiscoveryGrid = dynamic(() => import('@/components/sections/CategoryDiscoveryGrid'));
+const DiscoverByCategory = dynamic(() => import('@/components/sections/DiscoverByCategoryServer'));
+const FeaturedPieces = dynamic(() => import('@/components/sections/FeaturedPieces'));
+const ServicesPanels = dynamic(() => import('@/components/sections/ServicesPanels'));
 const ShopByGender = dynamic(() => import('@/components/sections/ShopByGender'));
 const NihaaAssurance = dynamic(() => import('@/components/sections/NihaaAssurance'));
 const Testimonials = dynamic(() => import('@/components/sections/Testimonials'));
@@ -38,14 +41,14 @@ export default function Home() {
     ],
     "@id": "https://nihaajewels.com/#store",
     "url": "https://nihaajewels.com",
-    "telephone": "+914222542026",
+    "telephone": STORE.phoneSchema,
     "priceRange": "$$$",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "42, DB Road, RS Puram",
+      "streetAddress": "Mahalaksmi Complex, 23 D Chokkampudur Road, Krishna Nagar, RS Puram",
       "addressLocality": "Coimbatore",
       "addressRegion": "Tamil Nadu",
-      "postalCode": "641002",
+      "postalCode": "641001",
       "addressCountry": "IN"
     },
     "geo": {
@@ -155,7 +158,7 @@ export default function Home() {
   };
 
   return (
-    <main className="bg-[#121212] min-h-screen">
+    <main className="landing-bg min-h-screen">
       <Script
         id="home-localbusiness-schema"
         type="application/ld+json"
@@ -163,12 +166,14 @@ export default function Home() {
       />
       <Navigation />
       <StaticBrandHero />
-      <PromotionalHero />
+      <DiscoverByCategory />
+      <FeaturedPieces />
       <NewLaunch />
-      <CategoryDiscoveryGrid />
+      <ServicesPanels />
       <ShopByGender />
       <NihaaAssurance />
       <Testimonials />
+      <VisitUs />
       <Footer />
     </main>
   );

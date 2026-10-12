@@ -1,430 +1,523 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AppBar, Toolbar, Container, Box, Typography, IconButton, InputBase, Stack } from '@mui/material';
-import { 
-  Gem, Sparkles, Circle, CircleDashed, Activity, Crown, Star, Gift, 
-  Search, MapPin, Heart, User, Phone, Menu, X, Baby, Feather
+import {
+  AppBar, Toolbar, Container, Box, Typography,
+  IconButton, InputBase, Stack
+} from '@mui/material';
+import {
+  Search, MapPin, Heart, User, Phone,
+  Menu, X, ChevronRight, ArrowRight, CalendarCheck,
+  ShieldCheck, Truck, RotateCcw, Award, Baby, Feather
 } from 'lucide-react';
 
-import { MEGA_NAVIGATION } from '@/constants';
+import BookAppointmentDialog from '@/components/catalogue/BookAppointmentDialog';
 
-/* ─── Sub-Components ───────────────────────────── */
+export interface NavItem {
+  label: string;
+  href: string;
+  badge?: string | null;
+  description?: string | null;
+  heroImagePath?: string | null;
+  columns: { title: string; items: { label: string; href: string }[] }[];
+}
 
+/* ─── Featured showcase per category (displayed in mega-menu right panel) ── */
+
+/* ─── Micro icons for mega-menu sub-items ─────────────────────────── */
+const getItemIcon = (name: string) => {
+  const s = { size: 13, strokeWidth: 1.4, style: { marginRight: 7, opacity: 0.6, flexShrink: 0 } as React.CSSProperties };
+  const l = name.toLowerCase();
+  if (l === 'women')                            return <User {...s} />;
+  if (l === 'men' || l === 'unisex')            return <User {...s} />;
+  if (l === 'kids')                             return <Baby {...s} />;
+  if (l === 'couple' || l === 'couples')        return <Heart {...s} />;
+  if (l.includes('light') || l.includes('everyday')) return <Feather {...s} />;
+  return null;
+};
+
+/* ─── Logo ──────────────────────────────────────────────────────── */
 const Logo = () => (
-  <Box component={Link} href="/" sx={{ display: 'flex', alignItems: 'center', gap: 1, textDecoration: 'none', flexShrink: 0 }}>
+  <Box
+    component={Link}
+    href="/"
+    sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}
+  >
     <Box
       component="img"
       src="/logo.svg"
       alt="Nihaa Jewels Logo"
-      sx={{
-        height: { xs: '36px', md: '44px' },
-        width: 'auto',
-        objectFit: 'contain'
-      }}
+      sx={{ height: { xs: 34, md: 42 }, width: 'auto', objectFit: 'contain' }}
     />
   </Box>
 );
 
-const RingIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <ellipse cx="12" cy="14" rx="6" ry="4" opacity="0.8"/>
-    <path d="M10 10l2-3 2 3-2 2z" />
-  </svg>
-);
+/* ─── Trust pills (bottom of mega-menu) ────────────────────────── */
+const TRUST_ITEMS = [
+  { icon: <ShieldCheck size={14} />, text: 'BIS 916 Hallmarked' },
+  { icon: <Award size={14} />,       text: 'IGI Certified Diamonds' },
+  { icon: <Truck size={14} />,       text: 'Free Insured Shipping' },
+  { icon: <RotateCcw size={14} />,   text: 'Lifetime Exchange' },
+];
 
-const EarringIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M12 3v3" opacity="0.6"/>
-    <circle cx="12" cy="6" r="1" fill="currentColor"/>
-    <path d="M12 7c-2 3-3 4.5-3 7a3 3 0 0 0 6 0c0-2.5-1-4-3-7z" />
-  </svg>
-);
-
-const JhumkaIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <circle cx="12" cy="5" r="1.5" fill="currentColor"/>
-    <path d="M7 14c0-3 3-6 5-6s5 3 5 6" />
-    <path d="M7 14h10" />
-    <circle cx="8" cy="16" r="0.5" fill="currentColor" />
-    <circle cx="12" cy="16" r="0.5" fill="currentColor" />
-    <circle cx="16" cy="16" r="0.5" fill="currentColor" />
-  </svg>
-);
-
-const StudIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M12 8l2 4 4-2-2 4 2 4-4-2-2 4-2-4-4 2 2-4-4-2 2-4z" />
-  </svg>
-);
-
-const HoopIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M12 4v2" opacity="0.6"/>
-    <circle cx="12" cy="14" r="7" />
-  </svg>
-);
-
-const BraceletIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <rect x="4" y="10" width="4" height="4" rx="1" />
-    <rect x="16" y="10" width="4" height="4" rx="1" />
-    <rect x="10" y="9" width="4" height="6" rx="1" />
-    <path d="M8 12h2M14 12h2" opacity="0.5"/>
-  </svg>
-);
-
-const CoupleBraceletIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <ellipse cx="9" cy="12" rx="6" ry="3" />
-    <ellipse cx="15" cy="15" rx="6" ry="3" opacity="0.6"/>
-  </svg>
-);
-
-const BangleIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <ellipse cx="12" cy="10" rx="8" ry="4" opacity="0.4"/>
-    <ellipse cx="12" cy="14" rx="8" ry="4" />
-  </svg>
-);
-
-const PendantIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M6 4l6 7.5 6-7.5" opacity="0.5" />
-    <path d="M12 11.5l-2.5 4h5z" />
-  </svg>
-);
-
-const BridalSetIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M6 5c0 6 3 11 6 11s6-5 6-11" strokeDasharray="3 2"/>
-    <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
-    <path d="M4 12v2" opacity="0.5"/>
-    <circle cx="4" cy="15" r="1" fill="currentColor"/>
-    <path d="M20 12v2" opacity="0.5"/>
-    <circle cx="20" cy="15" r="1" fill="currentColor"/>
-  </svg>
-);
-
-const MangalsutraIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M5 4c2 5 4 8 7 8s5-3 7-8" strokeDasharray="3 3" opacity="0.7"/>
-    <circle cx="10" cy="13" r="1.5" />
-    <circle cx="14" cy="13" r="1.5" />
-  </svg>
-);
-
-const GoldCoinIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <circle cx="12" cy="12" r="7" />
-    <circle cx="12" cy="12" r="5" opacity="0.4" />
-    <path d="M12 9v6" opacity="0.8"/>
-  </svg>
-);
-
-const ChainIcon = (props: any) => (
-  <svg width={props.size || 24} height={props.size || 24} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={props.strokeWidth || 1.5} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="M6 5c0 6 3 12 6 12s6-6 6-12" opacity="0.3" strokeWidth="1" />
-    <path d="M6 5c0 6 3 12 6 12s6-6 6-12" strokeDasharray="3 3" strokeWidth="2" />
-  </svg>
-);
-
-const getItemIcon = (itemName: string) => {
-  const props = { size: 14, strokeWidth: 1.5, style: { marginRight: 8, opacity: 0.6 } };
-  const lower = itemName.toLowerCase();
-  
-  if (lower === 'men' || lower === 'unisex') return <User {...props} />;
-  if (lower === 'women') return <User {...props} color="#D4AF37" />;
-  if (lower === 'kids') return <Baby {...props} />;
-  if (lower === 'couple' || lower === 'couples') return <Heart {...props} />;
-  
-  if (lower.includes('couple bracelet')) return <CoupleBraceletIcon {...props} />;
-  if (lower.includes('bridal set') || lower.includes('trousseau')) return <BridalSetIcon {...props} />;
-  if (lower.includes('ring')) return <RingIcon {...props} />;
-  if (lower.includes('bangle')) return <BangleIcon {...props} />;
-  if (lower.includes('bracelet')) return <BraceletIcon {...props} />;
-  
-  if (lower.includes('jhumka')) return <JhumkaIcon {...props} />;
-  if (lower.includes('stud')) return <StudIcon {...props} />;
-  if (lower.includes('hoop')) return <HoopIcon {...props} />;
-  if (lower.includes('drop')) return <EarringIcon {...props} />;
-  if (lower.includes('earring')) return <EarringIcon {...props} />;
-  
-  if (lower.includes('mangalsutra')) return <MangalsutraIcon {...props} />;
-  if (lower.includes('chain')) return <ChainIcon {...props} />;
-  if (lower.includes('pendant')) return <PendantIcon {...props} />;
-  if (lower.includes('coin')) return <GoldCoinIcon {...props} />;
-  if (lower.includes('light') || lower.includes('everyday')) return <Feather {...props} />;
-  
-  return null;
-};
-
-const getCategoryIcon = (iconName: string) => {
-  const props = { size: 16, strokeWidth: 1.5 };
-  switch (iconName) {
-    case 'gem': return <Gem {...props} />;
-    case 'sparkles': return <Sparkles {...props} />;
-    case 'ring': return <RingIcon {...props} />;
-    case 'ear': return <EarringIcon {...props} />;
-    case 'bangle': return <BangleIcon {...props} />;
-    case 'bracelet': return <BraceletIcon {...props} />;
-    case 'wedding': return <MangalsutraIcon {...props} />;
-    case 'sparkle': return <Sparkles {...props} />;
-    case 'gift': return <Gift {...props} />;
-    default: return <Gem {...props} />;
-  }
-};
-
-export default function Navigation() {
+/* ═══════════════════════════════════════════════════════════════════
+   NAVIGATION COMPONENT
+   ═══════════════════════════════════════════════════════════════════ */
+export default function Navigation({ items }: { items: NavItem[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
   const [activeMega, setActiveMega] = useState<string | null>(null);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
 
+  /* scroll listener */
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 36);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  /* close on route change */
   useEffect(() => {
     setMenuOpen(false);
     setActiveMega(null);
+    setMobileExpanded(null);
   }, [pathname]);
 
-  const isHomePage = pathname === '/';
+  const isHome = pathname === '/';
 
+  /* debounced mouse leave to prevent flicker */
+  const handleBarLeave = () => {
+    leaveTimer.current = setTimeout(() => setActiveMega(null), 180);
+  };
+  const handleBarEnter = () => {
+    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+  };
+
+  /* ─────────────────────────── render ─────────────────────────── */
   return (
     <>
-      {/* Visually hidden SEO descriptions as requested */}
+      {/* SEO hidden text */}
       <Box sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
         <Typography variant="body1">
-          Nihaa Jewels is a premium gold jewellery brand established in 2026, offering elegant and timeless gold jewellery collections for bridal, daily wear, gifting, and special occasions.
-        </Typography>
-        <Typography variant="body2">
-          Keywords: Gold Rings, Gold Bangles, Gold Bracelets, Wedding Jewellery, Daily Wear Jewellery, Gold Gifting
+          Nihaa Jewels — premium BIS hallmarked gold jewellery from Coimbatore. Bridal, daily wear, gifting & bespoke collections since 1986.
         </Typography>
       </Box>
 
+      {/* ============================================================
+          APP BAR
+          ============================================================ */}
       <AppBar
-        position={isHomePage ? "fixed" : "sticky"}
+        position={isHome ? 'fixed' : 'sticky'}
         elevation={0}
+        onMouseLeave={handleBarLeave}
+        onMouseEnter={handleBarEnter}
         sx={{
-          top: 0, left: 0, right: 0, zIndex: 1100,
-          background: scrolled 
-            ? 'rgba(18, 18, 18, 0.95)' 
-            : (isHomePage ? 'linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, rgba(5,5,5,0) 100%)' : '#121212'),
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled 
-            ? '1px solid rgba(212, 175, 55, 0.1)' 
-            : (isHomePage ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.05)'),
-          transition: 'all 0.3s ease'
+          top: 0,
+          zIndex: 1100,
+          bgcolor: scrolled
+            ? 'rgba(255,255,240,0.92)'   /* ivory with translucency */
+            : 'var(--c-ivory)',
+          backdropFilter: scrolled ? 'blur(16px) saturate(1.3)' : 'none',
+          borderBottom: scrolled
+            ? '1px solid rgba(95,100,64,0.12)'
+            : isHome ? '1px solid transparent' : '1px solid rgba(95,100,64,0.08)',
+          boxShadow: scrolled ? '0 4px 24px rgba(42,37,32,0.06)' : 'none',
+          transition: 'background 0.35s, border-color 0.35s, box-shadow 0.35s',
+          color: 'var(--c-text)',
         }}
-        onMouseLeave={() => setActiveMega(null)}
       >
-        <Container maxWidth="xl">
-          {/* ================= UPPER HEADER ================= */}
-          <Toolbar disableGutters sx={{ minHeight: { xs: '76px !important', md: '92px !important' }, py: 2.5, display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.3s ease' }}>
-            
-            {/* Left: Brand */}
-            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', transform: 'scale(1)', transition: 'transform 0.3s ease', transformOrigin: 'left center' }}>
-              <Logo />
-            </Box>
+        {/* ─── ROW 1 — Brand · Search · Actions ─────────────────── */}
+        <Container maxWidth={false} disableGutters className="container-page">
+          <Toolbar
+            disableGutters
+            sx={{
+              minHeight: { xs: '62px !important', md: '72px !important' },
+              gap: 2,
+            }}
+          >
+            {/* LOGO */}
+            <Logo />
 
-            {/* Center: Search Bar */}
-            <Box sx={{ flex: 2, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+            {/* SEARCH — centre */}
+            <Box sx={{ flex: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
               <Box
                 sx={{
-                  display: 'flex', alignItems: 'center', width: '100%', maxWidth: 500,
-                  bgcolor: 'rgba(255, 255, 255, 0.03)',
-                  border: '1px solid rgba(212, 175, 55, 0.2)',
-                  borderRadius: 8,
-                  px: 2, py: 0.5,
-                  transition: 'all 0.3s ease',
-                  '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.06)', borderColor: 'rgba(212, 175, 55, 0.4)' },
-                  '&:focus-within': { borderColor: '#D4AF37', boxShadow: '0 0 10px rgba(212, 175, 55, 0.1)' }
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  maxWidth: 480,
+                  border: '1px solid rgba(95,100,64,0.18)',
+                  borderRadius: '28px',
+                  bgcolor: 'rgba(255,255,255,0.65)',
+                  px: 2,
+                  py: '5px',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    borderColor: 'rgba(95,100,64,0.35)',
+                    bgcolor: '#fff',
+                  },
+                  '&:focus-within': {
+                    borderColor: 'var(--c-accent)',
+                    bgcolor: '#fff',
+                    boxShadow: '0 0 0 3px rgba(95,100,64,0.1)',
+                  },
                 }}
               >
-                <Search size={18} color="rgba(212, 175, 55, 0.8)" />
+                <Search size={16} style={{ color: 'var(--c-accent)', opacity: 0.7, flexShrink: 0 }} />
                 <InputBase
-                  placeholder="Search Gold Jewellery, Rings, Bangles, Bracelets, Wedding Gifts"
-                  sx={{ ml: 1.5, flex: 1, color: '#fff', fontSize: '0.85rem', fontFamily: 'var(--font-inter)' }}
+                  placeholder="Search jewellery, rings, bangles…"
+                  sx={{
+                    ml: 1.5,
+                    flex: 1,
+                    fontSize: '0.84rem',
+                    fontFamily: 'var(--font-inter)',
+                    color: 'var(--c-text)',
+                    '& input::placeholder': { color: 'var(--c-text-soft)', opacity: 0.75 },
+                  }}
                 />
               </Box>
             </Box>
 
-            {/* Right: Icons */}
-            <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: { xs: 1, md: 3 } }}>
-              <Box sx={{ display: { xs: 'none', lg: 'flex' }, gap: 3.5, alignItems: 'center' }}>
-                {[
-                  { name: "Visit Our Store", icon: <MapPin size={22} strokeWidth={1.5} />, href: "/stores" },
-                  { name: "Wishlist", icon: <Heart size={22} strokeWidth={1.5} />, href: "/wishlist" },
-                  { name: "Profile", icon: <User size={22} strokeWidth={1.5} />, href: "/profile" },
-                  { name: "Contact Us", icon: <Phone size={22} strokeWidth={1.5} />, href: "/contact" }
-                ].map((item) => (
-                  <motion.div key={item.name} whileHover={{ scale: 1.15, y: -2 }} whileTap={{ scale: 0.95 }}>
-                    <Box
-                      component={Link}
-                      href={item.href}
-                      aria-label={item.name}
-                      sx={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        color: 'rgba(255,255,255,0.7)', textDecoration: 'none',
-                        transition: 'color 0.3s',
-                        "&:hover": { color: '#D4AF37' }
-                      }}
-                    >
-                      {item.icon}
-                    </Box>
-                  </motion.div>
-                ))}
-              </Box>
-
-              {/* Mobile Menu Toggle */}
-              <IconButton 
-                sx={{ display: { lg: 'none' }, color: '#FAF9F6' }} 
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle navigation menu"
-              >
-                {menuOpen ? <X size={26} /> : <Menu size={26} />}
-              </IconButton>
-            </Box>
-          </Toolbar>
-          
-          {/* ================= LOWER HEADER (CATEGORIES & MEGA MENU) ================= */}
-          <Box
-            component="nav"
-            sx={{
-              display: { xs: 'none', lg: 'flex' },
-              justifyContent: 'center',
-              borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-              position: 'relative'
-            }}
-          >
-            {MEGA_NAVIGATION.map((category) => (
-              <Box
-                key={category.label}
-                onMouseEnter={() => setActiveMega(category.label)}
-                sx={{ position: 'static' }}
-              >
+            {/* ACTION ICONS — right */}
+            <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1 }}>
+              {[
+                { label: 'Store',     icon: <MapPin size={20} strokeWidth={1.4} />, href: '/stores' },
+                { label: 'Contact',   icon: <Phone size={20} strokeWidth={1.4} />,  href: '/contact' },
+              ].map((a) => (
                 <Box
+                  key={a.label}
                   component={Link}
-                  href={category.href}
+                  href={a.href}
+                  aria-label={a.label}
                   sx={{
                     display: 'flex',
+                    flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 1,
-                    py: 1,
-                    px: { lg: 2, xl: 3 },
-                    color: activeMega === category.label ? '#D4AF37' : 'rgba(255,255,255,0.85)',
+                    gap: '2px',
+                    px: 1.2,
+                    py: 0.6,
+                    borderRadius: '8px',
+                    color: 'var(--c-text)',
                     textDecoration: 'none',
-                    fontSize: '0.8rem',
-                    fontWeight: 500,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.1em',
-                    fontFamily: 'var(--font-inter)',
-                    transition: 'all 0.3s ease',
-                    position: 'relative',
-                    '&::before': {
-                      content: '""',
-                      position: 'absolute',
-                      bottom: 0,
-                      left: '10%',
-                      width: '80%',
-                      height: '2px',
-                      background: '#D4AF37',
-                      transform: activeMega === category.label ? 'scaleX(1)' : 'scaleX(0)',
-                      transition: 'transform 0.3s ease',
-                      transformOrigin: 'center'
-                    }
+                    transition: 'color 0.2s, background 0.2s',
+                    '&:hover': { color: 'var(--c-accent)', bgcolor: 'rgba(95,100,64,0.05)' },
                   }}
                 >
-                  {getCategoryIcon(category.icon)}
-                  {category.label}
+                  {a.icon}
+                  <Typography sx={{ fontSize: '0.6rem', fontWeight: 500, letterSpacing: '0.04em', fontFamily: 'var(--font-inter)', opacity: 0.8 }}>
+                    {a.label}
+                  </Typography>
                 </Box>
-                
-                {/* Mega Menu Dropdown */}
-                <AnimatePresence>
-                  {activeMega === category.label && (
+              ))}
+
+              {/* The site's primary action, so it reads as a button rather than a
+                  third icon. Opens the booking dialog with no product attached. */}
+              <Box
+                component="button"
+                type="button"
+                onClick={() => setBookingOpen(true)}
+                sx={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  ml: 1.2,
+                  px: 2.2,
+                  py: 1.1,
+                  border: 'none',
+                  cursor: 'pointer',
+                  bgcolor: 'var(--c-accent)',
+                  color: 'var(--c-ivory)',
+                  fontSize: '0.68rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontFamily: 'var(--font-inter)',
+                  whiteSpace: 'nowrap',
+                  transition: 'background 0.25s',
+                  '&:hover': { bgcolor: 'var(--c-accent-hover)' },
+                  '&:focus-visible': { outline: '3px solid var(--c-accent)', outlineOffset: '2px' },
+                }}
+              >
+                <CalendarCheck size={15} strokeWidth={1.6} />
+                Book Appointment
+              </Box>
+            </Box>
+
+            {/* MOBILE HAMBURGER */}
+            <IconButton
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+              sx={{
+                display: { lg: 'none' },
+                ml: 'auto',
+                color: 'var(--c-text)',
+                borderRadius: '8px',
+                bgcolor: 'rgba(95,100,64,0.06)',
+              }}
+            >
+              {menuOpen ? <X size={22} /> : <Menu size={22} />}
+            </IconButton>
+          </Toolbar>
+        </Container>
+
+        {/* ─── ROW 2 — Category links (desktop only) ────────────── */}
+        <Box
+          component="nav"
+          aria-label="Product categories"
+          sx={{
+            display: { xs: 'none', lg: 'block' },
+            borderTop: '1px solid rgba(95,100,64,0.08)',
+          }}
+        >
+          <Container maxWidth={false} disableGutters className="container-page">
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                position: 'relative',       /* mega-menu anchor */
+              }}
+            >
+              {items.map((cat) => {
+                const open = activeMega === cat.label;
+                return (
+                  <Box
+                    key={cat.label}
+                    onMouseEnter={() => setActiveMega(cat.label)}
+                    sx={{ position: 'static' }}
+                  >
+                    {/* category link */}
                     <Box
-                      component={motion.div}
-                      initial={{ opacity: 0, y: 10, scale: 0.99 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 5, scale: 0.99 }}
-                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      component={Link}
+                      href={cat.href}
                       sx={{
-                        position: 'absolute',
-                        top: '100%',
-                        left: 0,
-                        right: 0,
-                        bgcolor: '#080808',
-                        borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.95)',
-                        zIndex: 1000,
-                        px: { lg: 6, xl: 10 },
-                        py: 5,
-                        display: 'flex',
-                        justifyContent: 'center'
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '3px',
+                        px: { lg: 1.8, xl: 2.4 },
+                        py: 1.15,
+                        fontSize: '0.76rem',
+                        fontWeight: 500,
+                        letterSpacing: '0.11em',
+                        textTransform: 'uppercase',
+                        fontFamily: 'var(--font-inter)',
+                        color: open ? 'var(--c-accent)' : 'var(--c-text)',
+                        textDecoration: 'none',
+                        position: 'relative',
+                        transition: 'color 0.2s',
+                        '&:hover': { color: 'var(--c-accent)' },
+                        /* underline */
+                        '&::after': {
+                          content: '""',
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '20%',
+                          width: '60%',
+                          height: '2px',
+                          bgcolor: 'var(--c-accent)',
+                          borderRadius: 1,
+                          transform: open ? 'scaleX(1)' : 'scaleX(0)',
+                          transition: 'transform 0.25s cubic-bezier(.4,0,.2,1)',
+                          transformOrigin: 'center',
+                        },
                       }}
                     >
-                      {category.columns.map((col, idx) => (
-                        <Box key={idx} sx={{ 
-                          minWidth: 150, 
-                          flex: 1, 
-                          borderLeft: idx !== 0 ? '1px solid rgba(255,255,255,0.06)' : 'none', 
-                          pl: idx !== 0 ? { lg: 5, xl: 8 } : 0 
-                        }}>
-                          <Typography
-                            sx={{
-                              color: '#D4AF37',
-                              fontFamily: 'var(--font-playfair-display)',
-                              fontSize: '1.05rem',
-                              mb: 2,
-                              fontWeight: 600,
-                              letterSpacing: '0.06em'
-                            }}
-                          >
-                            {col.title}
-                          </Typography>
-                          <Stack spacing={1.5}>
-                            {col.items.map((item, itemIdx) => (
-                              <motion.div key={itemIdx} whileHover={{ x: 6 }} transition={{ type: "spring", stiffness: 300 }}>
-                                <Box
-                                  component={Link}
-                                  href={`/collections/${item.toLowerCase().replace(/ & /g, '-').replace(/\s+/g, '-')}`}
-                                  sx={{
-                                    color: 'rgba(255,255,255,0.55)',
-                                    textDecoration: 'none',
-                                    fontSize: '0.85rem',
-                                    fontFamily: 'var(--font-inter)',
-                                    transition: 'color 0.2s ease',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    width: 'fit-content',
-                                    '&:hover': { color: '#fff' }
-                                  }}
-                                >
-                                  {getItemIcon(item)}
-                                  {item}
-                                </Box>
-                              </motion.div>
-                            ))}
-                          </Stack>
-                        </Box>
-                      ))}
+                      {cat.label}
                     </Box>
-                  )}
-                </AnimatePresence>
-              </Box>
-            ))}
-          </Box>
-        </Container>
+
+                    {/* ── MEGA MENU ───────────────────────────────── */}
+                    <AnimatePresence>
+                      {open && (
+                        <Box
+                          component={motion.div}
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 4 }}
+                          transition={{ duration: 0.22, ease: [0.25, 1, 0.5, 1] }}
+                          sx={{
+                            position: 'absolute',
+                            top: '100%',
+                            left: 0,
+                            right: 0,
+                            bgcolor: '#FFFFFF',
+                            borderTop: '2px solid var(--c-accent)',
+                            boxShadow: '0 20px 50px -12px rgba(42,37,32,0.13)',
+                            zIndex: 999,
+                          }}
+                        >
+                          <Container maxWidth="xl">
+                            <Box sx={{ display: 'flex', py: 4.5, gap: { lg: 4, xl: 6 } }}>
+
+                              {/* columns */}
+                              <Box sx={{ flex: 1, display: 'flex', gap: { lg: 0 } }}>
+                                {cat.columns.map((col, ci) => (
+                                  <Box
+                                    key={ci}
+                                    sx={{
+                                      flex: 1,
+                                      px: { lg: 3, xl: 4 },
+                                      borderLeft: ci ? '1px solid rgba(95,100,64,0.08)' : 'none',
+                                    }}
+                                  >
+                                    {/* column heading */}
+                                    <Typography
+                                      sx={{
+                                        fontSize: '0.68rem',
+                                        fontWeight: 700,
+                                        letterSpacing: '0.14em',
+                                        textTransform: 'uppercase',
+                                        color: 'var(--c-accent)',
+                                        mb: 1.6,
+                                        fontFamily: 'var(--font-inter)',
+                                      }}
+                                    >
+                                      {col.title}
+                                    </Typography>
+
+                                    {/* items */}
+                                    <Stack spacing={0.9}>
+                                      {col.items.map((item, ii) => (
+                                        <Box
+                                          key={ii}
+                                          component={Link}
+                                          href={item.href}
+                                          sx={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            fontSize: '0.84rem',
+                                            color: 'var(--c-text)',
+                                            textDecoration: 'none',
+                                            fontFamily: 'var(--font-inter)',
+                                            py: '2px',
+                                            transition: 'color 0.15s, transform 0.15s',
+                                            '&:hover': { color: 'var(--c-accent)', transform: 'translateX(3px)' },
+                                          }}
+                                        >
+                                          {getItemIcon(item.label)}
+                                          {item.label}
+                                        </Box>
+                                      ))}
+                                    </Stack>
+                                  </Box>
+                                ))}
+                              </Box>
+
+                              {/* featured card */}
+                              {(() => {
+                                const f = { image: cat.heroImagePath ?? "", title: cat.label, desc: cat.description ?? "", badge: cat.badge ?? "", href: cat.href };
+                                return (
+                                  <Box
+                                    sx={{
+                                      width: { lg: 280, xl: 310 },
+                                      flexShrink: 0,
+                                      borderLeft: '1px solid rgba(95,100,64,0.08)',
+                                      pl: { lg: 3, xl: 4 },
+                                    }}
+                                  >
+                                    <Box
+                                      component={Link}
+                                      href={f.href}
+                                      sx={{
+                                        display: 'block',
+                                        borderRadius: '8px',
+                                        overflow: 'hidden',
+                                        border: '1px solid rgba(95,100,64,0.1)',
+                                        textDecoration: 'none',
+                                        color: 'inherit',
+                                        transition: 'box-shadow 0.3s, border-color 0.3s',
+                                        '&:hover': {
+                                          borderColor: 'var(--c-accent)',
+                                          boxShadow: '0 8px 24px -6px rgba(42,37,32,0.12)',
+                                          '& .featured-img': { transform: 'scale(1.04)' },
+                                        },
+                                      }}
+                                    >
+                                      <Box sx={{ position: 'relative', height: 150, overflow: 'hidden', bgcolor: 'var(--c-ivory)' }}>
+                                        <Box
+                                          className="featured-img"
+                                          component="img"
+                                          src={f.image}
+                                          alt={f.title}
+                                          sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
+                                            transition: 'transform 0.5s cubic-bezier(.25,1,.5,1)',
+                                          }}
+                                        />
+                                        {/* badge */}
+                                        <Box
+                                          sx={{
+                                            position: 'absolute',
+                                            top: 8,
+                                            left: 8,
+                                            fontSize: '0.58rem',
+                                            fontWeight: 700,
+                                            letterSpacing: '0.08em',
+                                            color: 'var(--c-accent)',
+                                            bgcolor: 'rgba(255,255,255,0.88)',
+                                            backdropFilter: 'blur(6px)',
+                                            border: '1px solid rgba(95,100,64,0.15)',
+                                            borderRadius: '3px',
+                                            px: 0.8,
+                                            py: '2px',
+                                          }}
+                                        >
+                                          {f.badge}
+                                        </Box>
+                                      </Box>
+                                      <Box sx={{ p: 2 }}>
+                                        <Typography sx={{ fontFamily: 'var(--font-playfair-display)', fontWeight: 600, fontSize: '0.95rem', color: 'var(--c-text)', mb: 0.3 }}>
+                                          {f.title}
+                                        </Typography>
+                                        <Typography sx={{ fontSize: '0.76rem', color: 'var(--c-text-soft)', lineHeight: 1.5, mb: 1.2, fontFamily: 'var(--font-inter)' }}>
+                                          {f.desc}
+                                        </Typography>
+                                        <Box sx={{ display: 'inline-flex', alignItems: 'center', gap: 0.5, fontSize: '0.76rem', fontWeight: 600, color: 'var(--c-accent)', fontFamily: 'var(--font-inter)' }}>
+                                          Explore <ArrowRight size={12} />
+                                        </Box>
+                                      </Box>
+                                    </Box>
+                                  </Box>
+                                );
+                              })()}
+                            </Box>
+                          </Container>
+
+                          {/* trust bar */}
+                          <Box sx={{ bgcolor: 'rgba(95,100,64,0.03)', borderTop: '1px solid rgba(95,100,64,0.06)', py: 1.1 }}>
+                            <Container maxWidth="xl">
+                              <Box sx={{ display: 'flex', justifyContent: 'center', gap: { lg: 5, xl: 8 }, flexWrap: 'wrap' }}>
+                                {TRUST_ITEMS.map((t, i) => (
+                                  <Box key={i} sx={{ display: 'flex', alignItems: 'center', gap: 0.7, color: 'var(--c-text-soft)' }}>
+                                    <Box sx={{ color: 'var(--c-accent)', display: 'flex' }}>{t.icon}</Box>
+                                    <Typography sx={{ fontSize: '0.7rem', fontWeight: 500, fontFamily: 'var(--font-inter)', letterSpacing: '0.02em' }}>
+                                      {t.text}
+                                    </Typography>
+                                  </Box>
+                                ))}
+                              </Box>
+                            </Container>
+                          </Box>
+                        </Box>
+                      )}
+                    </AnimatePresence>
+                  </Box>
+                );
+              })}
+            </Box>
+          </Container>
+        </Box>
       </AppBar>
 
-      {/* ================= MOBILE MENU ================= */}
+      {/* ============================================================
+          MOBILE DRAWER
+          ============================================================ */}
       <AnimatePresence>
         {menuOpen && (
           <Box
@@ -432,67 +525,175 @@ export default function Navigation() {
             initial={{ opacity: 0, x: '-100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '-100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            transition={{ type: 'spring', damping: 30, stiffness: 260 }}
             sx={{
               position: 'fixed',
               inset: 0,
-              zIndex: 1050,
-              bgcolor: '#050505',
-              pt: 12,
-              px: { xs: 3, sm: 5 },
-              overflowY: 'auto'
+              zIndex: 1200,
+              bgcolor: 'var(--c-ivory)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',
             }}
           >
-            <Stack spacing={4} sx={{ pb: 8 }}>
-              {MEGA_NAVIGATION.map((cat) => (
-                <Box key={cat.label}>
-                  <Typography
-                    component={Link}
-                    href={cat.href}
-                    onClick={() => setMenuOpen(false)}
-                    sx={{
-                      fontSize: '1.8rem',
-                      fontFamily: 'var(--font-playfair-display)',
-                      color: '#FAF9F6',
-                      textDecoration: 'none',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 1.5,
-                      mb: 2,
-                      borderBottom: '1px solid rgba(212, 175, 55, 0.2)',
-                      pb: 1.5,
-                      transition: 'color 0.3s',
-                      "&:hover": { color: '#D4AF37' }
-                    }}
-                  >
-                    {cat.label}
-                  </Typography>
-                  <Stack spacing={1.5} sx={{ pl: 2 }}>
-                    {cat.columns[0]?.items.map((subItem) => (
+            {/* top bar */}
+            <Box sx={{ px: 2.5, py: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(95,100,64,0.1)', bgcolor: '#fff' }}>
+              <Logo />
+              <IconButton onClick={() => setMenuOpen(false)} aria-label="Close" sx={{ color: 'var(--c-text)', borderRadius: '8px', bgcolor: 'rgba(95,100,64,0.06)' }}>
+                <X size={20} />
+              </IconButton>
+            </Box>
+
+            {/* search */}
+            <Box sx={{ px: 2.5, py: 2, bgcolor: '#fff', borderBottom: '1px solid rgba(95,100,64,0.06)' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(95,100,64,0.18)', borderRadius: '22px', px: 1.8, py: '5px', bgcolor: 'var(--c-ivory)' }}>
+                <Search size={15} style={{ color: 'var(--c-accent)', opacity: 0.7, flexShrink: 0 }} />
+                <InputBase placeholder="Search jewellery…" sx={{ ml: 1.2, flex: 1, fontSize: '0.84rem', fontFamily: 'var(--font-inter)' }} />
+              </Box>
+            </Box>
+
+            {/* accordion categories */}
+            <Box sx={{ px: 2.5, py: 2, flex: 1 }}>
+              <Stack spacing={1}>
+                {items.map((cat) => {
+                  const open = mobileExpanded === cat.label;
+                  return (
+                    <Box
+                      key={cat.label}
+                      sx={{
+                        borderRadius: '8px',
+                        border: '1px solid rgba(95,100,64,0.1)',
+                        bgcolor: '#fff',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {/* trigger */}
                       <Box
-                        key={subItem}
-                        component={Link}
-                        href={`${cat.href}?filter=${encodeURIComponent(subItem)}`}
-                        onClick={() => setMenuOpen(false)}
+                        onClick={() => setMobileExpanded(open ? null : cat.label)}
                         sx={{
-                          color: 'rgba(255,255,255,0.6)',
-                          textDecoration: 'none',
-                          fontSize: '1rem',
-                          fontFamily: 'var(--font-inter)',
-                          transition: 'color 0.2s',
-                          "&:hover": { color: '#D4AF37' }
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          px: 2,
+                          py: 1.4,
+                          cursor: 'pointer',
+                          '&:active': { bgcolor: 'rgba(95,100,64,0.04)' },
                         }}
                       >
-                        {subItem}
+                        <Typography sx={{ fontFamily: 'var(--font-playfair-display)', fontWeight: 600, fontSize: '0.95rem', color: open ? 'var(--c-accent)' : 'var(--c-text)' }}>
+                          {cat.label}
+                        </Typography>
+                        <ChevronRight
+                          size={16}
+                          color="var(--c-accent)"
+                          style={{ transform: open ? 'rotate(90deg)' : 'rotate(0)', transition: 'transform 0.2s' }}
+                        />
                       </Box>
-                    ))}
-                  </Stack>
-                </Box>
-              ))}
-            </Stack>
+
+                      {/* children */}
+                      <AnimatePresence>
+                        {open && (
+                          <Box
+                            component={motion.div}
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            sx={{ borderTop: '1px dashed rgba(95,100,64,0.1)', bgcolor: 'var(--c-ivory)', px: 2.5, pb: 2 }}
+                          >
+                            <Box
+                              component={Link}
+                              href={cat.href}
+                              onClick={() => setMenuOpen(false)}
+                              sx={{
+                                display: 'inline-flex', alignItems: 'center', gap: 0.5,
+                                mt: 1.5, mb: 1,
+                                fontSize: '0.78rem', fontWeight: 600, color: 'var(--c-accent)', textDecoration: 'none',
+                              }}
+                            >
+                              View All <ArrowRight size={11} />
+                            </Box>
+                            <Stack spacing={0.6}>
+                              {cat.columns[0]?.items.map((sub) => (
+                                <Box
+                                  key={sub.href}
+                                  component={Link}
+                                  href={sub.href}
+                                  onClick={() => setMenuOpen(false)}
+                                  sx={{
+                                    fontSize: '0.84rem',
+                                    color: 'var(--c-text)',
+                                    textDecoration: 'none',
+                                    fontFamily: 'var(--font-inter)',
+                                    py: '3px',
+                                    display: 'flex', alignItems: 'center',
+                                    '&:hover': { color: 'var(--c-accent)' },
+                                  }}
+                                >
+                                  {getItemIcon(sub.label)}
+                                  {sub.label}
+                                </Box>
+                              ))}
+                            </Stack>
+                          </Box>
+                        )}
+                      </AnimatePresence>
+                    </Box>
+                  );
+                })}
+              </Stack>
+            </Box>
+
+            {/* bottom bar */}
+            <Box sx={{ px: 2.5, py: 2, borderTop: '1px solid rgba(95,100,64,0.1)', bgcolor: '#fff' }}>
+              <Box
+                component="button"
+                type="button"
+                onClick={() => { setMenuOpen(false); setBookingOpen(true); }}
+                sx={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1,
+                  width: '100%', mb: 1.2, py: 1.5, border: 'none', cursor: 'pointer',
+                  borderRadius: '8px',
+                  bgcolor: 'var(--c-accent)', color: 'var(--c-ivory)',
+                  fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.08em',
+                  textTransform: 'uppercase', fontFamily: 'var(--font-inter)',
+                }}
+              >
+                <CalendarCheck size={16} strokeWidth={1.6} />
+                Book Appointment
+              </Box>
+              <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.2, mb: 1.5 }}>
+                {[
+                  { label: 'Our Stores', icon: <MapPin size={15} />, href: '/stores' },
+                  { label: 'Call Stylist', icon: <Phone size={15} />, href: '/contact' },
+                ].map((b) => (
+                  <Box
+                    key={b.label}
+                    component={Link}
+                    href={b.href}
+                    onClick={() => setMenuOpen(false)}
+                    sx={{
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.8,
+                      py: 1.1, borderRadius: '8px',
+                      border: '1px solid rgba(95,100,64,0.15)',
+                      color: 'var(--c-text)', textDecoration: 'none',
+                      fontSize: '0.78rem', fontWeight: 500,
+                      '& svg': { color: 'var(--c-accent)' },
+                    }}
+                  >
+                    {b.icon} {b.label}
+                  </Box>
+                ))}
+              </Box>
+              <Typography sx={{ textAlign: 'center', fontSize: '0.65rem', color: 'var(--c-text-soft)', letterSpacing: '0.06em' }}>
+                BIS 916 Hallmarked · Coimbatore Heritage · Since 1986
+              </Typography>
+            </Box>
           </Box>
         )}
       </AnimatePresence>
+
+      <BookAppointmentDialog open={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }

@@ -72,6 +72,10 @@ export default function ContactForm() {
       <Box>
         <Typography variant="h3" sx={{ fontSize: '1.5rem', color: 'text.primary', fontFamily: 'var(--font-playfair-display), serif', mb: 2 }}>Send Us a Message</Typography>
         <Box sx={{ width: 40, height: 1, bgcolor: 'primary.main' }} />
+        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 300, mt: 2, lineHeight: 1.7 }}>
+          For questions about a piece, pricing or a bespoke commission. We reply within one working day.
+          To reserve a time at the showroom, book an appointment instead.
+        </Typography>
       </Box>
       <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 4 }}>

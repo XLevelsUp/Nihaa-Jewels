@@ -8,7 +8,7 @@ import {
   alpha, 
   useTheme 
 } from '@mui/material';
-import Navigation from '@/components/sections/Navigation';
+import Navigation from '@/components/sections/NavigationClient';
 import Footer from '@/components/sections/Footer';
 
 // Metadata (Note: Will be ignored in 'use client' by Next.js, but user said not to fix other things)

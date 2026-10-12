@@ -1,3 +1,5 @@
+import { STORE } from './store';
+
 // Mega Navigation Configuration
 export const MEGA_NAVIGATION = [
   {
@@ -153,7 +155,7 @@ export const HERITAGE_CONTENT = {
 export const SOCIAL_LINKS = [
   { label: "Instagram", href: "https://instagram.com" },
   { label: "Pinterest", href: "https://pinterest.com" },
-  { label: "WhatsApp", href: "https://wa.me/9144228000000" },
+  { label: "WhatsApp", href: `https://wa.me/${STORE.whatsapp}` },
 ];
 
 // Collections Sub-menu
