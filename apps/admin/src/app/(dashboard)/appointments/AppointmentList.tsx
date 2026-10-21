@@ -8,6 +8,7 @@ import {
   Button,
   Chip,
   CircularProgress,
+  InputAdornment,
   Paper,
   Snackbar,
   Tab,
@@ -15,7 +16,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Phone, Mail, Calendar, Gem, StickyNote } from 'lucide-react';
+import { Phone, Mail, Calendar, Gem, MessageCircle, Search, StickyNote } from 'lucide-react';
 
 import { updateAppointmentStatus, saveStaffNotes } from '@/app/actions/appointments';
 import ConfirmDialog from '@/components/ConfirmDialog';
@@ -23,10 +24,32 @@ import { PALETTE } from '@/constants/palette';
 import type { AppointmentRow } from '@/lib/appointments';
 import type { AppointmentStatus } from '@/types/database';
 
+export type When = 'all' | 'today' | 'week';
+
 interface AppointmentListProps {
   appointments: AppointmentRow[];
   counts: Record<AppointmentStatus | 'all', number>;
   activeStatus: AppointmentStatus | 'all';
+  when: When;
+  search: string;
+}
+
+const WHEN: { value: When; label: string }[] = [
+  { value: 'all', label: 'All dates' },
+  { value: 'today', label: 'Today' },
+  { value: 'week', label: 'Next 7 days' },
+];
+
+// Indian mobile numbers are usually saved without the country code; WhatsApp links need it.
+function whatsappHref(a: AppointmentRow): string {
+  const digits = a.phone.replace(/\D/g, '');
+  const number = digits.length === 10 ? `91${digits}` : digits;
+  const slot = (SLOT_LABEL[a.preferred_slot] ?? a.preferred_slot).split(' (')[0].toLowerCase();
+  const message =
+    a.status === 'confirmed'
+      ? `Hello ${a.name}, this is Sakthi Chains. A reminder of your visit on ${formatDate(a.preferred_date)} (${slot}). We look forward to seeing you.`
+      : `Hello ${a.name}, this is Sakthi Chains. Thank you for your booking request for ${formatDate(a.preferred_date)} (${slot}). Shall we confirm this time for your visit?`;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 }
 
 const TABS: { value: AppointmentStatus | 'all'; label: string }[] = [
@@ -82,7 +105,8 @@ function isFuture(dateStr: string): boolean {
   return d > today;
 }
 
-export default function AppointmentList({ appointments, counts, activeStatus }: AppointmentListProps) {
+export default function AppointmentList({ appointments, counts, activeStatus, when, search }: AppointmentListProps) {
+  const [query, setQuery] = useState(search);
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [toast, setToast] = useState<{ ok: boolean; message: string } | null>(null);
@@ -119,12 +143,55 @@ export default function AppointmentList({ appointments, counts, activeStatus }: 
     });
   };
 
-  const changeTab = (value: AppointmentStatus | 'all') => {
-    router.push(value === 'all' ? '/appointments' : `/appointments?status=${value}`);
+  // Status, date window and search travel together in the URL, so changing one keeps the others.
+  const go = (next: { status?: AppointmentStatus | 'all'; when?: When; q?: string }) => {
+    const params = new URLSearchParams();
+    const s = next.status ?? activeStatus;
+    const w = next.when ?? when;
+    const q = (next.q ?? query).trim();
+    if (s !== 'all') params.set('status', s);
+    if (w !== 'all') params.set('when', w);
+    if (q) params.set('q', q);
+    const qs = params.toString();
+    router.push(qs ? `/appointments?${qs}` : '/appointments');
   };
+  const changeTab = (value: AppointmentStatus | 'all') => go({ status: value });
 
   return (
     <>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.5, mb: 2 }}>
+        <Box role="group" aria-label="Visit date" sx={{ display: 'flex', gap: 1 }}>
+          {WHEN.map((w) => (
+            <Chip
+              key={w.value}
+              label={w.label}
+              clickable
+              onClick={() => go({ when: w.value })}
+              aria-pressed={when === w.value}
+              color={when === w.value ? 'primary' : 'default'}
+              variant={when === w.value ? 'filled' : 'outlined'}
+              sx={{ fontSize: '0.8rem' }}
+            />
+          ))}
+        </Box>
+        <Box
+          component="form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            go({});
+          }}
+          sx={{ ml: { sm: 'auto' }, width: { xs: '100%', sm: 300 } }}
+        >
+          <TextField
+            size="small"
+            fullWidth
+            placeholder="Search customer name or phone"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            slotProps={{ input: { startAdornment: <InputAdornment position="start"><Search size={15} /></InputAdornment> } }}
+          />
+        </Box>
+      </Box>
       <Tabs
         value={activeStatus}
         onChange={(_, v) => changeTab(v)}
@@ -152,9 +219,11 @@ export default function AppointmentList({ appointments, counts, activeStatus }: 
       {appointments.length === 0 ? (
         <Paper variant="outlined" sx={{ py: 6, textAlign: 'center' }}>
           <Typography sx={{ color: 'text.secondary', fontSize: '0.9rem' }}>
-            {activeStatus === 'all'
-              ? 'No booking requests yet.'
-              : `No ${activeStatus} bookings.`}
+            {search || when !== 'all'
+              ? 'No bookings match this date range or search.'
+              : activeStatus === 'all'
+                ? 'No booking requests yet.'
+                : `No ${activeStatus} bookings.`}
           </Typography>
           {activeStatus === 'all' && (
             <Typography sx={{ color: 'text.secondary', fontSize: '0.8rem', mt: 1 }}>
@@ -224,6 +293,24 @@ export default function AppointmentList({ appointments, counts, activeStatus }: 
                         }}
                       >
                         <Phone size={13} /> {a.phone}
+                      </Box>
+                      <Box
+                        component="a"
+                        href={whatsappHref(a)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 0.5,
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                          color: '#1E8E4E',
+                          textDecoration: 'none',
+                          '&:hover': { textDecoration: 'underline' },
+                        }}
+                      >
+                        <MessageCircle size={13} /> WhatsApp
                       </Box>
                       {a.email && (
                         <Box

@@ -1,10 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
+import sharp from 'sharp';
 import { z } from 'zod';
 
 import { createAdminClient } from '@/lib/supabase-server';
-import { getCurrentUser } from '@/lib/supabase-auth';
+import { authorize } from '@/lib/supabase-auth';
 import { slugify } from '@/lib/pricing';
 
 // Admin and marketing deploy separately, so this cannot clear the public site's
@@ -30,8 +31,8 @@ const categorySchema = z.object({
 });
 
 export async function saveCategory(formData: FormData): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired. Please sign in again.' };
+  const auth = await authorize('categories.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
 
   const parsed = categorySchema.safeParse({
     id: (formData.get('id') as string) ?? '',
@@ -146,9 +147,55 @@ export async function saveCategory(formData: FormData): Promise<ActionResult> {
   };
 }
 
+// Collection photos share the product-images bucket under categories/, re-encoded to WebP like product photos; the returned path is saved with the collection.
+export async function uploadCategoryImage(formData: FormData): Promise<ActionResult & { path?: string }> {
+  const auth = await authorize('categories.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
+
+  const file = formData.get('file') as File | null;
+  if (!file || file.size === 0) return { ok: false, message: 'Choose a photo to upload.' };
+  if (file.size > 10 * 1024 * 1024) return { ok: false, message: 'Photo must be under 10 MB.' };
+
+  let webp: Buffer;
+  try {
+    const source = sharp(Buffer.from(await file.arrayBuffer()), { failOn: 'error' }).rotate();
+    const { width = 0, height = 0 } = await source.metadata();
+    if (Math.min(width, height) < 800) {
+      return { ok: false, message: `This photo is ${width} × ${height}px. Use one at least 800px on its shorter side.` };
+    }
+    webp = await source.resize({ width: 2000, height: 2000, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82, effort: 5 }).toBuffer();
+  } catch {
+    return { ok: false, message: 'That file could not be read as an image.' };
+  }
+
+  const supabase = createAdminClient();
+  const path = `categories/${crypto.randomUUID()}.webp`;
+  const { error } = await supabase.storage.from('product-images').upload(path, webp, { contentType: 'image/webp', upsert: false });
+  if (error) {
+    console.error('[uploadCategoryImage]', error);
+    return { ok: false, message: 'Could not upload the photo. Please try again.' };
+  }
+  return { ok: true, message: 'Photo uploaded. Save the collection to use it.', path };
+}
+
+export async function reorderCategories(orderedIds: string[]): Promise<ActionResult> {
+  const auth = await authorize('categories.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
+
+  const supabase = createAdminClient();
+  const results = await Promise.all(orderedIds.map((id, i) => supabase.from('categories').update({ display_order: i + 1 }).eq('id', id)));
+  if (results.some((r) => r.error)) {
+    console.error('[reorderCategories]', results.find((r) => r.error)?.error);
+    return { ok: false, message: 'Could not save the new order.' };
+  }
+
+  revalidatePath('/categories');
+  return { ok: true, message: 'Collection order saved. The website menu follows this order.' };
+}
+
 export async function toggleCategoryActive(id: string, isActive: boolean): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired.' };
+  const auth = await authorize('categories.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
 
   const supabase = createAdminClient();
   const { error } = await supabase.from('categories').update({ is_active: isActive }).eq('id', id);
@@ -166,8 +213,8 @@ export async function toggleCategoryActive(id: string, isActive: boolean): Promi
 }
 
 export async function deleteCategory(id: string): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired.' };
+  const auth = await authorize('categories.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
 
   const supabase = createAdminClient();
 
