@@ -1,180 +1,52 @@
 import type { Metadata } from 'next';
-import Script from 'next/script';
+import dynamic from 'next/dynamic';
 import Navigation from '@/components/sections/NavigationServer';
 import StaticBrandHero from '@/components/sections/StaticBrandHero';
-import VisitUs from '@/components/sections/VisitUs';
-import dynamic from 'next/dynamic';
-import { STORE } from '@/constants/store';
-const NewLaunch = dynamic(() => import('@/components/sections/NewLaunch'));
+import BrandStatement from '@/components/sections/BrandStatement';
+import OpeningCurtain from '@/components/ui/OpeningCurtain';
+import { homeSlot } from '@/lib/imageSlots';
 const DiscoverByCategory = dynamic(() => import('@/components/sections/DiscoverByCategoryServer'));
-const FeaturedPieces = dynamic(() => import('@/components/sections/FeaturedPieces'));
-const ServicesPanels = dynamic(() => import('@/components/sections/ServicesPanels'));
-const ShopByGender = dynamic(() => import('@/components/sections/ShopByGender'));
-const NihaaAssurance = dynamic(() => import('@/components/sections/NihaaAssurance'));
-const Testimonials = dynamic(() => import('@/components/sections/Testimonials'));
+const CampaignDiptych = dynamic(() => import('@/components/sections/CampaignDiptych'));
+const SignatureCreations = dynamic(() => import('@/components/sections/SignatureCreations'));
+const Occasions = dynamic(() => import('@/components/sections/Occasions'));
+const EditorialBand = dynamic(() => import('@/components/sections/EditorialBand'));
+const WornBy = dynamic(() => import('@/components/sections/WornBy'));
+const Atelier = dynamic(() => import('@/components/sections/Atelier'));
+const UpClose = dynamic(() => import('@/components/sections/UpClose'));
+const HousePromise = dynamic(() => import('@/components/sections/HousePromise'));
+const MadeForYou = dynamic(() => import('@/components/sections/MadeForYou'));
+const VisitUs = dynamic(() => import('@/components/sections/VisitUs'));
 const Footer = dynamic(() => import('@/components/sections/Footer'));
 
 export const metadata: Metadata = {
-  title: "Nihaa Jewels | Gold & Diamond Jewellery Shop in Coimbatore",
-  description: "Shop BIS hallmarked gold, IGI-certified diamond & bridal jewellery at Nihaa Jewels, Coimbatore. Four generations of master goldsmiths. Visit us in RS Puram.",
+  title: { absolute: 'Sakthi Chains | Fine Gold Jewellery, Made by Hand' },
+  description:
+    'Sakthi Chains is a house of fine gold jewellery: necklaces, bangles, earrings, chains and bridal sets, BIS hallmarked and finished by hand. Book a private appointment at our showroom.',
   keywords: [
-    "jewellery shop Coimbatore", "luxury gold jewellery", "bespoke goldsmiths",
-    "best jewellery shop near me", "gold jewellery shop near me", "Nihaa Jewels",
-    "fine jewellery", "luxury jewels", "gold rings", "diamond necklaces",
-    "bridal jewellery Coimbatore", "impon jewellery Coimbatore", "BIS Hallmarked gold",
-    "IGI certified diamonds", "bespoke jewellery design", "diamond jewellery Coimbatore",
-    "lightweight gold jewellery daily wear", "gold gifting Coimbatore",
-    "lab grown diamond jewellery Coimbatore", "gold rings Coimbatore",
-    "buy gold bangles Coimbatore"
+    'Sakthi Chains', 'gold jewellery', 'BIS hallmarked gold', 'bridal gold jewellery', 'temple jewellery',
+    'gold necklaces', 'gold bangles', 'gold earrings', 'gold chains', 'old gold exchange', 'bespoke gold jewellery',
   ],
 };
 
 export default function Home() {
-  const localBusinessSchema = {
-    "@context": "https://schema.org",
-    "@type": "JewelryStore",
-    "name": "Nihaa Jewels",
-    "image": [
-      "https://nihaajewels.com/images/bridaljewel.webp",
-      "https://nihaajewels.com/images/rings.webp",
-      "https://nihaajewels.com/images/earring2.webp"
-    ],
-    "@id": "https://nihaajewels.com/#store",
-    "url": "https://nihaajewels.com",
-    "telephone": STORE.phoneSchema,
-    "priceRange": "$$$",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Mahalaksmi Complex, 23 D Chokkampudur Road, Krishna Nagar, RS Puram",
-      "addressLocality": "Coimbatore",
-      "addressRegion": "Tamil Nadu",
-      "postalCode": "641001",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 11.0116,
-      "longitude": 76.9490
-    },
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ],
-        "opens": "10:00",
-        "closes": "20:30"
-      }
-    ],
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5.0",
-      "bestRating": "5",
-      "worstRating": "1",
-      "ratingCount": "5"
-    },
-    "review": [
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Priya"
-        },
-        "datePublished": "2026-05-15",
-        "reviewBody": "I found Nihaa Jewels when searching for the best bridal jewellery Coimbatore has to offer. Their BIS Hallmarked gold collection is absolutely stunning! It is truly the best jewellery shop near me, with gorgeous designs and incredible craftsmanship. My wedding gold set was perfect!",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      },
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Rajesh"
-        },
-        "datePublished": "2026-05-18",
-        "reviewBody": "Visited the RS Puram showroom in Coimbatore for some gold gifting. The experience was wonderful, and I found the perfect gift. The craftsmanship and collection of luxury jewels are exceptional. Full satisfaction!",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      },
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Ananya"
-        },
-        "datePublished": "2026-05-20",
-        "reviewBody": "I was looking for lightweight gold jewellery daily wear and was amazed by their collection. I also appreciated their traditional impon jewellery Coimbatore sets. The BIS Hallmarked gold gives total peace of mind regarding quality and purity.",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      },
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Vikram"
-        },
-        "datePublished": "2026-05-22",
-        "reviewBody": "Wanted a bespoke jewellery design for my mother and Nihaa Jewels delivered beautifully. They crafted a custom gold ring with IGI certified diamonds. Real luxury jewels made with extreme care. The best bespoke goldsmiths in Coimbatore!",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      },
-      {
-        "@type": "Review",
-        "author": {
-          "@type": "Person",
-          "name": "Divya"
-        },
-        "datePublished": "2026-05-24",
-        "reviewBody": "Bought IGI certified diamond jewellery and gold rings in Coimbatore from Nihaa Jewels. The staff was incredibly warm and knowledgeable, guiding me through the certified diamonds and hallmarking process. High-quality diamond jewellery Coimbatore loves!",
-        "reviewRating": {
-          "@type": "Rating",
-          "ratingValue": "5",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      }
-    ]
-  };
-
   return (
-    <main className="landing-bg min-h-screen">
-      <Script
-        id="home-localbusiness-schema"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
-      />
+    <div className="landing-bg min-h-screen">
+      <OpeningCurtain />
       <Navigation />
       <StaticBrandHero />
+      <BrandStatement />
       <DiscoverByCategory />
-      <FeaturedPieces />
-      <NewLaunch />
-      <ServicesPanels />
-      <ShopByGender />
-      <NihaaAssurance />
-      <Testimonials />
-      <VisitUs />
+      <CampaignDiptych />
+      <SignatureCreations />
+      <Occasions />
+      <EditorialBand />
+      <WornBy />
+      <Atelier />
+      <UpClose />
+      <HousePromise />
+      <MadeForYou />
+      <VisitUs showroom={homeSlot('visitShowroom')} />
       <Footer />
-    </main>
+    </div>
   );
 }
