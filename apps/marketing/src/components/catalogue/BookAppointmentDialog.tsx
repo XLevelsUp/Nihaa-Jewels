@@ -134,17 +134,18 @@ export default function BookAppointmentDialog({
             <input type="hidden" name="productId" value={productId ?? ''} />
             <input type="hidden" name="quotedPrice" value={quotedPrice ?? ''} />
 
+            {/* Spam trap. Its name must mean nothing to browser autofill: Chrome fills a field named "website", which rejected real bookings. */}
             <Box
               aria-hidden="true"
               sx={{ position: 'absolute', left: '-9999px', width: 1, height: 1, overflow: 'hidden' }}
             >
-              <input type="text" name="website" tabIndex={-1} autoComplete="off" />
+              <input type="text" name="sc_hp_field" tabIndex={-1} autoComplete="new-password" defaultValue="" />
             </Box>
 
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
               <TextField
                 name="name"
-                label="Full Name*"
+                label="Full Name"
                 placeholder="Priya Sharma"
                 required
                 fullWidth
@@ -156,7 +157,7 @@ export default function BookAppointmentDialog({
               />
               <TextField
                 name="phone"
-                label="Phone Number*"
+                label="Phone Number"
                 placeholder="+91 98000 00000"
                 required
                 fullWidth
@@ -185,7 +186,7 @@ export default function BookAppointmentDialog({
               <TextField
                 name="preferredDate"
                 type="date"
-                label="Preferred Date*"
+                label="Preferred Date"
                 required
                 fullWidth
                 variant="standard"
