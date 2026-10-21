@@ -1,6 +1,6 @@
 'use client';
 
-// sage/icing/blush are all under 3:1 on ivory, so they carry surfaces and borders only — text uses ink.
+// sage/icing/blush (champagne tones) are all under 3:1 on ivory, so they carry surfaces and borders only — text uses ink.
 
 import { createTheme } from '@mui/material/styles';
 
@@ -37,7 +37,7 @@ const theme = createTheme({
     divider: PALETTE.icing,
     action: {
       hover: PALETTE.sageWash,
-      selected: 'rgba(172, 176, 135, 0.3)',
+      selected: 'rgba(232, 214, 179, 0.6)',
     },
   },
   typography: {
