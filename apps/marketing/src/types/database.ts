@@ -56,12 +56,33 @@ export interface Product {
   making_charge_value: number;
   stone_charges: number;
   hallmark_charges: number;
+  discount_type: 'percentage' | 'flat';
+  discount_value: number;
   occasion: string[];
   gender: string | null;
   is_active: boolean;
   is_featured: boolean;
+  status: ProductStatus;
+  deleted_at: string | null;
+  metal_colour: 'yellow' | 'rose' | 'white' | null;
+  huid: string | null;
+  size_label: string | null;
+  dimensions: string | null;
+  closure: string | null;
+  care_instructions: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export type ProductStatus = 'draft' | 'published' | 'archived';
+
+export interface ProductAudit {
+  id: number;
+  product_id: string;
+  action: 'created' | 'updated' | 'deleted' | 'restored';
+  changed_by: string | null;
+  changes: Record<string, { from: unknown; to: unknown }>;
+  created_at: string;
 }
 
 export interface ProductImage {
