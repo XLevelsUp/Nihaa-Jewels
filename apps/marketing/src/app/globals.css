@@ -1,51 +1,50 @@
 @import "tailwindcss";
 
-/* Single source of colour. Every contrast pairing below passes WCAG AA — the
-   brand colours are pale, so ivory and icing are only ever text ON a sage or
-   blush fill, never on a light surface. */
+/* Sakthi Chains: champagne #E8D6B3 and burgundy #800022. Token names are inherited and no longer describe their colour — the value is what matters, and every pairing below passes WCAG AA. */
 
 :root {
-  /* ── Brand ── */
-  --c-sage:        #ACB087;
-  --c-icing:       #F4DFCC;
-  --c-blush:       #F4E1E0;
-  --c-ivory:       #FFFFF0;
+  --c-champagne:   #E8D6B3;
+  --c-burgundy:    #800022;
 
-  /* ── Derived: dark enough to carry text ── */
-  --c-sage-deep:   #5F6440;
-  --c-sage-deeper: #4C5133;
-  --c-blush-deep:  #7E5653;
-  --c-icing-deep:  #A87840;
-  --c-sage-tint:   #E8EAD9;
+  --c-sage:        var(--c-champagne);
+  --c-icing:       #F0E2CA;
+  --c-blush:       #F5EADA;
+  --c-ivory:       #FDFAF5;
 
-  /* ── Surfaces ── */
+  --c-sage-deep:   var(--c-burgundy);
+  --c-sage-deeper: #5E001A;
+  --c-blush-deep:  #6E2630;
+  --c-icing-deep:  #9A6B2F;
+  --c-sage-tint:   #F5EADA;
+
   --c-page:        var(--c-ivory);
   --c-surface:     var(--c-sage-tint);
   --c-card:        #FFFFFF;
-  --c-product-card: #FBFAF6;          /* product tiles only, not dialogs or forms */
+  --c-product-card: #FFFDF9;
   --c-panel:       var(--c-icing);
-  --c-block-sage:  var(--c-sage-deep);
+  --c-block-sage:  var(--c-burgundy);
   --c-block-blush: var(--c-blush-deep);
 
-  /* ── Text. The pairing decides the colour, never preference. ── */
-  --c-text:        #2A2520;            /* on page/surface/card  15.0:1 */
-  --c-text-soft:   #55524A;            /* on page/surface/card   7.7:1 */
-  --c-on-sage:     var(--c-ivory);     /* on --c-block-sage      6.2:1 */
-  --c-on-blush:    var(--c-icing);     /* on --c-block-blush     4.8:1 */
+  --c-text:        #241012;
+  --c-text-soft:   #5A4A42;
+  --c-on-sage:     #F7ECD9;
+  --c-on-blush:    var(--c-champagne);
 
-  /* ── Status. Not brand colours: these must read as open/closed at a glance. ── */
   --c-open:        #2E7D53;
   --c-closed:      #B3261E;
 
-  /* ── Accent ── */
-  --c-accent:      var(--c-sage-deep);
-  --c-accent-hover:var(--c-sage-deeper);
-  --c-border:      var(--c-icing);
-  --c-border-firm: var(--c-sage);
+  --c-chrome:      var(--c-burgundy);
+  --c-on-chrome:   var(--c-champagne);
+  --c-on-chrome-soft: #D8C39C;
+  --c-chrome-rule: rgba(232, 214, 179, 0.18);
 
-  /* ── Aliases kept until every file is migrated off inline colour ── */
+  --c-accent:      var(--c-burgundy);
+  --c-accent-hover:var(--c-sage-deeper);
+  --c-border:      var(--c-champagne);
+  --c-border-firm: #D9BF91;
+
   --color-gold:          var(--c-accent);
-  --color-gold-light:    var(--c-sage);
+  --color-gold-light:    var(--c-champagne);
   --color-gold-dark:     var(--c-sage-deeper);
   --color-black:         var(--c-page);
   --color-black-soft:    var(--c-card);
@@ -72,6 +71,7 @@
   /* ── Spacing ── */
   --section-padding-y: 6rem;
   --container-max:     1280px;
+  --container-wide:    1440px;
 
   /* Gutter grows with the viewport so content never sits against the edge on a
      phone, and is not pinched on a wide monitor. */
@@ -81,6 +81,18 @@
 @media (min-width: 640px)  { :root { --gutter: 2rem; } }
 @media (min-width: 1024px) { :root { --gutter: 3rem; } }
 @media (min-width: 1536px) { :root { --gutter: 4rem; } }
+
+/* Large monitors: rem-based type and spacing grow from 100% at 1536px to 125% near 2560px, and the page widens with them. */
+@media (min-width: 1536px) {
+  :root {
+    font-size: clamp(100%, calc(100% + (100vw - 1536px) * 0.004), 125%);
+    --container-max: clamp(1280px, 74vw, 1720px);
+    --container-wide: clamp(1440px, 82vw, 1960px);
+  }
+  :root .MuiContainer-maxWidthMd { max-width: 56.25rem; }
+  :root .MuiContainer-maxWidthLg { max-width: calc(var(--container-max) + var(--gutter) * 2); }
+  :root .MuiContainer-maxWidthXl { max-width: calc(var(--container-wide) + var(--gutter) * 2); }
+}
 
 /* Section padding shrinks on small screens, where 6rem is too much. */
 @media (max-width: 640px) { :root { --section-padding-y: 3.5rem; } }
@@ -142,8 +154,8 @@ a { color: inherit; text-decoration: none; }
   to   { opacity: 1; transform: translateY(0);    }
 }
 @keyframes goldPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(95,100,64,0); }
-  50%       { box-shadow: 0 0 20px 6px rgba(95,100,64,0.25); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(128, 0, 34,0); }
+  50%       { box-shadow: 0 0 20px 6px rgba(128, 0, 34,0.25); }
 }
 @keyframes shine {
   0% { transform: translateX(-300%) skewX(-25deg); }
@@ -181,35 +193,87 @@ a { color: inherit; text-decoration: none; }
   z-index: -1;
   pointer-events: none;
   background-image:
-    /* Fine gold pinstripe, like the guard lines on a hallmark certificate.
-       Two thin rules per 96px tile, so it reads as texture, not as a grid. */
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cg stroke='%23A87840' stroke-opacity='0.07' stroke-width='1'%3E%3Cpath d='M0 0.5h96M0.5 0v96'/%3E%3C/g%3E%3Cg fill='%23A87840' fill-opacity='0.09'%3E%3Ccircle cx='48' cy='48' r='1.1'/%3E%3C/g%3E%3C/svg%3E"),
-    /* Whisper-level glows. Kept low so the page stays close to ivory even
-       where two of them overlap. */
     radial-gradient(ellipse 75% 50% at 10% 0%, color-mix(in srgb, var(--c-icing) 20%, transparent), transparent 68%),
     radial-gradient(ellipse 65% 45% at 95% 30%, color-mix(in srgb, var(--c-blush) 14%, transparent), transparent 70%),
     radial-gradient(ellipse 85% 40% at 50% 100%, color-mix(in srgb, var(--c-sage-tint) 18%, transparent), transparent 68%),
     linear-gradient(175deg, var(--c-ivory) 0%, color-mix(in srgb, var(--c-icing) 7%, var(--c-ivory)) 100%);
-  background-size: 96px 96px, auto, auto, auto, auto;
 }
 
-/* A hairline of gold along the top edge, the one place the metal appears flat. */
+/* Opening curtain: logo fades, then two velvet panels part; hidden for repeat visits, a click, or reduced motion. */
+.sc-curtain { position: fixed; inset: 0; z-index: 2000; overflow: hidden; cursor: pointer; animation: sc-curtain-gone 0s linear 1.6s forwards; }
+.sc-curtain-panel {
+  position: absolute; top: 0; bottom: 0; width: 50.5%;
+  background-color: var(--c-sage-deeper);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.22) 0, transparent 36px, rgba(255, 255, 255, 0.05) 58px, transparent 82px),
+    url('/images/texture/damask-burgundy.webp');
+  background-size: auto, 380px auto;
+  animation-duration: 1s; animation-delay: 0.6s; animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); animation-fill-mode: forwards;
+}
+.sc-curtain-left { left: 0; box-shadow: inset -1px 0 0 rgba(232, 214, 179, 0.55), 12px 0 40px rgba(0, 0, 0, 0.35); animation-name: sc-curtain-left; }
+.sc-curtain-right { right: 0; box-shadow: inset 1px 0 0 rgba(232, 214, 179, 0.55), -12px 0 40px rgba(0, 0, 0, 0.35); animation-name: sc-curtain-right; }
+.sc-curtain-mark {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  color: var(--c-champagne); font-family: var(--font-cinzel), Georgia, serif; font-size: 0.95rem; letter-spacing: 0.32em; text-transform: uppercase;
+  animation: sc-curtain-mark 0.9s ease forwards;
+}
+@keyframes sc-curtain-left { to { transform: translateX(-101%); } }
+@keyframes sc-curtain-right { to { transform: translateX(101%); } }
+@keyframes sc-curtain-mark { 0% { opacity: 0; transform: translateY(8px); } 30%, 78% { opacity: 1; transform: none; } 100% { opacity: 0; transform: scale(0.97); } }
+@keyframes sc-curtain-gone { to { visibility: hidden; pointer-events: none; } }
+.sc-curtain-seen .sc-curtain { display: none; }
+@media (prefers-reduced-motion: reduce) { .sc-curtain { display: none; } }
+
+/* Hero scroll hint: the line drips down and fades on a loop. */
+.hero-scroll-line { transform-origin: top; animation: hero-drip 2.2s ease-in-out infinite; }
+@keyframes hero-drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .hero-scroll-line { animation: none; } }
+
+/* Maison type kit shared by the homepage: one eyebrow, one display serif, one quiet link, one button; gold ink is 5.4:1 on ivory where icing-deep falls just short of AA. */
+:root { --c-gold-ink: #8A5F28; --ease-maison: cubic-bezier(0.22, 0.61, 0.36, 1); }
+.lux-eyebrow { font-family: var(--font-inter), sans-serif; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.42em; text-transform: uppercase; color: var(--c-gold-ink); }
+.lux-display { font-family: var(--font-cormorant), Georgia, serif; font-weight: 300; line-height: 1.06; letter-spacing: -0.008em; color: var(--c-text); text-wrap: balance; }
+.lux-display em { font-style: italic; color: var(--c-burgundy); }
+.lux-title { font-family: var(--font-cormorant), Georgia, serif; font-weight: 400; line-height: 1.15; color: var(--c-text); }
+.lux-body { font-size: 0.95rem; line-height: 1.85; color: var(--c-text-soft); max-width: 60ch; }
+.lux-link { display: inline-flex; min-height: 46px; align-items: center; gap: 0.85rem; padding-inline: 1.6rem; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: var(--c-burgundy); border: 1px solid color-mix(in srgb, currentColor 40%, transparent); transition: background 0.3s var(--ease-maison), border-color 0.3s var(--ease-maison); }
+.lux-link::after { content: ''; flex: none; width: 14px; height: 14px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform 0.3s var(--ease-maison); }
+.lux-link:hover, .lux-link:focus-visible, .group:hover .lux-link { border-color: currentColor; background: color-mix(in srgb, currentColor 8%, transparent); }
+.lux-link:hover::after, .lux-link:focus-visible::after, .group:hover .lux-link::after { transform: translateX(4px); }
+.lux-button { display: inline-flex; min-height: 52px; align-items: center; justify-content: center; gap: 0.75rem; padding-inline: 2.25rem; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.28em; text-transform: uppercase; background: var(--c-burgundy); color: var(--c-on-sage); border: 1px solid var(--c-burgundy); cursor: pointer; transition: background 0.3s var(--ease-maison), transform 0.1s ease-out; }
+.lux-button:hover { background: var(--c-sage-deeper); border-color: var(--c-sage-deeper); }
+.lux-button:active { transform: scale(0.98); }
+.lux-button-ghost { background: transparent; color: var(--c-burgundy); border-color: color-mix(in srgb, var(--c-burgundy) 35%, transparent); }
+.lux-button-ghost:hover { background: color-mix(in srgb, var(--c-burgundy) 6%, transparent); border-color: var(--c-burgundy); }
+.lux-button:focus-visible, .lux-link:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.lux-rule { height: 1px; background: color-mix(in srgb, var(--c-gold-ink) 28%, transparent); border: 0; }
+@media (min-width: 768px) { .lux-eyebrow { font-size: 0.68rem; } }
+.chrome-block .lux-eyebrow { color: var(--c-on-chrome-soft); }
+.chrome-block .lux-display em, .chrome-block .lux-link { color: var(--c-on-sage); }
+.chrome-block .lux-rule { background: var(--c-chrome-rule); }
+
+/* Image placeholder: a champagne plate with a faint sheen and hairline edge, labelled with the slot it is waiting for. */
+.image-slot {
+  color: var(--c-gold-ink);
+  background:
+    linear-gradient(125deg, transparent 30%, rgba(255, 255, 255, 0.35) 48%, transparent 66%),
+    linear-gradient(160deg, #F5EADA 0%, #EBDBBC 55%, #E3CFA8 100%);
+  box-shadow: inset 0 0 0 1px rgba(138, 95, 40, 0.16);
+}
+.image-slot-label { font-family: var(--font-cormorant), Georgia, serif; font-size: clamp(1.05rem, 1.6vw, 1.35rem); line-height: 1.2; color: var(--c-text); }
+.image-slot-meta { font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; }
+
+/* Ivory damask over the wash, multiplied so it reads as embossed paper; raise opacity to strengthen it. */
 .landing-bg::after {
   content: '';
   position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 1px;
+  inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--c-icing-deep) 30%, transparent) 25%,
-    color-mix(in srgb, var(--c-icing-deep) 70%, transparent) 50%,
-    color-mix(in srgb, var(--c-icing-deep) 30%, transparent) 75%,
-    transparent
-  );
+  background-image: url('/images/texture/damask-ivory.webp');
+  background-size: 420px auto;
+  opacity: 0.3;
+  mix-blend-mode: multiply;
 }
 
 /* Page-fill sections turn transparent here so the layers below show through;
@@ -220,12 +284,36 @@ a { color: inherit; text-decoration: none; }
 .landing-bg .block-sage,
 .landing-bg .block-blush { position: relative; z-index: 0; }
 
-/* The pinstripe is fine detail — drop it on small screens where it only adds noise. */
-@media (max-width: 640px) {
-  .landing-bg::before { background-image: none, radial-gradient(ellipse 100% 35% at 50% 0%, color-mix(in srgb, var(--c-icing) 18%, transparent), transparent 70%), radial-gradient(ellipse 100% 35% at 50% 100%, color-mix(in srgb, var(--c-sage-tint) 16%, transparent), transparent 70%), linear-gradient(175deg, var(--c-ivory), color-mix(in srgb, var(--c-icing) 6%, var(--c-ivory))); }
-}
 
 /* Surfaces — each sets the correct text colour for its own background */
+/* Footer is burgundy chrome: remapping the tokens inside it recolours all 51 nested references at once. */
+.chrome-block {
+  background: var(--c-chrome);
+  position: relative;
+  isolation: isolate;
+  --c-page: var(--c-chrome);
+  --c-card: var(--c-chrome);
+  --c-text: var(--c-on-chrome);
+  --c-text-soft: var(--c-on-chrome-soft);
+  --c-accent: var(--c-on-chrome);
+  --c-accent-hover: #FFFFFF;
+  --c-border: var(--c-chrome-rule);
+  --c-border-firm: rgba(232, 214, 179, 0.35);
+  color: var(--c-on-chrome);
+}
+
+.chrome-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url('/images/texture/damask-burgundy.webp');
+  background-size: 430px auto;
+  opacity: 0.24;
+  mix-blend-mode: overlay;
+}
+
 .surface-page    { background: var(--c-page);        color: var(--c-text); }
 .surface-alt     { background: var(--c-surface);     color: var(--c-text); }
 .surface-card    { background: var(--c-card);        color: var(--c-text); }
@@ -265,7 +353,7 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   background: #25D366;
   color: #FFFFFF;
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(42, 37, 32, 0.15);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(36, 16, 18, 0.15);
   transition: box-shadow 0.3s ease, background 0.3s ease;
 }
 .whatsapp-float:hover { background: #20BD5A; box-shadow: 0 8px 26px rgba(37, 211, 102, 0.45); }
@@ -287,7 +375,7 @@ a { color: inherit; text-decoration: none; }
 /* A wider variant for full-bleed-ish rows like the category scroller. */
 .container-wide {
   width: 100%;
-  max-width: calc(1440px + var(--gutter) * 2);
+  max-width: calc(var(--container-wide) + var(--gutter) * 2);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
@@ -318,7 +406,7 @@ a { color: inherit; text-decoration: none; }
 }
 .card:hover {
   border-color: var(--c-border-firm);
-  box-shadow: 0 12px 32px rgba(42, 37, 32, 0.08);
+  box-shadow: 0 12px 32px rgba(36, 16, 18, 0.08);
 }
 
 /* ── Premium Effects ──────────────────────────────────── */
@@ -389,13 +477,13 @@ a { color: inherit; text-decoration: none; }
 .btn-secondary:hover {
   background: #6F4B48;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(126, 86, 83, 0.25);
+  box-shadow: 0 8px 24px rgba(110, 38, 48, 0.25);
 }
 .btn-primary:hover,
 .btn-gold-shimmer:hover {
   background: var(--c-accent-hover);
   transform:  translateY(-2px);
-  box-shadow: 0 8px 24px rgba(95, 100, 64, 0.28);
+  box-shadow: 0 8px 24px rgba(128, 0, 34, 0.28);
 }
 
 /* Outline: gold border, gold text → fills on hover */
@@ -414,7 +502,7 @@ a { color: inherit; text-decoration: none; }
 .btn-gold-outline:hover {
   background:  var(--color-gold);
   color:       var(--color-ivory-bg);
-  box-shadow:  0 4px 16px rgba(95, 100, 64, 0.2);
+  box-shadow:  0 4px 16px rgba(128, 0, 34, 0.2);
 }
 
 /* Secondary: maroon fill */
@@ -433,7 +521,7 @@ a { color: inherit; text-decoration: none; }
   background:       rgba(18,18,18,0.85);
   backdrop-filter:  blur(25px) saturate(180%);
   -webkit-backdrop-filter: blur(25px) saturate(180%);
-  border-bottom:    1px solid rgba(95,100,64, 0.2);
+  border-bottom:    1px solid rgba(128, 0, 34, 0.2);
 }
 
 /* ── Section utils ────────────────────────────────────── */
@@ -479,7 +567,7 @@ a { color: inherit; text-decoration: none; }
 .input-gold:focus {
   outline:            none;
   border-bottom-color: var(--color-gold) !important;
-  box-shadow:          0 2px 0 rgba(95,100,64,0.45);
+  box-shadow:          0 2px 0 rgba(128, 0, 34,0.45);
 }
 
 /* Reduced motion means a gentler equivalent, not the absence of feedback. */
@@ -503,3 +591,6 @@ a { color: inherit; text-decoration: none; }
 
 /* Native scroll-snap carousels: hide the bar, keep the scrolling. */
 .surface-page [style*="scroll-snap-type"]::-webkit-scrollbar { display: none; }
+
+/* Footer credit heart: a soft double beat, then rest. */
+@keyframes heartbeat { 0%, 40%, 100% { transform: scale(1); } 15% { transform: scale(1.22); } 28% { transform: scale(1.08); } }

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter, Montserrat } from "next/font/google";
+import { Playfair_Display, Inter, Montserrat, Cinzel, Cormorant_Garamond } from "next/font/google";
 import Script from "next/script";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import { STORE } from "@/constants/store";
@@ -29,40 +29,50 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
+  subsets: ["latin"],
+  weight: ["300", "400", "600", "700"],
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
 /* ── Global SEO metadata ──────────────────────────────── */
 export const metadata: Metadata = {
   metadataBase: new URL('https://nihaajewels.com'),
   title: {
-    template: "%s | Nihaa Jewels",
-    default: "Nihaa Jewels — Best Luxury Jewellery Shop in Coimbatore",
+    template: `%s | ${STORE.name}`,
+    default: `${STORE.name} | Fine Gold Jewellery, Made by Hand`,
   },
   description:
-    "Nihaa Jewels offers handcrafted gold, diamond, and bridal jewellery in Coimbatore. Four generations of master goldsmiths creating timeless heirlooms with BIS hallmarking and conflict-free diamonds.",
+    "Sakthi Chains is a house of fine gold jewellery: necklaces, bangles, earrings, chains and bridal sets, BIS hallmarked and finished by hand.",
   keywords: [
-    "best jewellery shop near me",
+    "Sakthi Chains",
+    "gold jewellery",
     "gold jewellery shop near me",
-    "jewellery shop in Coimbatore",
-    "Nihaa Jewels",
-    "fine jewellery",
-    "luxury jewels",
-    "gold rings",
-    "diamond necklaces",
-    "bridal jewellery Coimbatore",
-    "impon jewellery Coimbatore",
+    "22 karat gold",
+    "gold chains",
     "BIS Hallmarked gold",
-    "IGI certified diamonds",
-    "bespoke jewellery design",
+    "bridal gold jewellery",
+    "bespoke gold jewellery",
   ],
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: "Nihaa Jewels — Fine Luxury Jewellery & Bespoke Goldsmiths",
+    title: `${STORE.name} | Fine Gold Jewellery, Made by Hand`,
     description:
-      "Legacy of four generations in gold craftsmanship. Discover bridal collections, diamond jewellery, and bespoke designs in Coimbatore.",
+      "Fine 22 karat gold, hallmarked and finished by hand. Explore the catalogue and book a private appointment.",
     type: "website",
     locale: "en_IN",
-    siteName: "Nihaa Jewels",
+    siteName: STORE.name,
     url: 'https://nihaajewels.com',
   },
   robots: {
@@ -84,42 +94,18 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "JewelryStore",
-  "name": "Nihaa Jewels",
-  "image": "https://nihaajewels.com/og-image.jpg",
-  "@id": "https://nihaajewels.com",
-  "url": "https://nihaajewels.com",
+  "name": STORE.name,
   "telephone": STORE.phoneSchema,
   "priceRange": "$$$",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "Mahalaksmi Complex, 23 D Chokkampudur Road, Krishna Nagar, RS Puram",
-    "addressLocality": "Coimbatore",
-    "addressRegion": "TN",
-    "postalCode": "641001",
-    "addressCountry": "IN"
+    "streetAddress": `${STORE.complex}, ${STORE.street}, ${STORE.area}`,
+    "addressLocality": STORE.city,
+    "addressRegion": STORE.state,
+    "postalCode": STORE.postcode,
+    "addressCountry": STORE.country
   },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 11.0116,
-    "longitude": 76.9490
-  },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday"
-    ],
-    "opens": "10:00",
-    "closes": "20:00"
-  },
-  "sameAs": [
-    "https://instagram.com/nihaajewels",
-    "https://pinterest.com/nihaajewels"
-  ]
+  "openingHours": STORE.openingHoursSchema
 };
 
 export default function RootLayout({
@@ -130,10 +116,20 @@ export default function RootLayout({
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
+    // The head script below adds sc-curtain-seen to <html> before React hydrates; this tells React that one difference is expected (it covers <html>'s own attributes only).
     <html
       lang="en"
-      className={`${playfairDisplay.variable} ${inter.variable} ${montserrat.variable}`}
+      className={`${playfairDisplay.variable} ${inter.variable} ${montserrat.variable} ${cinzel.variable} ${cormorant.variable}`}
+      suppressHydrationWarning
     >
+      <head>
+        {/* Repeat visits in the same session skip the homepage curtain before first paint. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('sc-curtain-seen')==='1')document.documentElement.classList.add('sc-curtain-seen')}catch(e){}`,
+          }}
+        />
+      </head>
       <body className="min-h-screen antialiased">
         <ThemeRegistry>
           <script>

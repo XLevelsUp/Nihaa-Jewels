@@ -6,12 +6,12 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   AppBar, Toolbar, Container, Box, Typography,
-  IconButton, InputBase, Stack
+  IconButton, Stack
 } from '@mui/material';
 import {
-  Search, MapPin, Heart, User, Phone,
+  MapPin, Heart, User, Phone,
   Menu, X, ChevronRight, ArrowRight, CalendarCheck,
-  ShieldCheck, Truck, RotateCcw, Award, Baby, Feather
+  ShieldCheck, Scale, RotateCcw, Baby, Feather
 } from 'lucide-react';
 
 import BookAppointmentDialog from '@/components/catalogue/BookAppointmentDialog';
@@ -40,27 +40,44 @@ const getItemIcon = (name: string) => {
 };
 
 /* ─── Logo ──────────────────────────────────────────────────────── */
-const Logo = () => (
+// Mark plus wordmark; 'light' sits on the burgundy bar and the hero film, 'dark' on the white mobile drawer.
+const Logo = ({ tone = 'light' }: { tone?: 'light' | 'dark' }) => (
   <Box
     component={Link}
     href="/"
-    sx={{ display: 'flex', alignItems: 'center', textDecoration: 'none', flexShrink: 0 }}
+    aria-label="Sakthi Chains, home"
+    sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1.25, md: 1.5 }, textDecoration: 'none', flexShrink: 0 }}
   >
     <Box
       component="img"
-      src="/logo.svg"
-      alt="Nihaa Jewels Logo"
-      sx={{ height: { xs: 34, md: 42 }, width: 'auto', objectFit: 'contain' }}
+      src={tone === 'light' ? '/images/brand/logo-champagne.png' : '/images/brand/logo-amber.png'}
+      alt=""
+      sx={{ height: { xs: 30, md: 34 }, width: 'auto', objectFit: 'contain' }}
     />
+    <Typography
+      component="span"
+      sx={{
+        fontFamily: 'var(--font-cormorant), Georgia, serif',
+        fontWeight: 700,
+        fontSize: { xs: '0.98rem', md: '1.12rem' },
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        lineHeight: 1,
+        whiteSpace: 'nowrap',
+        color: tone === 'light' ? 'var(--c-champagne)' : 'var(--c-burgundy)',
+      }}
+    >
+      Sakthi Chains
+    </Typography>
   </Box>
 );
 
 /* ─── Trust pills (bottom of mega-menu) ────────────────────────── */
 const TRUST_ITEMS = [
-  { icon: <ShieldCheck size={14} />, text: 'BIS 916 Hallmarked' },
-  { icon: <Award size={14} />,       text: 'IGI Certified Diamonds' },
-  { icon: <Truck size={14} />,       text: 'Free Insured Shipping' },
-  { icon: <RotateCcw size={14} />,   text: 'Lifetime Exchange' },
+  { icon: <ShieldCheck size={14} />,   text: 'BIS 916 Hallmarked' },
+  { icon: <Scale size={14} />,         text: "Priced at Today's Gold Rate" },
+  { icon: <RotateCcw size={14} />,     text: 'Lifetime Exchange' },
+  { icon: <CalendarCheck size={14} />, text: 'By Appointment' },
 ];
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -90,6 +107,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
   }, [pathname]);
 
   const isHome = pathname === '/';
+  const overHero = isHome && !scrolled && !activeMega;
 
   /* debounced mouse leave to prevent flicker */
   const handleBarLeave = () => {
@@ -105,7 +123,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
       {/* SEO hidden text */}
       <Box sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
         <Typography variant="body1">
-          Nihaa Jewels — premium BIS hallmarked gold jewellery from Coimbatore. Bridal, daily wear, gifting & bespoke collections since 1986.
+          Sakthi Chains, fine BIS hallmarked gold jewellery made by hand. Chains, bridal, daily wear, gifting and bespoke commissions, by appointment.
         </Typography>
       </Box>
 
@@ -120,16 +138,25 @@ export default function Navigation({ items }: { items: NavItem[] }) {
         sx={{
           top: 0,
           zIndex: 1100,
-          bgcolor: scrolled
-            ? 'rgba(255,255,240,0.92)'   /* ivory with translucency */
-            : 'var(--c-ivory)',
+          bgcolor: overHero ? 'transparent' : scrolled ? 'rgba(128, 0, 34, 0.95)' : 'var(--c-chrome)',
+          isolation: 'isolate',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            zIndex: -1,
+            pointerEvents: 'none',
+            backgroundImage: "url('/images/texture/damask-burgundy.webp')",
+            backgroundSize: '430px auto',
+            opacity: overHero ? 0 : 0.24,
+            mixBlendMode: 'overlay',
+            transition: 'opacity 0.6s',
+          },
           backdropFilter: scrolled ? 'blur(16px) saturate(1.3)' : 'none',
-          borderBottom: scrolled
-            ? '1px solid rgba(95,100,64,0.12)'
-            : isHome ? '1px solid transparent' : '1px solid rgba(95,100,64,0.08)',
-          boxShadow: scrolled ? '0 4px 24px rgba(42,37,32,0.06)' : 'none',
-          transition: 'background 0.35s, border-color 0.35s, box-shadow 0.35s',
-          color: 'var(--c-text)',
+          borderBottom: `1px solid ${overHero ? 'rgba(232, 214, 179, 0.12)' : 'rgba(232, 214, 179, 0.18)'}`,
+          boxShadow: scrolled ? '0 4px 24px rgba(36, 16, 18,0.18)' : 'none',
+          transition: 'background 0.6s, border-color 0.6s, box-shadow 0.6s',
+          color: 'var(--c-on-chrome)',
         }}
       >
         {/* ─── ROW 1 — Brand · Search · Actions ─────────────────── */}
@@ -137,85 +164,42 @@ export default function Navigation({ items }: { items: NavItem[] }) {
           <Toolbar
             disableGutters
             sx={{
-              minHeight: { xs: '62px !important', md: '72px !important' },
+              minHeight: { xs: '54px !important', md: '56px !important' },
               gap: 2,
             }}
           >
-            {/* LOGO */}
+            {/* Logo alone on the left; quiet links, the one action and the mobile menu share the right. */}
             <Logo />
 
-            {/* SEARCH — centre */}
-            <Box sx={{ flex: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  maxWidth: 480,
-                  border: '1px solid rgba(95,100,64,0.18)',
-                  borderRadius: '28px',
-                  bgcolor: 'rgba(255,255,255,0.65)',
-                  px: 2,
-                  py: '5px',
-                  transition: 'all 0.2s',
-                  '&:hover': {
-                    borderColor: 'rgba(95,100,64,0.35)',
-                    bgcolor: '#fff',
-                  },
-                  '&:focus-within': {
-                    borderColor: 'var(--c-accent)',
-                    bgcolor: '#fff',
-                    boxShadow: '0 0 0 3px rgba(95,100,64,0.1)',
-                  },
-                }}
-              >
-                <Search size={16} style={{ color: 'var(--c-accent)', opacity: 0.7, flexShrink: 0 }} />
-                <InputBase
-                  placeholder="Search jewellery, rings, bangles…"
-                  sx={{
-                    ml: 1.5,
-                    flex: 1,
-                    fontSize: '0.84rem',
-                    fontFamily: 'var(--font-inter)',
-                    color: 'var(--c-text)',
-                    '& input::placeholder': { color: 'var(--c-text-soft)', opacity: 0.75 },
-                  }}
-                />
-              </Box>
-            </Box>
-
-            {/* ACTION ICONS — right */}
-            <Box sx={{ display: { xs: 'none', lg: 'flex' }, alignItems: 'center', gap: 1 }}>
+            <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 3.5 }}>
               {[
-                { label: 'Store',     icon: <MapPin size={20} strokeWidth={1.4} />, href: '/stores' },
-                { label: 'Contact',   icon: <Phone size={20} strokeWidth={1.4} />,  href: '/contact' },
+                { label: 'Collections', href: '/collections' },
+                { label: 'Our Showroom', href: '/stores' },
+                { label: 'Contact', href: '/contact' },
               ].map((a) => (
                 <Box
                   key={a.label}
                   component={Link}
                   href={a.href}
-                  aria-label={a.label}
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
+                    display: { xs: 'none', lg: 'inline-flex' },
                     alignItems: 'center',
-                    gap: '2px',
-                    px: 1.2,
-                    py: 0.6,
-                    borderRadius: '8px',
-                    color: 'var(--c-text)',
+                    minHeight: 44,
+                    fontSize: '0.66rem',
+                    fontWeight: 500,
+                    letterSpacing: '0.24em',
+                    textTransform: 'uppercase',
+                    fontFamily: 'var(--font-inter)',
+                    color: 'var(--c-on-chrome)',
+                    opacity: 0.85,
                     textDecoration: 'none',
-                    transition: 'color 0.2s, background 0.2s',
-                    '&:hover': { color: 'var(--c-accent)', bgcolor: 'rgba(95,100,64,0.05)' },
+                    transition: 'opacity 0.3s',
+                    '&:hover': { opacity: 1 },
                   }}
                 >
-                  {a.icon}
-                  <Typography sx={{ fontSize: '0.6rem', fontWeight: 500, letterSpacing: '0.04em', fontFamily: 'var(--font-inter)', opacity: 0.8 }}>
-                    {a.label}
-                  </Typography>
+                  {a.label}
                 </Box>
               ))}
-
               {/* The site's primary action, so it reads as a button rather than a
                   third icon. Opens the booking dialog with no product attached. */}
               <Box
@@ -223,46 +207,46 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                 type="button"
                 onClick={() => setBookingOpen(true)}
                 sx={{
-                  display: 'inline-flex',
+                  display: { xs: 'none', lg: 'inline-flex' },
                   alignItems: 'center',
-                  gap: 1,
-                  ml: 1.2,
+                  gap: 1.2,
+                  minHeight: 36,
                   px: 2.2,
-                  py: 1.1,
-                  border: 'none',
+                  border: '1px solid rgba(232, 214, 179, 0.55)',
                   cursor: 'pointer',
-                  bgcolor: 'var(--c-accent)',
-                  color: 'var(--c-ivory)',
-                  fontSize: '0.68rem',
-                  fontWeight: 600,
-                  letterSpacing: '0.1em',
+                  bgcolor: 'transparent',
+                  color: 'var(--c-on-chrome)',
+                  fontSize: '0.64rem',
+                  fontWeight: 500,
+                  letterSpacing: '0.24em',
                   textTransform: 'uppercase',
                   fontFamily: 'var(--font-inter)',
                   whiteSpace: 'nowrap',
-                  transition: 'background 0.25s',
-                  '&:hover': { bgcolor: 'var(--c-accent-hover)' },
-                  '&:focus-visible': { outline: '3px solid var(--c-accent)', outlineOffset: '2px' },
+                  transition: 'background 0.3s, border-color 0.3s, transform 0.1s',
+                  '&:hover': { bgcolor: 'rgba(232, 214, 179, 0.12)', borderColor: 'var(--c-on-chrome)' },
+                  '&:active': { transform: 'scale(0.98)' },
+                  '&:focus-visible': { outline: '2px solid var(--c-on-chrome)', outlineOffset: '3px' },
                 }}
               >
-                <CalendarCheck size={15} strokeWidth={1.6} />
-                Book Appointment
+                <CalendarCheck size={14} strokeWidth={1.5} />
+                Book an Appointment
               </Box>
-            </Box>
 
-            {/* MOBILE HAMBURGER */}
-            <IconButton
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-label="Toggle menu"
-              sx={{
-                display: { lg: 'none' },
-                ml: 'auto',
-                color: 'var(--c-text)',
-                borderRadius: '8px',
-                bgcolor: 'rgba(95,100,64,0.06)',
-              }}
-            >
-              {menuOpen ? <X size={22} /> : <Menu size={22} />}
-            </IconButton>
+              <IconButton
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={menuOpen}
+                sx={{
+                  display: { lg: 'none' },
+                  width: 44,
+                  height: 44,
+                  color: 'var(--c-on-chrome)',
+                  borderRadius: '8px',
+                }}
+              >
+                {menuOpen ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
 
@@ -272,7 +256,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
           aria-label="Product categories"
           sx={{
             display: { xs: 'none', lg: 'block' },
-            borderTop: '1px solid rgba(95,100,64,0.08)',
+            borderTop: '1px solid rgba(232, 214, 179, 0.15)',
           }}
         >
           <Container maxWidth={false} disableGutters className="container-page">
@@ -300,18 +284,17 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                         alignItems: 'center',
                         gap: '3px',
                         px: { lg: 1.8, xl: 2.4 },
-                        py: 1.15,
-                        fontSize: '0.76rem',
+                        py: 0.75,
+                        fontSize: '0.7rem',
                         fontWeight: 500,
                         letterSpacing: '0.11em',
                         textTransform: 'uppercase',
                         fontFamily: 'var(--font-inter)',
-                        color: open ? 'var(--c-accent)' : 'var(--c-text)',
+                        color: open ? '#FFFFFF' : 'var(--c-on-chrome)',
                         textDecoration: 'none',
                         position: 'relative',
                         transition: 'color 0.2s',
-                        '&:hover': { color: 'var(--c-accent)' },
-                        /* underline */
+                        '&:hover': { color: '#FFFFFF' },
                         '&::after': {
                           content: '""',
                           position: 'absolute',
@@ -319,7 +302,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                           left: '20%',
                           width: '60%',
                           height: '2px',
-                          bgcolor: 'var(--c-accent)',
+                          bgcolor: 'var(--c-on-chrome)',
                           borderRadius: 1,
                           transform: open ? 'scaleX(1)' : 'scaleX(0)',
                           transition: 'transform 0.25s cubic-bezier(.4,0,.2,1)',
@@ -346,7 +329,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                             right: 0,
                             bgcolor: '#FFFFFF',
                             borderTop: '2px solid var(--c-accent)',
-                            boxShadow: '0 20px 50px -12px rgba(42,37,32,0.13)',
+                            boxShadow: '0 20px 50px -12px rgba(36, 16, 18,0.13)',
                             zIndex: 999,
                           }}
                         >
@@ -361,7 +344,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                     sx={{
                                       flex: 1,
                                       px: { lg: 3, xl: 4 },
-                                      borderLeft: ci ? '1px solid rgba(95,100,64,0.08)' : 'none',
+                                      borderLeft: ci ? '1px solid rgba(128, 0, 34,0.08)' : 'none',
                                     }}
                                   >
                                     {/* column heading */}
@@ -415,7 +398,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                     sx={{
                                       width: { lg: 280, xl: 310 },
                                       flexShrink: 0,
-                                      borderLeft: '1px solid rgba(95,100,64,0.08)',
+                                      borderLeft: '1px solid rgba(128, 0, 34,0.08)',
                                       pl: { lg: 3, xl: 4 },
                                     }}
                                   >
@@ -426,13 +409,13 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                         display: 'block',
                                         borderRadius: '8px',
                                         overflow: 'hidden',
-                                        border: '1px solid rgba(95,100,64,0.1)',
+                                        border: '1px solid rgba(128, 0, 34,0.1)',
                                         textDecoration: 'none',
                                         color: 'inherit',
                                         transition: 'box-shadow 0.3s, border-color 0.3s',
                                         '&:hover': {
                                           borderColor: 'var(--c-accent)',
-                                          boxShadow: '0 8px 24px -6px rgba(42,37,32,0.12)',
+                                          boxShadow: '0 8px 24px -6px rgba(36, 16, 18,0.12)',
                                           '& .featured-img': { transform: 'scale(1.04)' },
                                         },
                                       }}
@@ -462,7 +445,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                             color: 'var(--c-accent)',
                                             bgcolor: 'rgba(255,255,255,0.88)',
                                             backdropFilter: 'blur(6px)',
-                                            border: '1px solid rgba(95,100,64,0.15)',
+                                            border: '1px solid rgba(128, 0, 34,0.15)',
                                             borderRadius: '3px',
                                             px: 0.8,
                                             py: '2px',
@@ -490,7 +473,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                           </Container>
 
                           {/* trust bar */}
-                          <Box sx={{ bgcolor: 'rgba(95,100,64,0.03)', borderTop: '1px solid rgba(95,100,64,0.06)', py: 1.1 }}>
+                          <Box sx={{ bgcolor: 'rgba(128, 0, 34,0.03)', borderTop: '1px solid rgba(128, 0, 34,0.06)', py: 1.1 }}>
                             <Container maxWidth="xl">
                               <Box sx={{ display: 'flex', justifyContent: 'center', gap: { lg: 5, xl: 8 }, flexWrap: 'wrap' }}>
                                 {TRUST_ITEMS.map((t, i) => (
@@ -537,24 +520,38 @@ export default function Navigation({ items }: { items: NavItem[] }) {
             }}
           >
             {/* top bar */}
-            <Box sx={{ px: 2.5, py: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(95,100,64,0.1)', bgcolor: '#fff' }}>
-              <Logo />
-              <IconButton onClick={() => setMenuOpen(false)} aria-label="Close" sx={{ color: 'var(--c-text)', borderRadius: '8px', bgcolor: 'rgba(95,100,64,0.06)' }}>
+            <Box sx={{ px: 2.5, py: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(128, 0, 34,0.1)', bgcolor: '#fff' }}>
+              <Logo tone="dark" />
+              <IconButton onClick={() => setMenuOpen(false)} aria-label="Close" sx={{ color: 'var(--c-text)', borderRadius: '8px', bgcolor: 'rgba(128, 0, 34,0.06)' }}>
                 <X size={20} />
               </IconButton>
-            </Box>
-
-            {/* search */}
-            <Box sx={{ px: 2.5, py: 2, bgcolor: '#fff', borderBottom: '1px solid rgba(95,100,64,0.06)' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', border: '1px solid rgba(95,100,64,0.18)', borderRadius: '22px', px: 1.8, py: '5px', bgcolor: 'var(--c-ivory)' }}>
-                <Search size={15} style={{ color: 'var(--c-accent)', opacity: 0.7, flexShrink: 0 }} />
-                <InputBase placeholder="Search jewellery…" sx={{ ml: 1.2, flex: 1, fontSize: '0.84rem', fontFamily: 'var(--font-inter)' }} />
-              </Box>
             </Box>
 
             {/* accordion categories */}
             <Box sx={{ px: 2.5, py: 2, flex: 1 }}>
               <Stack spacing={1}>
+                <Box
+                  component={Link}
+                  href="/collections"
+                  onClick={() => setMenuOpen(false)}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    minHeight: 48,
+                    px: 2,
+                    borderRadius: '8px',
+                    bgcolor: 'var(--c-accent)',
+                    color: 'var(--c-on-sage)',
+                    textDecoration: 'none',
+                    fontFamily: 'var(--font-playfair-display)',
+                    fontWeight: 600,
+                    fontSize: '0.95rem',
+                  }}
+                >
+                  All Collections
+                  <ArrowRight size={16} />
+                </Box>
                 {items.map((cat) => {
                   const open = mobileExpanded === cat.label;
                   return (
@@ -562,7 +559,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                       key={cat.label}
                       sx={{
                         borderRadius: '8px',
-                        border: '1px solid rgba(95,100,64,0.1)',
+                        border: '1px solid rgba(128, 0, 34,0.1)',
                         bgcolor: '#fff',
                         overflow: 'hidden',
                       }}
@@ -577,7 +574,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                           px: 2,
                           py: 1.4,
                           cursor: 'pointer',
-                          '&:active': { bgcolor: 'rgba(95,100,64,0.04)' },
+                          '&:active': { bgcolor: 'rgba(128, 0, 34,0.04)' },
                         }}
                       >
                         <Typography sx={{ fontFamily: 'var(--font-playfair-display)', fontWeight: 600, fontSize: '0.95rem', color: open ? 'var(--c-accent)' : 'var(--c-text)' }}>
@@ -599,7 +596,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.2 }}
-                            sx={{ borderTop: '1px dashed rgba(95,100,64,0.1)', bgcolor: 'var(--c-ivory)', px: 2.5, pb: 2 }}
+                            sx={{ borderTop: '1px dashed rgba(128, 0, 34,0.1)', bgcolor: 'var(--c-ivory)', px: 2.5, pb: 2 }}
                           >
                             <Box
                               component={Link}
@@ -645,7 +642,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
             </Box>
 
             {/* bottom bar */}
-            <Box sx={{ px: 2.5, py: 2, borderTop: '1px solid rgba(95,100,64,0.1)', bgcolor: '#fff' }}>
+            <Box sx={{ px: 2.5, py: 2, borderTop: '1px solid rgba(128, 0, 34,0.1)', bgcolor: '#fff' }}>
               <Box
                 component="button"
                 type="button"
@@ -675,7 +672,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                     sx={{
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0.8,
                       py: 1.1, borderRadius: '8px',
-                      border: '1px solid rgba(95,100,64,0.15)',
+                      border: '1px solid rgba(128, 0, 34,0.15)',
                       color: 'var(--c-text)', textDecoration: 'none',
                       fontSize: '0.78rem', fontWeight: 500,
                       '& svg': { color: 'var(--c-accent)' },
@@ -686,7 +683,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                 ))}
               </Box>
               <Typography sx={{ textAlign: 'center', fontSize: '0.65rem', color: 'var(--c-text-soft)', letterSpacing: '0.06em' }}>
-                BIS 916 Hallmarked · Coimbatore Heritage · Since 1986
+                BIS 916 Hallmarked · Fine Gold · By Appointment
               </Typography>
             </Box>
           </Box>
