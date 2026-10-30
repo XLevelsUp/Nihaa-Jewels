@@ -29,6 +29,7 @@ import {
   Coins,
   CalendarDays,
   Newspaper,
+  Users,
   Menu as MenuIcon,
   LogOut,
   UserCircle,
@@ -36,8 +37,10 @@ import {
 
 import { ADMIN_NAVIGATION, type NavItem } from '@/constants/navigation';
 import { logout } from '@/app/actions/auth';
+import CommandSearch from '@/components/CommandSearch';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/theme';
+import { can, ROLE_LABELS, type Role } from '@/lib/permissions';
 
 const DRAWER_WIDTH = 248;
 
@@ -48,9 +51,10 @@ const ICONS = {
   coins: Coins,
   calendar: CalendarDays,
   article: Newspaper,
+  users: Users,
 } as const;
 
-function NavList({ onNavigate }: { onNavigate?: () => void }) {
+function NavList({ onNavigate, role }: { onNavigate?: () => void; role: Role }) {
   const pathname = usePathname();
 
   const isActive = (item: NavItem) =>
@@ -58,7 +62,7 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <List sx={{ px: 1.5, py: 2 }}>
-      {ADMIN_NAVIGATION.map((item) => {
+      {ADMIN_NAVIGATION.filter((item) => !item.requires || can(role, item.requires)).map((item) => {
         const Icon = ICONS[item.icon];
         const active = isActive(item);
 
@@ -111,9 +115,11 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 export default function AdminShell({
   children,
   userEmail,
+  userRole,
 }: {
   children: React.ReactNode;
   userEmail: string;
+  userRole: Role;
 }) {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
@@ -124,9 +130,10 @@ export default function AdminShell({
 
   const brand = (
     <Box sx={{ px: 3, py: 2.5, display: 'flex', alignItems: 'center', gap: 1.5 }}>
+      <Box component="img" src="/logo.png" alt="" sx={{ height: 32, width: 32, flexShrink: 0 }} />
       <Box>
         <Typography sx={{ fontFamily: 'var(--font-playfair-display), Georgia, serif', fontWeight: 600, fontSize: '1.05rem', lineHeight: 1.2 }}>
-          Nihaa Jewels
+          Sakthi Chains
         </Typography>
         <Typography sx={{ color: 'text.secondary', fontSize: '0.68rem', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
           Admin
@@ -158,6 +165,8 @@ export default function AdminShell({
             <MenuIcon size={20} />
           </IconButton>
 
+          <CommandSearch />
+
           <Box sx={{ flexGrow: 1 }} />
 
           <IconButton onClick={(e) => setAnchorEl(e.currentTarget)} aria-label="Account menu">
@@ -166,7 +175,7 @@ export default function AdminShell({
           <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
             <Box sx={{ px: 2, py: 1 }}>
               <Typography sx={{ fontSize: '0.8rem', fontWeight: 600 }}>{userEmail}</Typography>
-              <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>Signed in</Typography>
+              <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>Signed in as {ROLE_LABELS[userRole]}</Typography>
             </Box>
             <Divider />
             <MenuItem
@@ -197,7 +206,7 @@ export default function AdminShell({
         >
           {brand}
           <Divider />
-          <NavList onNavigate={() => setMobileOpen(false)} />
+          <NavList role={userRole} onNavigate={() => setMobileOpen(false)} />
         </Drawer>
       </Box>
 

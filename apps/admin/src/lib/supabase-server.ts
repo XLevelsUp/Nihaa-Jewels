@@ -14,8 +14,10 @@ if (!supabaseUrl || !serviceRoleKey) {
   );
 }
 
-export function createAdminClient() {
+// changedBy rides along as a request header so the history trigger can credit the change without storing staff emails on public rows.
+export function createAdminClient(changedBy?: string) {
   return createClient(supabaseUrl!, serviceRoleKey!, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: changedBy ? { headers: { 'x-changed-by': changedBy } } : undefined,
   });
 }

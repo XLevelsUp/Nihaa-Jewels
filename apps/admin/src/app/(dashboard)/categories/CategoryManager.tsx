@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Accordion,
@@ -30,11 +30,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Plus, Pencil, Trash2, ChevronDown } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronDown, GripVertical, Image as ImageIcon, Pencil, Plus, Trash2, Upload } from 'lucide-react';
 
-import { saveCategory, toggleCategoryActive, deleteCategory } from '@/app/actions/categories';
+import { deleteCategory, reorderCategories, saveCategory, toggleCategoryActive, uploadCategoryImage } from '@/app/actions/categories';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
+import { imageSrc } from '@/lib/site';
 import type { Category } from '@/types/database';
 
 interface CategoryManagerProps {
@@ -121,6 +122,41 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
     setErrors((prev) => ({ ...prev, [key]: '' }));
   };
 
+  const [uploading, setUploading] = useState(false);
+  const uploadPhoto = async (file: File) => {
+    setUploading(true);
+    const formData = new FormData();
+    formData.set('file', file);
+    const result = await uploadCategoryImage(formData);
+    setUploading(false);
+    setToast(result);
+    if (result.ok && result.path) set('heroImagePath', result.path);
+  };
+
+  // Collections reorder among their siblings only, so a sub-collection never jumps under a different parent.
+  const [order, setOrder] = useState(categories);
+  useEffect(() => setOrder(categories), [categories]);
+  const dragId = useRef<string | null>(null);
+
+  const moveCategory = (id: string, targetId: string) => {
+    const moving = order.find((c) => c.id === id);
+    const target = order.find((c) => c.id === targetId);
+    if (!moving || !target || moving.id === target.id || moving.parent_id !== target.parent_id) return;
+    const siblings = order.filter((c) => c.parent_id === moving.parent_id);
+    const from = siblings.findIndex((c) => c.id === moving.id);
+    const to = siblings.findIndex((c) => c.id === target.id);
+    siblings.splice(to, 0, siblings.splice(from, 1)[0]);
+    const rank = new Map(siblings.map((c, i) => [c.id, i]));
+    setOrder((prev) => [...prev].sort((a, b) => (rank.has(a.id) && rank.has(b.id) ? rank.get(a.id)! - rank.get(b.id)! : 0)));
+    run(() => reorderCategories(siblings.map((c) => c.id)));
+  };
+
+  const siblingStep = (c: Category, step: -1 | 1) => {
+    const siblings = order.filter((s) => s.parent_id === c.parent_id);
+    const target = siblings[siblings.findIndex((s) => s.id === c.id) + step];
+    if (target) moveCategory(c.id, target.id);
+  };
+
   return (
     <>
       <Box sx={{ mb: 2.5 }}>
@@ -133,6 +169,9 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
         <Table size="small">
           <TableHead>
             <TableRow>
+              <TableCell sx={{ width: 84 }}>
+                <Typography component="span" sx={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)' }}>Order</Typography>
+              </TableCell>
               <TableCell>Collection</TableCell>
               <TableCell>Web address</TableCell>
               <TableCell align="right">Products</TableCell>
@@ -143,13 +182,43 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
           <TableBody>
             {categories.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
-                  No collections yet.
+                <TableCell colSpan={6} sx={{ textAlign: 'center', py: 5, color: 'text.secondary' }}>
+                  No collections yet. Use “Add collection” to create the first one.
                 </TableCell>
               </TableRow>
             ) : (
-              categories.map((c) => (
-                <TableRow key={c.id} hover>
+              order.map((c) => {
+                const siblings = order.filter((s) => s.parent_id === c.parent_id);
+                const index = siblings.findIndex((s) => s.id === c.id);
+                return (
+                <TableRow
+                  key={c.id}
+                  hover
+                  draggable={!pending}
+                  onDragStart={() => (dragId.current = c.id)}
+                  onDragOver={(e) => {
+                    const moving = order.find((s) => s.id === dragId.current);
+                    if (moving && moving.parent_id === c.parent_id) e.preventDefault();
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    if (dragId.current) moveCategory(dragId.current, c.id);
+                    dragId.current = null;
+                  }}
+                  onDragEnd={() => (dragId.current = null)}
+                  sx={{ cursor: pending ? 'default' : 'grab' }}
+                >
+                  <TableCell sx={{ whiteSpace: 'nowrap', pl: c.parent_id ? 3 : 1 }}>
+                    <Box sx={{ display: 'inline-flex', alignItems: 'center', color: 'text.secondary' }}>
+                      <GripVertical size={14} aria-hidden="true" />
+                      <IconButton size="small" disabled={pending || index === 0} onClick={() => siblingStep(c, -1)} aria-label={`Move ${c.name} up`}>
+                        <ArrowUp size={13} />
+                      </IconButton>
+                      <IconButton size="small" disabled={pending || index === siblings.length - 1} onClick={() => siblingStep(c, 1)} aria-label={`Move ${c.name} down`}>
+                        <ArrowDown size={13} />
+                      </IconButton>
+                    </Box>
+                  </TableCell>
                   <TableCell>
                     <Typography sx={{ fontSize: '0.86rem', fontWeight: 500, pl: c.parent_id ? 2.5 : 0 }}>
                       {c.parent_id && <Box component="span" sx={{ color: 'text.secondary', mr: 0.75 }}>↳</Box>}
@@ -192,7 +261,8 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))
+                );
+              })
             )}
           </TableBody>
         </Table>
@@ -310,15 +380,56 @@ export default function CategoryManager({ categories, productCounts }: CategoryM
                   fullWidth
                   helperText="Separate with commas"
                 />
-                <TextField
-                  label="Hero image path"
-                  value={editing?.heroImagePath ?? ''}
-                  onChange={(e) => set('heroImagePath', e.target.value)}
-                  fullWidth
-                  helperText="e.g. /images/rings.webp"
-                />
               </AccordionDetails>
             </Accordion>
+
+            <Box>
+              <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, mb: 1 }}>Collection photo</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Box
+                  sx={{
+                    width: 96,
+                    height: 96,
+                    flexShrink: 0,
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    bgcolor: PALETTE.icingWash,
+                    border: `1px solid ${PALETTE.icing}`,
+                    display: 'grid',
+                    placeItems: 'center',
+                  }}
+                >
+                  {editing?.heroImagePath ? (
+                    <Box component="img" src={imageSrc(editing.heroImagePath)} alt="" sx={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  ) : (
+                    <ImageIcon size={22} color={PALETTE.inkSoft} aria-hidden="true" />
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, alignItems: 'flex-start' }}>
+                  <Button component="label" size="small" variant="outlined" startIcon={uploading ? <CircularProgress size={14} /> : <Upload size={14} />} disabled={uploading}>
+                    {editing?.heroImagePath ? 'Replace photo' : 'Upload photo'}
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/jpeg,image/png,image/webp,image/avif"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadPhoto(file);
+                        e.target.value = '';
+                      }}
+                    />
+                  </Button>
+                  {editing?.heroImagePath && (
+                    <Button size="small" color="inherit" onClick={() => set('heroImagePath', '')} sx={{ fontSize: '0.75rem' }}>
+                      Remove photo
+                    </Button>
+                  )}
+                  <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                    Shown on the homepage, the menu and the collections strip. Square works best.
+                  </Typography>
+                </Box>
+              </Box>
+            </Box>
 
             <FormControlLabel
               control={

@@ -14,5 +14,8 @@
     "start:admin": "npm run start --workspace=admin",
     "lint:marketing": "npm run lint --workspace=marketing",
     "lint:admin": "npm run lint --workspace=admin"
+  },
+  "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
   }
 }

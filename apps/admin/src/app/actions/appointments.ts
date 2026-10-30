@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 import { createAdminClient } from '@/lib/supabase-server';
-import { getCurrentUser } from '@/lib/supabase-auth';
+import { authorize } from '@/lib/supabase-auth';
 import type { ActionResult } from './products';
 
 const statusSchema = z.enum(['new', 'confirmed', 'completed', 'cancelled']);
@@ -27,8 +27,8 @@ export async function updateAppointmentStatus(
   // Undo replays a known previous status, so it bypasses the forward-only rules.
   options?: { undo?: boolean },
 ): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired. Please sign in again.' };
+  const auth = await authorize('appointments.manage');
+  if (!auth.user) return { ok: false, message: auth.error };
 
   const parsed = statusSchema.safeParse(status);
   if (!parsed.success) return { ok: false, message: 'Unknown status.' };
@@ -81,8 +81,8 @@ export async function updateAppointmentStatus(
 }
 
 export async function saveStaffNotes(id: string, notes: string): Promise<ActionResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired.' };
+  const auth = await authorize('appointments.manage');
+  if (!auth.user) return { ok: false, message: auth.error };
 
   const trimmed = notes.trim().slice(0, 2000);
 

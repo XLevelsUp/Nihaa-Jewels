@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import LoginClient from './LoginClient';
 
 export const metadata: Metadata = {
-  title: 'Sign in — Nihaa Jewels Admin',
+  title: 'Sign in — Sakthi Chains Admin',
   robots: { index: false, follow: false },
 };
 

@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 
-import { getCurrentUser } from '@/lib/supabase-auth';
+import { authorize } from '@/lib/supabase-auth';
 import { getCurrentRates, publishRate, validateRateChange } from '@/lib/rates';
 import type { Karat } from '@/types/database';
 
@@ -21,8 +21,9 @@ export interface PublishRateResult {
 }
 
 export async function publishGoldRate(formData: FormData): Promise<PublishRateResult> {
-  const user = await getCurrentUser();
-  if (!user) return { ok: false, message: 'Your session has expired. Please sign in again.' };
+  const auth = await authorize('rates.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
+  const { user } = auth;
 
   const parsed = schema.safeParse({
     karat: formData.get('karat'),

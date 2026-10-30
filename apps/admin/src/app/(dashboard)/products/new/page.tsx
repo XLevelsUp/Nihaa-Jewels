@@ -4,11 +4,14 @@ import { ArrowLeft } from 'lucide-react';
 
 import ProductForm from '../ProductForm';
 import { listCategories, getLatestRates } from '@/lib/catalogue';
+import { getCurrentUser } from '@/lib/supabase-auth';
+import { can } from '@/lib/permissions';
 
 export const dynamic = 'force-dynamic';
 
 export default async function NewProductPage() {
-  const [categories, rates] = await Promise.all([listCategories(), getLatestRates()]);
+  const [categories, rates, user] = await Promise.all([listCategories(), getLatestRates(), getCurrentUser()]);
+  const perms = { canPublish: can(user?.role, 'products.publish'), canDiscount: can(user?.role, 'discounts.edit') };
 
   return (
     <Box>
@@ -30,7 +33,7 @@ export default async function NewProductPage() {
           Create a collection first, under Categories.
         </Typography>
       ) : (
-        <ProductForm product={null} categories={categories} rates={rates} />
+        <ProductForm product={null} categories={categories} rates={rates} perms={perms} />
       )}
     </Box>
   );

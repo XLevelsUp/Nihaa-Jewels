@@ -15,6 +15,13 @@ export const PRICE_BANDS: PriceBand[] = [
 
 export const OCCASIONS = ['wedding', 'daily-wear', 'festive', 'engagement', 'office'];
 
+export const SORTS = [
+  { value: '', label: 'Signature first' },
+  { value: 'newest', label: 'Newest' },
+  { value: 'price-asc', label: 'Price: low to high' },
+  { value: 'price-desc', label: 'Price: high to low' },
+];
+
 // Audience values match the admin GENDERS list; unisex is never browsed directly
 // because those pieces already surface under both women and men.
 export const AUDIENCES: Record<string, { heading: string; blurb: string }> = {

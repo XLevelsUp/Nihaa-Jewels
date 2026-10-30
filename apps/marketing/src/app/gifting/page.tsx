@@ -30,7 +30,7 @@ export default function GiftingPage() {
             variant="h1"
             sx={{
               fontSize: { xs: '2.5rem', md: '3.5rem' },
-              color: '#2A2520',
+              color: '#241012',
               fontFamily: 'var(--font-playfair-display), serif',
               lineHeight: 1.2
             }}
@@ -44,7 +44,7 @@ export default function GiftingPage() {
           <Typography
             variant="body1"
             sx={{
-              color: '#55524A',
+              color: '#5A4A42',
               fontWeight: 300,
               maxWidth: 600,
               mx: 'auto',
@@ -78,7 +78,7 @@ export default function GiftingPage() {
             variant="h2"
             sx={{
               fontSize: '1.5rem',
-              color: '#2A2520',
+              color: '#241012',
               mb: 2,
               fontFamily: 'var(--font-playfair-display), serif'
             }}

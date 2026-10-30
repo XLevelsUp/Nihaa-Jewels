@@ -1,108 +1,109 @@
 'use client';
 
-import React, { useState } from "react";
-import {
-  Box,
-  Typography,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  alpha,
-  useTheme,
-  FormControl,
-  InputLabel,
-  Snackbar,
-  Alert,
-  CircularProgress
-} from "@mui/material";
+// Open enquiries go to the shop's Google Sheet; success is only shown when the request actually left the browser, and failures point to the phone instead of pretending.
+
+import { useState } from 'react';
+import { Send } from 'lucide-react';
+
+import { STORE } from '@/constants/store';
+
+const INTERESTS = [
+  { value: '', label: 'Choose one (optional)' },
+  { value: 'bridal', label: 'Bridal jewellery' },
+  { value: 'custom', label: 'Bespoke / custom design' },
+  { value: 'exchange', label: 'Old gold exchange' },
+  { value: 'gifting', label: 'Gifting' },
+  { value: 'general', label: 'General question' },
+];
+
+const EMPTY = { name: '', phone: '', email: '', interest: '', message: '' };
 
 export default function ContactForm() {
-  const theme = useTheme();
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    interest: "",
-    message: ""
-  });
+  const [form, setForm] = useState(EMPTY);
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | { name?: string; value: unknown }>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name as string]: value }));
-  };
+  const set = (key: keyof typeof EMPTY) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    const endpoint = process.env.NEXT_PUBLIC_GOOGLE_SHEET_URL;
+    if (!endpoint) {
+      setState('failed');
+      return;
+    }
+    setState('sending');
     try {
-      const params = new URLSearchParams();
-      params.append("name", formData.name);
-      params.append("phone", formData.phone);
-      params.append("email", formData.email);
-      params.append("interest", formData.interest);
-      params.append("message", formData.message);
-
-      await fetch(process.env.NEXT_PUBLIC_GOOGLE_SHEET_URL!, {
-        method: "POST",
-        mode: "no-cors",           // ← critical for Google Apps Script
-        body: params,
-      });
-
-      setSuccess(true);
-      setFormData({ name: "", phone: "", email: "", interest: "", message: "" });
+      // no-cors: Apps Script does not send CORS headers, so the reply is opaque; a network failure still throws.
+      await fetch(endpoint, { method: 'POST', mode: 'no-cors', body: new URLSearchParams(form) });
+      setState('sent');
+      setForm(EMPTY);
     } catch (err) {
-      console.error("Form error:", err);
-    } finally {
-      setLoading(false);
+      console.error('[contact] send failed:', err);
+      setState('failed');
     }
   };
-  const textFieldStyle = {
-    '& .MuiInput-underline:before': { borderBottomColor: alpha(theme.palette.primary.main, 0.2) },
-    '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottomColor: theme.palette.primary.main },
-    '& .MuiInput-underline:after': { borderBottomColor: theme.palette.primary.main },
-    '& .MuiInputBase-input': { color: theme.palette.text.primary, fontFamily: 'var(--font-inter), sans-serif', fontSize: '0.875rem' },
-    '& .MuiInputLabel-root': { color: theme.palette.primary.main, textTransform: 'uppercase', letterSpacing: '0.15em', fontSize: '0.65rem' }
-  };
+
+  const field = 'mt-2 w-full border-0 border-b bg-transparent px-0 py-2 text-[0.92rem] outline-none transition-colors focus:border-[var(--c-burgundy)]';
+  const fieldStyle = { borderColor: 'var(--c-border-firm)', color: 'var(--c-text)' };
+  const label = 'lux-eyebrow block';
 
   return (
-    <Box sx={{ bgcolor: 'background.paper', border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`, p: { xs: 4, md: 6 }, display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <Box>
-        <Typography variant="h3" sx={{ fontSize: '1.5rem', color: 'text.primary', fontFamily: 'var(--font-playfair-display), serif', mb: 2 }}>Send Us a Message</Typography>
-        <Box sx={{ width: 40, height: 1, bgcolor: 'primary.main' }} />
-        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 300, mt: 2, lineHeight: 1.7 }}>
-          For questions about a piece, pricing or a bespoke commission. We reply within one working day.
-          To reserve a time at the showroom, book an appointment instead.
-        </Typography>
-      </Box>
-      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 4 }}>
-          <TextField fullWidth name="name" value={formData.name} onChange={handleChange} variant="standard" label="Full Name*" placeholder="Priya Sharma" required sx={textFieldStyle} InputLabelProps={{ shrink: true }} />
-          <TextField fullWidth name="phone" value={formData.phone} onChange={handleChange} variant="standard" label="Phone Number" placeholder="+91 98000 00000" sx={textFieldStyle} InputLabelProps={{ shrink: true }} />
-        </Box>
-        <TextField fullWidth name="email" value={formData.email} onChange={handleChange} variant="standard" label="Email Address*" placeholder="priya@example.com" type="email" required sx={textFieldStyle} InputLabelProps={{ shrink: true }} />
-        <FormControl fullWidth variant="standard" sx={textFieldStyle}>
-          <InputLabel shrink sx={{ color: 'primary.main' }}>I&rsquo;m Interested In</InputLabel>
-          <Select name="interest" value={formData.interest} onChange={(e) => setFormData(prev => ({ ...prev, interest: e.target.value as string }))} displayEmpty sx={{ '&:before': { borderBottomColor: alpha(theme.palette.primary.main, 0.2) }, '&:after': { borderBottomColor: theme.palette.primary.main }, '& .MuiSelect-select': { py: 1, color: theme.palette.text.secondary, fontSize: '0.875rem' } }}>
-            <MenuItem value="" disabled>Select an option</MenuItem>
-            <MenuItem value="bridal">Bridal Jewellery</MenuItem>
-            <MenuItem value="custom">Bespoke / Custom Design</MenuItem>
-            <MenuItem value="gifting">Gifting</MenuItem>
-            <MenuItem value="general">General Inquiry</MenuItem>
-          </Select>
-        </FormControl>
-        <TextField fullWidth name="message" value={formData.message} onChange={handleChange} variant="standard" label="Message*" placeholder="Tell us more about what you're looking for..." multiline rows={4} required sx={textFieldStyle} InputLabelProps={{ shrink: true }} />
-        <Button type="submit" variant="contained" disabled={loading} className="btn-gold-shimmer" sx={{ py: 2.5, fontSize: '0.75rem', letterSpacing: '0.15em', fontWeight: 600 }}>
-          {loading ? <CircularProgress size={20} color="inherit" /> : "Send Message"}
-        </Button>
-      </Box>
-      <Snackbar open={success} autoHideDuration={6000} onClose={() => setSuccess(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
-        <Alert onClose={() => setSuccess(false)} severity="success" sx={{ bgcolor: 'background.paper', color: 'primary.main', border: `1px solid ${theme.palette.primary.main}`, width: '100%' }}>
-          Your message has been received. Our team will contact you shortly.
-        </Alert>
-      </Snackbar>
-    </Box>
+    <div className="p-6 md:p-10" style={{ border: '1px solid var(--c-border-firm)', background: 'var(--c-product-card)' }}>
+      <h2 className="lux-display" style={{ fontSize: 'clamp(1.7rem, 3vw, 2.3rem)' }}>
+        Send us <em>a message</em>
+      </h2>
+      <p className="lux-body mt-3 text-[0.88rem]">
+        For questions about a piece, pricing or a commission. To reserve a time at the showroom, book a visit instead.
+      </p>
+
+      {state === 'sent' ? (
+        <div role="status" className="mt-8 p-6" style={{ background: 'var(--c-icing)' }}>
+          <p className="lux-title text-[1.3rem]">Thank you, your message is on its way.</p>
+          <p className="lux-body mt-2 text-[0.88rem]">We will reply as soon as we can. For anything urgent, call {STORE.phone}.</p>
+          <button type="button" onClick={() => setState('idle')} className="lux-link mt-3">Send another message</button>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="mt-8 flex flex-col gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <label className={label}>
+              Full name *
+              <input required name="name" autoComplete="name" value={form.name} onChange={set('name')} className={field} style={fieldStyle} />
+            </label>
+            <label className={label}>
+              Phone
+              <input name="phone" type="tel" autoComplete="tel" value={form.phone} onChange={set('phone')} className={field} style={fieldStyle} />
+            </label>
+          </div>
+          <label className={label}>
+            Email *
+            <input required name="email" type="email" autoComplete="email" value={form.email} onChange={set('email')} className={field} style={fieldStyle} />
+          </label>
+          <label className={label}>
+            I am interested in
+            <select name="interest" value={form.interest} onChange={set('interest')} className={`${field} cursor-pointer`} style={fieldStyle}>
+              {INTERESTS.map((i) => (
+                <option key={i.value} value={i.value}>{i.label}</option>
+              ))}
+            </select>
+          </label>
+          <label className={label}>
+            Message *
+            <textarea required name="message" rows={4} value={form.message} onChange={set('message')} className={`${field} resize-y`} style={fieldStyle} />
+          </label>
+
+          {state === 'failed' && (
+            <p role="alert" className="p-4 text-[0.85rem]" style={{ background: 'rgba(179,38,30,0.08)', color: 'var(--c-text)' }}>
+              Your message could not be sent. Please call or WhatsApp us on {STORE.phone}.
+            </p>
+          )}
+
+          <button type="submit" disabled={state === 'sending'} className="lux-button self-start disabled:opacity-60">
+            <Send size={14} strokeWidth={1.5} aria-hidden="true" />
+            {state === 'sending' ? 'Sending…' : 'Send message'}
+          </button>
+        </form>
+      )}
+    </div>
   );
 }

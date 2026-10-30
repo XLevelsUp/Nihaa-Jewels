@@ -23,8 +23,12 @@ const schema = z.object({
   preferredSlot: z.enum(SLOTS),
   notes: z.string().trim().max(1000).optional().or(z.literal('')),
   quotedPrice: z.number().positive().nullable(),
-  website: z.string().max(0).optional().or(z.literal('')),
+  // Honeypot: never a validation error (a visitor cannot see or fix it); a filled value is handled as a bot below.
+  trap: z.string().optional().or(z.literal('')),
 });
+
+// Fields the dialog can highlight; an error on any other field is spelled out in the message instead of hidden.
+const VISIBLE_FIELDS = ['name', 'phone', 'email', 'preferredDate', 'preferredSlot', 'notes'];
 
 export interface BookingResult {
   ok: boolean;
@@ -42,7 +46,7 @@ export async function bookAppointment(formData: FormData): Promise<BookingResult
     preferredSlot: (formData.get('preferredSlot') as string) ?? '',
     notes: (formData.get('notes') as string) ?? '',
     quotedPrice: formData.get('quotedPrice') ? Number(formData.get('quotedPrice')) : null,
-    website: (formData.get('website') as string) ?? '',
+    trap: (formData.get('sc_hp_field') as string) ?? '',
   };
 
   const parsed = schema.safeParse(raw);
@@ -52,12 +56,17 @@ export async function bookAppointment(formData: FormData): Promise<BookingResult
       const key = String(issue.path[0]);
       if (!fieldErrors[key]) fieldErrors[key] = issue.message;
     }
+    const hidden = Object.entries(fieldErrors).filter(([key]) => !VISIBLE_FIELDS.includes(key));
+    if (hidden.length > 0) {
+      console.error('[book-appointment] invalid hidden fields:', hidden);
+      return { ok: false, message: `We could not send this request. Please call us on ${STORE.phone}.`, fieldErrors };
+    }
     return { ok: false, message: 'Please check the highlighted fields.', fieldErrors };
   }
 
   const input = parsed.data;
 
-  if (input.website) {
+  if (input.trap) {
     return { ok: true, message: 'Thank you — we will call you shortly to confirm.' };
   }
 

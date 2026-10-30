@@ -54,15 +54,15 @@ export default function LoginClient() {
         <Box sx={{ textAlign: 'center', mb: 4 }}>
           <Box
             component="img"
-            src="/logo.svg"
+            src="/logo.png"
             alt=""
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = 'none';
             }}
-            sx={{ height: 40, mb: 2 }}
+            sx={{ height: 48, mb: 2 }}
           />
           <Typography variant="h1" sx={{ fontSize: '1.4rem', mb: 0.5 }}>
-            Nihaa Jewels
+            Sakthi Chains
           </Typography>
           <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem' }}>
             Staff sign in

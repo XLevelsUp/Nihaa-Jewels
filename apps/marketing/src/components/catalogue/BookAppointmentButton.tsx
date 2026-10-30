@@ -27,8 +27,8 @@ export default function BookAppointmentButton({
 
   const whatsappHref = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     productName
-      ? `Hello Nihaa Jewels, I'd like to know more about "${productName}".`
-      : "Hello Nihaa Jewels, I'd like to enquire about your collection.",
+      ? `Hello ${STORE.name}, I'd like to know more about "${productName}".`
+      : `Hello ${STORE.name}, I'd like to enquire about your collection.`,
   )}`;
 
   return (

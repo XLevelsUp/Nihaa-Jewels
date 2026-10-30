@@ -7,8 +7,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-playfair-display", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Nihaa Jewels — Admin",
-  description: "Internal admin panel for Nihaa Jewels. Not for public access.",
+  title: "Sakthi Chains — Admin",
+  description: "Internal admin panel for Sakthi Chains. Not for public access.",
   robots: {
     index: false,
     follow: false,

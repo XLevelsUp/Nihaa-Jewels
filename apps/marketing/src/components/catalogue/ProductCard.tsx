@@ -1,144 +1,66 @@
-'use client';
+// Image-led card in the fine-jeweller convention: a tall photograph on a soft ground, then purity and weight, the name, and the indicative price.
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Box, Typography, alpha, useTheme } from '@mui/material';
 
-import { formatRupees } from '@/lib/pricing';
+import PriceTag from './PriceTag';
 import { productImageUrl } from '@/lib/supabase';
 import type { PricedProduct } from '@/lib/catalogue';
 
 interface ProductCardProps {
   product: PricedProduct;
   priority?: boolean;
+  sizes?: string;
 }
 
-export default function ProductCard({ product, priority = false }: ProductCardProps) {
-  const theme = useTheme();
+export default function ProductCard({ product, priority = false, sizes = '(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw' }: ProductCardProps) {
   const image = product.images[0];
   const href = `/collections/${product.category?.slug ?? 'all'}/${product.slug}`;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.5, ease: 'easeOut' }}
-    >
-      <Box
-        component={Link}
-        href={href}
-        sx={{
-          display: 'block',
-          textDecoration: 'none',
-          bgcolor: 'var(--c-product-card)',
-          // Fill is near-invisible on the ivory page, so the border defines the card edge.
-          border: `1px solid ${alpha(theme.palette.primary.main, 0.22)}`,
-          overflow: 'hidden',
-          height: '100%',
-          transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), border-color 0.3s ease, box-shadow 0.35s ease',
-          '&:hover': {
-            transform: 'translateY(-3px)',
-            borderColor: alpha(theme.palette.primary.main, 0.4),
-            boxShadow: `0 12px 40px ${alpha(theme.palette.primary.main, 0.12)}`,
-          },
-          '&:hover .product-image': { transform: 'scale(1.04)' },
-        }}
-      >
-        <Box sx={{ position: 'relative', aspectRatio: '1 / 1', overflow: 'hidden', bgcolor: 'var(--c-page)' }}>
+    <article>
+      <Link href={href} className="group block">
+        <div className="relative aspect-square overflow-hidden" style={{ background: 'var(--c-icing)' }}>
           {image ? (
             <Image
-              className="product-image"
               src={productImageUrl(image.storage_path)}
               alt={image.alt_text || product.name}
               fill
-              sizes="(max-width: 600px) 100vw, (max-width: 900px) 50vw, 33vw"
+              sizes={sizes}
               priority={priority}
-              style={{ objectFit: 'cover', transition: 'transform 0.6s ease' }}
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
             />
           ) : (
-            <Box
-              sx={{
-                position: 'absolute',
-                inset: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: alpha(theme.palette.primary.main, 0.3),
-                fontSize: '0.7rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-              }}
-            >
+            <span className="text-soft absolute inset-0 grid place-items-center text-[0.62rem] uppercase tracking-[0.2em]">
               Image coming soon
-            </Box>
+            </span>
           )}
-
           {product.is_featured && (
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 12,
-                left: 12,
-                px: 1.5,
-                py: 0.5,
-                bgcolor: alpha(theme.palette.background.default, 0.85),
-                border: `1px solid ${alpha(theme.palette.primary.main, 0.4)}`,
-                color: 'primary.main',
-                fontSize: '0.6rem',
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-              }}
+            <span
+              className="absolute left-3 top-3 px-2 py-1 text-[0.56rem] font-medium uppercase tracking-[0.22em]"
+              style={{ background: 'rgba(253, 250, 245, 0.92)', color: 'var(--c-burgundy)' }}
             >
               Signature
-            </Box>
+            </span>
           )}
-        </Box>
+        </div>
 
-        <Box sx={{ p: 3 }}>
-          <Typography
-            variant="overline"
-            sx={{
-              display: 'block',
-              color: alpha(theme.palette.primary.main, 0.6),
-              letterSpacing: '0.2em',
-              fontSize: '0.6rem',
-              mb: 0.5,
-            }}
-          >
-            {product.karat} &middot; {product.category?.name ?? 'Jewellery'}
-          </Typography>
-
-          <Typography
-            variant="h3"
-            sx={{
-              fontSize: '1.05rem',
-              color: 'text.primary',
-              fontFamily: 'var(--font-playfair-display), serif',
-              mb: 1.5,
-              lineHeight: 1.35,
-            }}
-          >
+        <div className="pt-3">
+          <p className="text-soft text-[0.58rem] uppercase tracking-[0.18em] tabular-nums">
+            {product.karat} gold &middot; {Number(product.net_weight_g)} g
+          </p>
+          <h3 className="lux-title mt-1 line-clamp-2 text-[0.98rem] leading-snug transition-colors duration-300 group-hover:text-[var(--c-burgundy)]">
             {product.name}
-          </Typography>
-
+          </h3>
           {product.price ? (
-            <>
-              <Typography sx={{ color: 'primary.main', fontSize: '1.1rem', fontWeight: 600 }}>
-                {formatRupees(product.price.total)}
-              </Typography>
-              <Typography sx={{ color: 'text.secondary', fontSize: '0.65rem', opacity: 0.7, mt: 0.25 }}>
-                Indicative &middot; {product.net_weight_g}g net
-              </Typography>
-            </>
+            <div className="mt-1.5">
+              <PriceTag price={product.price} />
+            </div>
           ) : (
-            <Typography sx={{ color: 'text.secondary', fontSize: '0.8rem', fontStyle: 'italic', opacity: 0.7 }}>
-              Price on enquiry
-            </Typography>
+            <p className="text-soft mt-2 text-[0.85rem] italic">Price on enquiry</p>
           )}
-        </Box>
-      </Box>
-    </motion.article>
+        </div>
+      </Link>
+    </article>
   );
 }

@@ -10,6 +10,7 @@ import { Box, Container, Typography } from '@mui/material';
 import Navigation from '@/components/sections/NavigationServer';
 import Footer from '@/components/sections/Footer';
 import PriceBreakdownTable from '@/components/catalogue/PriceBreakdownTable';
+import PriceTag from '@/components/catalogue/PriceTag';
 import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton';
 import { getProductBySlug } from '@/lib/catalogue';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
@@ -150,7 +151,7 @@ export default async function ProductPage({ params }: PageProps) {
                   position: 'relative',
                   aspectRatio: '1 / 1',
                   bgcolor: 'var(--c-icing)',
-                  border: '1px solid rgba(95, 100, 64,0.12)',
+                  border: '1px solid rgba(128, 0, 34,0.12)',
                   overflow: 'hidden',
                 }}
               >
@@ -171,7 +172,7 @@ export default async function ProductPage({ params }: PageProps) {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: 'rgba(95, 100, 64, 0.55)',
+                      color: 'rgba(128, 0, 34, 0.55)',
                       fontSize: '0.7rem',
                       letterSpacing: '0.15em',
                       textTransform: 'uppercase',
@@ -191,7 +192,7 @@ export default async function ProductPage({ params }: PageProps) {
                         position: 'relative',
                         width: 72,
                         height: 72,
-                        border: '1px solid rgba(95, 100, 64,0.15)',
+                        border: '1px solid rgba(128, 0, 34,0.15)',
                         overflow: 'hidden',
                       }}
                     >
@@ -234,6 +235,13 @@ export default async function ProductPage({ params }: PageProps) {
                 {product.name}
               </Typography>
 
+              {product.price && (
+                <Box sx={{ mt: 2.5 }}>
+                  <PriceTag price={product.price} size="lg" />
+                  <Typography sx={{ color: 'text.secondary', fontSize: '0.7rem', mt: 0.5 }}>Inclusive of GST &middot; indicative</Typography>
+                </Box>
+              )}
+
               <Box sx={{ width: 56, height: 1, bgcolor: 'primary.main', mt: 3, mb: 4 }} />
 
               {product.description && (
@@ -251,16 +259,21 @@ export default async function ProductPage({ params }: PageProps) {
                   m: 0,
                   mb: 4,
                   py: 3,
-                  borderTop: '1px solid rgba(95, 100, 64,0.12)',
-                  borderBottom: '1px solid rgba(95, 100, 64,0.12)',
+                  borderTop: '1px solid rgba(128, 0, 34,0.12)',
+                  borderBottom: '1px solid rgba(128, 0, 34,0.12)',
                 }}
               >
                 {[
                   { label: 'Purity', value: `${product.karat} BIS Hallmarked` },
+                  { label: 'Gold Colour', value: product.metal_colour ? `${product.metal_colour.charAt(0).toUpperCase()}${product.metal_colour.slice(1)} gold` : null },
                   { label: 'Gross Weight', value: `${product.gross_weight_g} g` },
                   { label: 'Net Gold Weight', value: `${product.net_weight_g} g` },
+                  { label: 'Size / Length', value: product.size_label },
+                  { label: 'Dimensions', value: product.dimensions },
+                  { label: 'Closure', value: product.closure },
+                  { label: 'HUID', value: product.huid },
                   { label: 'SKU', value: product.sku },
-                ].map((spec) => (
+                ].filter((spec): spec is { label: string; value: string } => Boolean(spec.value)).map((spec) => (
                   <Box key={spec.label}>
                     <Box
                       component="dt"
@@ -280,6 +293,19 @@ export default async function ProductPage({ params }: PageProps) {
                   </Box>
                 ))}
               </Box>
+
+              {product.care_instructions && (
+                <Box sx={{ mb: 4 }}>
+                  <Typography
+                    sx={{ color: 'var(--c-accent)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', mb: 1 }}
+                  >
+                    Care
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+                    {product.care_instructions}
+                  </Typography>
+                </Box>
+              )}
 
               {product.price ? (
                 <Box sx={{ mb: 4 }}>

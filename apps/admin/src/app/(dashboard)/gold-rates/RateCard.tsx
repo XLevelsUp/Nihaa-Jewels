@@ -22,6 +22,7 @@ interface RateCardProps {
   currentRate: number | null;
   source: string | null;
   effectiveFrom: string | null;
+  canEdit: boolean;
 }
 
 function formatRupees(amount: number): string {
@@ -32,7 +33,7 @@ function formatRupees(amount: number): string {
   }).format(amount);
 }
 
-export default function RateCard({ karat, currentRate, source, effectiveFrom }: RateCardProps) {
+export default function RateCard({ karat, currentRate, source, effectiveFrom, canEdit }: RateCardProps) {
   const [pending, startTransition] = useTransition();
   const [value, setValue] = useState('');
   const [note, setNote] = useState('');
@@ -94,6 +95,7 @@ export default function RateCard({ karat, currentRate, source, effectiveFrom }: 
         )}
       </Box>
 
+      {!canEdit ? null : (
       <Box
         component="form"
         onSubmit={handleSubmit}
@@ -168,6 +170,7 @@ export default function RateCard({ karat, currentRate, source, effectiveFrom }: 
           </Button>
         )}
       </Box>
+      )}
     </Paper>
   );
 }

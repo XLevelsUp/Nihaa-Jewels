@@ -1,12 +1,20 @@
 import { redirect } from 'next/navigation';
 
 import AdminShell from '@/components/AdminShell';
-import { getCurrentUser } from '@/lib/supabase-auth';
+import NoAccess from '@/components/NoAccess';
+import { getCurrentUser, getSessionUser } from '@/lib/supabase-auth';
 
-// Middleware already redirects anonymous users; this is the second gate in case a route escapes the matcher.
+// Middleware already redirects anonymous users; this is the second gate, and the one that turns away a valid login that is not on the staff list.
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const user = await getCurrentUser();
-  if (!user) redirect('/login');
+  const session = await getSessionUser();
+  if (!session) redirect('/login');
 
-  return <AdminShell userEmail={user.email}>{children}</AdminShell>;
+  const user = await getCurrentUser();
+  if (!user) return <NoAccess email={session.email} />;
+
+  return (
+    <AdminShell userEmail={user.email} userRole={user.role}>
+      {children}
+    </AdminShell>
+  );
 }

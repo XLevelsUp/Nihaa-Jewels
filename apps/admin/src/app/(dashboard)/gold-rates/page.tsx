@@ -13,21 +13,29 @@ import {
 
 import RateCard from './RateCard';
 import { getCurrentRates, getRateHistory, KARATS, formatRupees } from '@/lib/rates';
+import { getCurrentUser } from '@/lib/supabase-auth';
+import { can, deniedMessage } from '@/lib/permissions';
 import { PALETTE } from '@/constants/palette';
 
 export const dynamic = 'force-dynamic';
 
 export default async function GoldRatesPage() {
-  const [current, history] = await Promise.all([getCurrentRates(), getRateHistory(30)]);
+  const [current, history, user] = await Promise.all([getCurrentRates(), getRateHistory(30), getCurrentUser()]);
+  const canEdit = can(user?.role, 'rates.edit');
 
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h1">Gold Rates</Typography>
         <Typography sx={{ color: 'text.secondary', mt: 0.5, fontSize: '0.9rem' }}>
-          Every price on the website is calculated from these rates. A change appears on the site
-          within seconds.
+          Every price on the website is calculated from these rates. A change reaches the website within about an
+          hour.
         </Typography>
+        {!canEdit && (
+          <Typography sx={{ mt: 1.5, fontSize: '0.82rem', fontWeight: 600, color: 'primary.main' }}>
+            {deniedMessage('rates.edit')} You can see the current rates and their history.
+          </Typography>
+        )}
       </Box>
 
       <Box
@@ -47,6 +55,7 @@ export default async function GoldRatesPage() {
               currentRate={rate?.ratePerGram ?? null}
               source={rate?.source ?? null}
               effectiveFrom={rate?.effectiveFrom ?? null}
+              canEdit={canEdit}
             />
           );
         })}

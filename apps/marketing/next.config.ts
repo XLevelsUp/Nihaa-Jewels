@@ -12,6 +12,7 @@ const cspHeader = `
     img-src 'self' blob: data: https://images.unsplash.com https://www.google-analytics.com ${supabaseOrigin};
     font-src 'self' data:;
     connect-src 'self' https://www.google-analytics.com https://script.google.com ${supabaseOrigin};
+    frame-src https://www.google.com https://maps.google.com;
     object-src 'none';
     base-uri 'self';
     form-action 'self';
