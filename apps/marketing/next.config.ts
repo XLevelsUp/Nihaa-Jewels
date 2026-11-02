@@ -11,7 +11,7 @@ const cspHeader = `
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: https://images.unsplash.com https://www.google-analytics.com ${supabaseOrigin};
     font-src 'self' data:;
-    connect-src 'self' https://www.google-analytics.com https://script.google.com ${supabaseOrigin};
+    connect-src 'self' https://www.google-analytics.com https://script.google.com https://script.googleusercontent.com ${supabaseOrigin};
     frame-src https://www.google.com https://maps.google.com;
     object-src 'none';
     base-uri 'self';
