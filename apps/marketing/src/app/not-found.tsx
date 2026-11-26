@@ -11,7 +11,7 @@ import { STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
   title: 'Page not found',
-  description: `This page could not be found. Explore ${STORE.name}'s gold necklaces, chains, bangles and earrings, or book a visit to our Coimbatore showroom.`,
+  description: `This page could not be found. Explore ${STORE.name}'s gold, diamond and silver jewellery, or book a visit to our Coimbatore showroom.`,
   robots: { index: false, follow: true },
 };
 

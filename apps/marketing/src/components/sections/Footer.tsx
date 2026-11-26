@@ -1,113 +1,130 @@
-// Burgundy colophon: centred mark, three short link columns plus the showroom, then legal; every store detail reads from STORE so the brand's contact info lives in one place.
+// Four-column burgundy footer (brand and socials, links, visit us, legal) over a thin copyright bar; every store detail reads from constants/store.
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+import { Clock, Heart, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 
-import { STORE, STORE_ADDRESS_LINES } from '@/constants/store';
+import SocialIcons from '@/components/ui/SocialIcons';
+import OpenNow from '@/components/ui/OpenNow';
+import { SHOWROOMS, STORE, socialLinksWithInstagram } from '@/constants/store';
 
-const COLUMNS = [
-  {
-    title: 'The House',
-    links: [
-      { label: 'Our Story', href: '/about' },
-      { label: 'Our Showroom', href: '/stores' },
-      { label: 'Contact', href: '/contact' },
-    ],
-  },
-  {
-    title: 'Collections',
-    links: [
-      { label: 'The Catalogue', href: '/collections' },
-      { label: 'Bespoke Commissions', href: '/custom-design' },
-      { label: 'Gifting', href: '/gifting' },
-    ],
-  },
-  {
-    title: 'Client Care',
-    links: [
-      { label: 'Book an Appointment', href: '/contact' },
-      { label: 'Caring for Gold', href: '/care-guide' },
-      { label: 'WhatsApp', href: `https://wa.me/${STORE.whatsapp}` },
-    ],
-  },
+const EXPLORE = [
+  { label: 'The Catalogue', href: '/collections' },
+  { label: 'Our Story', href: '/about' },
+  { label: 'Bespoke Commissions', href: '/custom-design' },
+  { label: 'Gifting', href: '/gifting' },
+  { label: 'Caring for Gold', href: '/care-guide' },
 ];
 
 const LEGAL = [
   { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Terms & Conditions', href: '/terms-and-conditions' },
+  { label: 'Contact Us', href: '/contact' },
 ];
+
+const heading = 'text-[1rem] font-semibold tracking-[0.02em]';
+const linkClass = 'inline-flex min-h-9 items-center text-[0.9rem] opacity-85 transition-opacity duration-300 hover:opacity-100';
+const soft = { color: 'var(--c-on-chrome-soft)' };
+
+function Row({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3 text-[0.88rem] leading-[1.6]">
+      <span className="mt-[3px] shrink-0 opacity-80" aria-hidden="true">{icon}</span>
+      <div>{children}</div>
+    </li>
+  );
+}
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const showroom = SHOWROOMS[0];
 
   return (
-    <footer className="chrome-block pt-20 pb-10 md:pt-28">
-      <div className="container-page">
-        <div className="flex flex-col items-center text-center">
-          <Image src="/images/brand/logo-champagne.png" alt="" width={56} height={56} />
-          <p className="mt-5 text-[0.95rem] uppercase tracking-[0.36em]" style={{ fontFamily: 'var(--font-cinzel), Georgia, serif' }}>
-            {STORE.name}
+    <footer className="chrome-block">
+      <div className="container-wide grid grid-cols-1 gap-x-10 gap-y-12 pt-14 pb-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1.3fr_1fr]">
+        <div>
+          <Link href="/" className="inline-flex items-center gap-3" aria-label={`${STORE.name} home`}>
+            <Image src="/images/brand/logo-champagne.png" alt="" width={44} height={44} />
+            <span className="text-[1.05rem] font-semibold uppercase tracking-[0.28em]" style={{ fontFamily: 'var(--font-cinzel), Georgia, serif' }}>
+              {STORE.name}
+            </span>
+          </Link>
+          <p className="mt-5 max-w-[22rem] text-[0.88rem] leading-[1.7]" style={soft}>
+            Gold, diamond and silver jewellery at Town Hall, Coimbatore. BIS hallmarked, weighed in front of you and priced at
+            the day’s gold rate.
           </p>
-          <p className="lux-display mt-3 text-[1.25rem]" style={{ color: 'var(--c-on-chrome-soft)' }}>
-            <em>Fine gold, made by hand</em>
-          </p>
+          <nav aria-label="Sakthi Chains on social media" className="mt-6">
+            <SocialIcons links={socialLinksWithInstagram()} />
+          </nav>
         </div>
 
-        <hr className="lux-rule mt-14 md:mt-20" />
-
-        <div className="mt-12 grid grid-cols-2 gap-x-6 gap-y-12 md:grid-cols-4">
-          {COLUMNS.map((col) => (
-            <nav key={col.title} aria-label={col.title}>
-              <p className="lux-eyebrow">{col.title}</p>
-              <ul className="mt-5 space-y-1">
-                {col.links.map((l) => (
-                  <li key={l.label}>
-                    <Link
-                      href={l.href}
-                      className="inline-flex min-h-11 items-center text-[0.9rem] opacity-90 transition-opacity duration-300 hover:opacity-100"
-                      {...(l.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                    >
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-
-          <address className="col-span-2 not-italic md:col-span-1">
-            <p className="lux-eyebrow">The Showroom</p>
-            <p className="mt-5 text-[0.88rem] leading-[1.8]" style={{ color: 'var(--c-on-chrome-soft)' }}>
-              {STORE_ADDRESS_LINES.map((line) => (
-                <span key={line} className="block">{line}</span>
-              ))}
-            </p>
-            <p className="mt-4 text-[0.88rem]" style={{ color: 'var(--c-on-chrome-soft)' }}>{STORE.hours}</p>
-            <a href={STORE.phoneHref} className="mt-2 inline-flex min-h-11 items-center text-[0.9rem] tabular-nums">
-              {STORE.phone}
-            </a>
-          </address>
-        </div>
-
-        <hr className="lux-rule mt-16" />
-
-        <div className="mt-8 flex flex-col items-center gap-4 text-[0.75rem] md:flex-row md:justify-between" style={{ color: 'var(--c-on-chrome-soft)' }}>
-          <p>&copy; {year} {STORE.name}. All rights reserved.</p>
-          <ul className="flex gap-6">
-            {LEGAL.map((l) => (
+        <nav aria-label="Explore">
+          <p className={heading}>Explore</p>
+          <ul className="mt-4 space-y-0.5">
+            {EXPLORE.map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="inline-flex min-h-11 items-center transition-colors duration-300 hover:text-[var(--c-on-sage)]">
-                  {l.label}
-                </Link>
+                <Link href={l.href} className={linkClass}>{l.label}</Link>
               </li>
             ))}
           </ul>
+        </nav>
+
+        <div>
+          <p className={heading}>Visit Us</p>
+          <ul className="mt-5 space-y-4">
+            <Row icon={<MapPin size={16} />}>
+              <address className="not-italic">{showroom.address}</address>
+              <a href={showroom.mapsUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block opacity-85 hover:opacity-100"
+                style={{ textDecoration: 'underline', textUnderlineOffset: '4px', textDecorationThickness: '1px' }}
+              >
+                Open in Google Maps
+              </a>
+            </Row>
+            <Row icon={<Clock size={16} />}>
+              <OpenNow />
+              <p style={soft}>{STORE.hours.replace('Mon–Sat:', 'Monday to Saturday,')}</p>
+            </Row>
+            <Row icon={<Phone size={16} />}>
+              <a href={STORE.phoneHref} className="tabular-nums hover:underline">{STORE.phone}</a>
+            </Row>
+            <Row icon={<MessageCircle size={16} />}>
+              <a href={`https://wa.me/${STORE.whatsapp}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                WhatsApp us
+              </a>
+            </Row>
+            {STORE.email && (
+              <Row icon={<Mail size={16} />}>
+                <a href={`mailto:${STORE.email}`} className="hover:underline">{STORE.email}</a>
+              </Row>
+            )}
+          </ul>
+        </div>
+
+        <div>
+          <nav aria-label="Legal">
+            <p className={heading}>Legal</p>
+            <ul className="mt-4 space-y-0.5">
+              {LEGAL.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className={linkClass}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <p className="mt-6 inline-block rounded-full px-5 py-3 text-[0.8rem]" style={{ border: '1px solid currentColor', opacity: 0.85 }}>
+            BIS hallmarked gold, priced daily
+          </p>
+        </div>
+      </div>
+
+      <div style={{ borderTop: '1px solid color-mix(in srgb, currentColor 22%, transparent)' }}>
+        <div className="container-wide flex flex-col items-center justify-between gap-3 py-6 text-[0.8rem] sm:flex-row" style={soft}>
+          <p>&copy; {year} {STORE.name}. All rights reserved.</p>
           <p className="inline-flex items-center gap-1.5">
             Built with
             <Heart size={13} fill="#F0507A" color="#F0507A" className="motion-safe:animate-[heartbeat_1.6s_ease-in-out_infinite]" aria-label="love" role="img" />
             by{' '}
-            <a href="https://xlevelsup.com" target="_blank" rel="noopener noreferrer" className="transition-colors duration-300 hover:text-[var(--c-on-sage)]">
+            <a href="https://xlevelsup.com" target="_blank" rel="noopener noreferrer" className="transition-opacity hover:opacity-100">
               XLevelsUp
             </a>
           </p>

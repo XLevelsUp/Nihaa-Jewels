@@ -5,10 +5,12 @@ import Script from 'next/script';
 import { notFound } from 'next/navigation';
 
 import CategoryClient from './CategoryClient';
+import Footer from '@/components/sections/Footer';
 import { getCategoryBySlug, getCategories, getCategoryWithChildren, getProducts } from '@/lib/catalogue';
 import { PRICE_BANDS, OCCASIONS, titleCase } from '@/constants/filters';
+import { SITE_URL } from '@/constants/store';
 
-const BASE_URL = 'https://nihaajewels.com';
+const BASE_URL = SITE_URL;
 
 export const revalidate = 3600;
 
@@ -32,18 +34,19 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { category: slug } = await params;
   const category = await getCategoryBySlug(slug);
 
-  if (!category) return { title: 'Collection Not Found | Nihaa Jewels' };
+  if (!category) return { title: 'Collection not found' };
 
-  const title = category.meta_title ?? `${category.name} | Nihaa Jewels Coimbatore`;
+  // The layout appends the brand, so a title names the collection plus the city searchers type; "in Coimbatore" is added unless staff already wrote it.
+  const base = category.meta_title?.trim() || category.name;
+  const title = /coimbatore/i.test(base) ? base : `${base} in Coimbatore`;
   const description =
     category.meta_description ??
     category.description ??
-    `Explore our ${category.name.toLowerCase()} collection in BIS hallmarked gold. Book an appointment to view at our Coimbatore store.`;
+    `Explore ${category.name.toLowerCase()} at Sakthi Chains, a jewellery shop at Town Hall, Coimbatore. Weighed and priced at today's rate; book a visit to see them in person.`;
 
   return {
     title,
     description,
-    keywords: category.meta_keywords?.length ? category.meta_keywords : undefined,
     alternates: { canonical: `/collections/${slug}` },
     openGraph: { title, description, type: 'website' },
   };
@@ -71,7 +74,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
-    name: `Nihaa Jewels ${category.name}`,
+    name: `Sakthi Chains ${category.name}`,
     description: category.meta_description ?? category.description ?? undefined,
     numberOfItems: products.length,
     itemListElement: products.map((product, i) => ({
@@ -109,7 +112,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
-      <CategoryClient category={category} products={products} subCategories={children} />
+      <CategoryClient category={category} products={products} subCategories={children} footer={<Footer />} />
     </>
   );
 }

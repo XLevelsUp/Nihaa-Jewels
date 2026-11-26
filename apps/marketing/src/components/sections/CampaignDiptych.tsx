@@ -13,10 +13,10 @@ const PANELS = [
 
 export default function CampaignDiptych() {
   return (
-    <section aria-label="Campaign" className="mt-24 grid grid-cols-1 gap-1 md:mt-36 md:grid-cols-2">
+    <section aria-label="Campaign" className="container-wide mt-24 grid grid-cols-1 gap-4 md:mt-36 md:grid-cols-2 md:gap-6">
       {PANELS.map((p, i) => (
         <Reveal key={p.key} delay={i * 0.12} y={0}>
-          <Link href={p.href} className="group relative block h-[78svh] min-h-[480px] overflow-hidden md:h-[92svh]">
+          <Link href={p.href} className="group relative block h-[60svh] min-h-[420px] overflow-hidden md:h-[68svh] md:max-h-[620px]">
             <ImageSlot
               slot={homeSlot(p.key)}
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -27,9 +27,9 @@ export default function CampaignDiptych() {
               className="pointer-events-none absolute inset-0"
               style={{ background: 'linear-gradient(180deg, rgba(20, 6, 8, 0) 55%, rgba(20, 6, 8, 0.7) 100%)' }}
             />
-            <span className="absolute inset-x-0 bottom-0 block p-8 md:p-12">
+            <span className="absolute inset-x-0 bottom-0 block p-6 md:p-10">
               <span className="lux-eyebrow block" style={{ color: 'var(--c-champagne)' }}>{p.eyebrow}</span>
-              <span className="lux-display mt-3 block" style={{ fontSize: 'clamp(2rem, 3.6vw, 3.2rem)', color: '#F7ECD9' }}>
+              <span className="lux-display mt-3 block" style={{ fontSize: 'clamp(1.8rem, 2.8vw, 2.6rem)', color: '#F7ECD9' }}>
                 {p.title} <em style={{ color: 'var(--c-champagne)' }}>{p.accent}</em>
               </span>
               <span className="lux-link mt-4" style={{ color: '#F7ECD9' }}>Discover</span>

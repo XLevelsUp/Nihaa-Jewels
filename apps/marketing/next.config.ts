@@ -22,6 +22,9 @@ const cspHeader = `
 `.replace(/\s{2,}/g, ' ').trim();
 
 const nextConfig: NextConfig = {
+  // Hides the "X-Powered-By: Next.js" header; browser source maps are already off by default and stay off.
+  poweredByHeader: false,
+  productionBrowserSourceMaps: false,
   images: {
     remotePatterns: [
       {
@@ -29,6 +32,9 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
+      // Instagram feed images; Meta serves them from these CDNs under signed, expiring URLs.
+      { protocol: "https", hostname: "**.cdninstagram.com", pathname: "/**" },
+      { protocol: "https", hostname: "**.fbcdn.net", pathname: "/**" },
       // Product photography uploaded through admin; without this next/image refuses to load it.
       ...(supabaseOrigin
         ? [

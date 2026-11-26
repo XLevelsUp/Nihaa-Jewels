@@ -15,17 +15,16 @@ const Atelier = dynamic(() => import('@/components/sections/Atelier'));
 const UpClose = dynamic(() => import('@/components/sections/UpClose'));
 const HousePromise = dynamic(() => import('@/components/sections/HousePromise'));
 const MadeForYou = dynamic(() => import('@/components/sections/MadeForYou'));
+const InstagramFeed = dynamic(() => import('@/components/sections/InstagramFeed'));
+const LocalGuide = dynamic(() => import('@/components/sections/LocalGuide'));
 const VisitUs = dynamic(() => import('@/components/sections/VisitUs'));
 const Footer = dynamic(() => import('@/components/sections/Footer'));
 
 export const metadata: Metadata = {
-  title: { absolute: 'Sakthi Chains | Fine Gold Jewellery, Made by Hand' },
+  title: { absolute: 'Sakthi Chains | Gold, Diamond & Silver Jewellery Shop in Coimbatore' },
   description:
-    'Sakthi Chains is a house of fine gold jewellery: necklaces, bangles, earrings, chains and bridal sets, BIS hallmarked and finished by hand. Book a private appointment at our showroom.',
-  keywords: [
-    'Sakthi Chains', 'gold jewellery', 'BIS hallmarked gold', 'bridal gold jewellery', 'temple jewellery',
-    'gold necklaces', 'gold bangles', 'gold earrings', 'gold chains', 'old gold exchange', 'bespoke gold jewellery',
-  ],
+    'Sakthi Chains, a gold jewellery shop in Coimbatore: gold chains for men and women, earrings, bangles and bridal sets, plus diamond and silver. Book a visit.',
+  alternates: { canonical: '/' },
 };
 
 export default function Home() {
@@ -45,6 +44,8 @@ export default function Home() {
       <UpClose />
       <HousePromise />
       <MadeForYou />
+      <InstagramFeed />
+      <LocalGuide />
       <VisitUs showroom={homeSlot('visitShowroom')} />
       <Footer />
     </div>

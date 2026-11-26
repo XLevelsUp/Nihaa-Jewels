@@ -8,12 +8,12 @@ import Footer from '@/components/sections/Footer';
 import ContactForm from '@/components/sections/ContactForm';
 import Reveal from '@/components/ui/Reveal';
 import BookVisitButton from '@/components/ui/BookVisitButton';
-import { MAPS_URL, STORE, STORE_ADDRESS_ONE_LINE } from '@/constants/store';
+import { SHOWROOMS, STORE } from '@/constants/store';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: `Call, WhatsApp or write to ${STORE.name}, or book a visit to our showroom in RS Puram, Coimbatore.`,
+  description: `Call, WhatsApp or write to ${STORE.name}, or book a visit to our showroom at Town Hall, Coimbatore.`,
   alternates: { canonical: '/contact' },
 };
 
@@ -41,7 +41,7 @@ const FAQS = [
 
 export default function ContactPage() {
   const channels = [
-    { icon: Phone, title: 'Call us', detail: STORE.phone, note: STORE.hours, href: STORE.phoneHref, action: 'Call now', external: false },
+    ...SHOWROOMS.map((s) => ({ icon: Phone, title: 'Call us', detail: s.phone, note: s.hours, href: s.phoneHref, action: 'Call now', external: false })),
     { icon: MessageCircle, title: 'WhatsApp', detail: STORE.whatsappDisplay, note: 'Photos, prices and quick questions', href: WHATSAPP_HREF, action: 'Start a chat', external: true },
     ...(STORE.email
       ? [{ icon: Mail, title: 'Email', detail: STORE.email, note: 'We reply within one working day', href: `mailto:${STORE.email}`, action: 'Write to us', external: false }]
@@ -65,7 +65,7 @@ export default function ContactPage() {
               </p>
             </Reveal>
 
-            <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {channels.map((c, i) => (
                 <Reveal key={c.title} delay={i * 0.08} className="h-full">
                   <a
@@ -109,24 +109,23 @@ export default function ContactPage() {
 
             <div className="flex flex-col gap-10 lg:col-span-5">
               <Reveal delay={0.1}>
-                <p className="lux-eyebrow">The Showroom</p>
-                <dl className="mt-6 flex flex-col gap-5 text-[0.9rem]">
-                  <div className="flex gap-3">
-                    <MapPin size={18} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
-                    <div>
-                      <dt className="sr-only">Address</dt>
-                      <dd className="leading-relaxed">{STORE_ADDRESS_ONE_LINE}</dd>
-                      <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="lux-link mt-2">Directions</a>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <Clock size={18} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
-                    <div>
-                      <dt className="sr-only">Hours</dt>
-                      <dd>{STORE.hours}</dd>
-                    </div>
-                  </div>
-                </dl>
+                <p className="lux-eyebrow">Our Showroom</p>
+                <div className="mt-6 flex flex-col gap-7 text-[0.9rem]">
+                  {SHOWROOMS.map((s) => (
+                    <address key={s.id} className="not-italic">
+                      <p className="lux-title text-[1.25rem]">{s.name}</p>
+                      <p className="mt-2 flex gap-2.5 leading-relaxed">
+                        <MapPin size={17} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
+                        {s.address}
+                      </p>
+                      <p className="mt-1.5 flex gap-2.5">
+                        <Clock size={17} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
+                        {s.hours}
+                      </p>
+                      <a href={s.mapsUrl} target="_blank" rel="noopener noreferrer" className="lux-link mt-2">Directions</a>
+                    </address>
+                  ))}
+                </div>
               </Reveal>
 
               <Reveal delay={0.15}>

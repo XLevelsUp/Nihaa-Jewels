@@ -112,7 +112,7 @@ export default function StaticBrandHero() {
           className="text-[0.62rem] font-medium uppercase tracking-[0.42em] md:text-[0.68rem]"
           style={{ color: 'var(--c-champagne)' }}
         >
-          Sakthi Chains &middot; Fine Gold Jewellery
+          Sakthi Chains &middot; Gold, Diamond &amp; Silver Jewellery
         </motion.p>
 
         <motion.h1

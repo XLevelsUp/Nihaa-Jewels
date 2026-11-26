@@ -1,85 +1,80 @@
-import { Metadata } from "next";
-import { Box, Container, Typography } from "@mui/material";
+import type { Metadata } from 'next';
+
+import LegalPage from '@/components/sections/LegalPage';
+import { STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Nihaa Jewels",
-  description: "Read the Privacy Policy of Nihaa Jewels. Learn how we handle, protect, and respect your personal information when you shop our premium gold and bridal jewelry collections.",
-  keywords: "privacy policy, data protection, secure jewelry shopping, Nihaa Jewels privacy",
-  alternates: {
-    canonical: "/privacy-policy"
-  }
+  title: 'Privacy Policy',
+  description: 'How Sakthi Chains, Coimbatore, collects and uses the details you share when you book a showroom visit or contact us, and how to ask us to change or delete them.',
+  alternates: { canonical: '/privacy-policy' },
 };
 
 export default function PrivacyPolicy() {
   return (
-    <Box sx={{ bgcolor: "#FDFAF5", color: "#241012", minHeight: "100vh", pt: 16, pb: 8 }}>
-      <Container maxWidth="md">
-        <Typography 
-          variant="h2" 
-          component="h1"
-          sx={{ 
-            fontFamily: "var(--font-playfair-display)", 
-            color: "#800022", 
-            mb: 4, 
-            textAlign: "center",
-            fontWeight: 600,
-            fontSize: { xs: "2.5rem", md: "3.5rem" }
-          }}
-        >
-          Privacy Policy
-        </Typography>
-
-        <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "#241012", mb: 6, textAlign: "center" }}>
-          Last Updated: {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-        </Typography>
-
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 5 }}>
-          <Box>
-            <Typography variant="h5" sx={{ fontFamily: "var(--font-playfair-display)", color: "#800022", mb: 2 }}>
-              1. Information We Collect
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "rgba(90, 74, 66, 0.8)", lineHeight: 1.8, textAlign: "justify" }}>
-              At Nihaa Jewels, we respect the privacy of our valued clientele. When you interact with our website, visit our boutique at RS Puram, Coimbatore, or place an order, we may collect personal details such as your name, email address, physical address, and contact number. This information helps us fulfill your bespoke jewelry requirements and ensure a seamless luxury shopping experience.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h5" sx={{ fontFamily: "var(--font-playfair-display)", color: "#800022", mb: 2 }}>
-              2. How We Use Your Data
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "rgba(90, 74, 66, 0.8)", lineHeight: 1.8, textAlign: "justify" }}>
-              Your personal information is strictly used to process your transactions, manage delivery, and verify the authenticity and certification of your gold purchases. With your explicit consent, we may occasionally inform you about our latest Bridal Edits, bespoke collections, and exclusive private viewings.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h5" sx={{ fontFamily: "var(--font-playfair-display)", color: "#800022", mb: 2 }}>
-              3. Data Protection and Security
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "rgba(90, 74, 66, 0.8)", lineHeight: 1.8, textAlign: "justify" }}>
-              We employ the highest level of industry-standard security protocols to encrypt and protect your sensitive data. The secure transmission of your information is guaranteed. Under no circumstances do we sell or lease your personal information to third parties. Every transaction is highly confidential, matching the trust you place in our craftsmanship.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h5" sx={{ fontFamily: "var(--font-playfair-display)", color: "#800022", mb: 2 }}>
-              4. Cookies & Tracking Technology
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "rgba(90, 74, 66, 0.8)", lineHeight: 1.8, textAlign: "justify" }}>
-              Our platform utilizes cookies to enhance and personalize your digital browsing experience. These analytical tools allow us to understand client preferences and optimize our online showcase of premium jewelry. You may manage your cookie preferences through your personal browser settings at any time.
-            </Typography>
-          </Box>
-
-          <Box>
-            <Typography variant="h5" sx={{ fontFamily: "var(--font-playfair-display)", color: "#800022", mb: 2 }}>
-              5. Contact Us Regarding Your Privacy
-            </Typography>
-            <Typography variant="body1" sx={{ fontFamily: "var(--font-inter)", color: "rgba(90, 74, 66, 0.8)", lineHeight: 1.8, textAlign: "justify" }}>
-              If you have any questions, concerns, or requests regarding how your data is handled by Nihaa Jewels, please contact our support desk directly at <strong>support@nihaajewels.com</strong> or visit us at our Coimbatore boutique.
-            </Typography>
-          </Box>
-        </Box>
-      </Container>
-    </Box>
+    <LegalPage
+      eyebrow="Client Care"
+      title="Privacy Policy"
+      updated="November 2026"
+      intro={`This page explains what ${STORE.name} does with the details you share with us through this website or at our showroom.`}
+      sections={[
+        {
+          heading: 'What we collect',
+          body: (
+            <p>
+              When you book a showroom visit or send us a message, we receive the details you type in: your name, phone
+              number, email address if you give one, the date and time you prefer, and your message. We do not ask for card or
+              bank details on this website.
+            </p>
+          ),
+        },
+        {
+          heading: 'How we use it',
+          body: (
+            <p>
+              We use your details only to reply to you, confirm or change your appointment, and have the pieces you asked about
+              ready when you visit. If you ask us to, we may also let you know about new collections; you can tell us to stop at
+              any time.
+            </p>
+          ),
+        },
+        {
+          heading: 'Who sees it',
+          body: (
+            <p>
+              Your details are seen by our showroom team. Form entries are stored in our Google account. We do not sell or rent
+              your details to anyone.
+            </p>
+          ),
+        },
+        {
+          heading: 'No online payments',
+          body: (
+            <p>
+              This website is a catalogue. You cannot buy or pay on it, so no payment information is collected here. Purchases
+              are made at the showroom.
+            </p>
+          ),
+        },
+        {
+          heading: 'Cookies and analytics',
+          body: (
+            <p>
+              We use Google Analytics and the Meta Pixel to understand how many people visit and which pages they find useful.
+              These tools set cookies in your browser. You can block or delete cookies in your browser settings; the website
+              still works without them.
+            </p>
+          ),
+        },
+        {
+          heading: 'Your choices',
+          body: (
+            <p>
+              You can ask us to show, correct or delete the details we hold about you. Call or WhatsApp us on {STORE.phone}, or
+              ask at the showroom.
+            </p>
+          ),
+        },
+      ]}
+    />
   );
 }

@@ -1,61 +1,34 @@
 import type { MetadataRoute } from 'next';
 
+import { SITE_URL } from '@/constants/store';
+
+// Search engines and AI search assistants may read every public page; only AI-training crawlers and bulk SEO-scraping bots are turned away.
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      // Tier 1: Standard search engines — unrestricted indexing
       {
-        userAgent: ['Googlebot', 'Bingbot', 'Applebot', 'DuckDuckBot'],
+        userAgent: '*',
         allow: '/',
-        disallow: ['/_next/', '/api/'],
+        disallow: ['/api/'],
       },
-      // Tier 2: AI search assistants — public marketing content only, no infra paths
-      {
-        userAgent: ['GPTBot', 'Claude-SearchBot', 'PerplexityBot'],
-        allow: [
-          '/',
-          '/collections',
-          '/collections/rings',
-          '/collections/necklaces',
-          '/collections/bridal',
-          '/collections/temple',
-          '/collections/earrings',
-          '/collections/bangles',
-          '/collections/daily-wear',
-          '/about',
-          '/stores',
-          '/care-guide',
-          '/custom-design',
-          '/gifting',
-        ],
-        disallow: ['/api/', '/_next/', '/contact'],
-      },
-      // Tier 3: AI training corpus harvesters — disallow all
       {
         userAgent: [
           'CCBot',
           'Bytespider',
-          'Amazonbot',
           'meta-externalagent',
           'Google-Extended',
-          'ClaudeBot',
           'Applebot-Extended',
+          'ClaudeBot',
           'Diffbot',
-          'DataForSeoBot',
           'ImagesiftBot',
+          'DataForSeoBot',
           'MJ12bot',
           'AhrefsBot',
           'SemrushBot',
         ],
         disallow: '/',
       },
-      // Tier 4: Wildcard baseline — allow public content, block infrastructure
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/_next/', '/api/'],
-      },
     ],
-    sitemap: 'https://nihaajewels.com/sitemap.xml',
+    sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

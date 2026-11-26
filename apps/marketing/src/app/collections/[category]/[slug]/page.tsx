@@ -15,8 +15,9 @@ import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton'
 import { getProductBySlug } from '@/lib/catalogue';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
 import { productImageUrl } from '@/lib/supabase';
+import { SITE_URL } from '@/constants/store';
 
-const BASE_URL = 'https://nihaajewels.com';
+const BASE_URL = SITE_URL;
 
 function absoluteImageUrl(storagePath: string): string {
   const url = productImageUrl(storagePath);
@@ -34,13 +35,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const product = await getProductBySlug(slug);
 
   if (!product) {
-    return { title: 'Product Not Found | Nihaa Jewels' };
+    return { title: 'Product not found' };
   }
 
-  const title = `${product.name} | ${product.karat} Gold | Nihaa Jewels Coimbatore`;
+  const title = `${product.name} | ${product.karat} Gold, Coimbatore`;
   const description =
     product.description?.slice(0, 155) ??
-    `${product.name} in ${product.karat} BIS hallmarked gold. Book an appointment to view at our Coimbatore store.`;
+    `${product.name} in ${product.karat} BIS hallmarked gold at Sakthi Chains, Coimbatore. Priced at today's gold rate; book a visit to see it in person.`;
 
   return {
     title,
@@ -70,7 +71,7 @@ export default async function ProductPage({ params }: PageProps) {
     sku: product.sku,
     description: product.description ?? undefined,
     image: primaryImage ? absoluteImageUrl(primaryImage.storage_path) : undefined,
-    brand: { '@type': 'Brand', name: 'Nihaa Jewels' },
+    brand: { '@type': 'Brand', name: 'Sakthi Chains' },
     material: `${product.karat} Gold`,
     weight: {
       '@type': 'QuantitativeValue',

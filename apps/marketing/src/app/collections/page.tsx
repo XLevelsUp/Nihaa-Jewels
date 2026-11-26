@@ -39,7 +39,7 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   return {
     title: 'All Jewellery',
     description:
-      'Browse every Sakthi Chains piece in one place: necklaces, chains, bangles and earrings in BIS hallmarked gold, filtered by purity, occasion and price.',
+      'Browse Sakthi Chains jewellery in one place: gold chains for men and women, necklaces, bangles and earrings in BIS hallmarked gold, filtered by purity, occasion and price.',
     alternates: { canonical: '/collections' },
   };
 }
