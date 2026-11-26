@@ -3,8 +3,9 @@
 import { MetadataRoute } from 'next';
 
 import { getCategories, getProducts } from '@/lib/catalogue';
+import { SITE_URL } from '@/constants/store';
 
-const BASE_URL = 'https://nihaajewels.com';
+const BASE_URL = SITE_URL;
 
 export const revalidate = 3600;
 

@@ -3,7 +3,6 @@
 import { Box, Container, Typography, alpha, useTheme } from '@mui/material';
 
 import Navigation from '@/components/sections/NavigationClient';
-import Footer from '@/components/sections/Footer';
 import ProductGrid from '@/components/catalogue/ProductGrid';
 import FilterBar from '@/components/catalogue/FilterBar';
 import SubCategoryNav from '@/components/catalogue/SubCategoryNav';
@@ -16,9 +15,11 @@ interface CategoryClientProps {
   category: Category;
   products: PricedProduct[];
   subCategories: Category[];
+  // Rendered on the server by the page, because the footer reads server-only settings.
+  footer: React.ReactNode;
 }
 
-export default function CategoryClient({ category, products, subCategories }: CategoryClientProps) {
+export default function CategoryClient({ category, products, subCategories, footer }: CategoryClientProps) {
   const theme = useTheme();
 
   const words = category.name.trim().split(' ');
@@ -126,7 +127,7 @@ export default function CategoryClient({ category, products, subCategories }: Ca
         </Box>
       </Container>
 
-      <Footer />
+      {footer}
     </Box>
   );
 }

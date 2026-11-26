@@ -9,7 +9,7 @@ import ImageSlot from '@/components/ui/ImageSlot';
 import Reveal from '@/components/ui/Reveal';
 import type { ResolvedSlot } from '@/constants/homepageImages';
 import BookAppointmentDialog from '@/components/catalogue/BookAppointmentDialog';
-import { MAPS_URL, STORE, STORE_ADDRESS_ONE_LINE } from '@/constants/store';
+import { SHOWROOMS, STORE } from '@/constants/store';
 
 const WHATSAPP_HREF = `https://wa.me/${STORE.whatsapp}?text=${encodeURIComponent(
   `Hello ${STORE.name}, I would like to arrange a viewing.`,
@@ -52,22 +52,21 @@ export default function VisitUs({ showroom }: { showroom: ResolvedSlot }) {
 
           <hr className="lux-rule mt-12" />
 
-          <address className="mt-8 grid grid-cols-1 gap-6 not-italic sm:grid-cols-2">
-            <div>
-              <p className="lux-eyebrow" style={{ letterSpacing: '0.3em' }}>Showroom</p>
-              <p className="text-body mt-3 text-[0.88rem] leading-[1.75]">{STORE_ADDRESS_ONE_LINE}</p>
-              <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="lux-link mt-1">
-                Directions
-              </a>
-            </div>
-            <div>
-              <p className="lux-eyebrow" style={{ letterSpacing: '0.3em' }}>Hours</p>
-              <p className="text-body mt-3 text-[0.88rem] leading-[1.75]">{STORE.hours}</p>
-              <a href={STORE.phoneHref} className="text-body mt-1 inline-flex min-h-11 items-center text-[0.88rem] tabular-nums">
-                {STORE.phone}
-              </a>
-            </div>
-          </address>
+          <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+            {SHOWROOMS.map((s) => (
+              <address key={s.id} className="not-italic">
+                <p className="lux-eyebrow" style={{ letterSpacing: '0.3em' }}>{s.name}</p>
+                <p className="text-body mt-3 text-[0.88rem] leading-[1.75]">{s.address}</p>
+                <p className="text-soft mt-1 text-[0.82rem]">{s.hours}</p>
+                <a href={s.phoneHref} className="text-body inline-flex min-h-11 items-center text-[0.88rem] tabular-nums">
+                  {s.phone}
+                </a>
+                <a href={s.mapsUrl} target="_blank" rel="noopener noreferrer" className="lux-link">
+                  Directions
+                </a>
+              </address>
+            ))}
+          </div>
         </Reveal>
       </div>
       <BookAppointmentDialog open={bookingOpen} onClose={() => setBookingOpen(false)} />

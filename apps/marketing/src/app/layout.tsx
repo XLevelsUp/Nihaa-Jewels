@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter, Montserrat, Cinzel, Cormorant_Garamond } from "next/font/google";
 import Script from "next/script";
 import ThemeRegistry from "@/components/ThemeRegistry";
-import { STORE } from "@/constants/store";
+import { SHOWROOMS, SITE_URL, STORE, socialLinksWithInstagram } from "@/constants/store";
 import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
 import "./globals.css";
 
@@ -46,34 +46,24 @@ const cormorant = Cormorant_Garamond({
 
 /* ── Global SEO metadata ──────────────────────────────── */
 export const metadata: Metadata = {
-  metadataBase: new URL('https://nihaajewels.com'),
+  metadataBase: new URL(SITE_URL),
   title: {
     template: `%s | ${STORE.name}`,
-    default: `${STORE.name} | Fine Gold Jewellery, Made by Hand`,
+    default: `${STORE.name} | Gold, Diamond & Silver Jewellery Shop in Coimbatore`,
   },
   description:
-    "Sakthi Chains is a house of fine gold jewellery: necklaces, bangles, earrings, chains and bridal sets, BIS hallmarked and finished by hand.",
-  keywords: [
-    "Sakthi Chains",
-    "gold jewellery",
-    "gold jewellery shop near me",
-    "22 karat gold",
-    "gold chains",
-    "BIS Hallmarked gold",
-    "bridal gold jewellery",
-    "bespoke gold jewellery",
-  ],
+    "Gold, diamond and silver jewellery at Town Hall, Coimbatore: gold chains, earrings, bangles and bridal sets, BIS hallmarked and priced at today's gold rate.",
   alternates: {
     canonical: '/',
   },
   openGraph: {
-    title: `${STORE.name} | Fine Gold Jewellery, Made by Hand`,
+    title: `${STORE.name} | Gold, Diamond & Silver Jewellery in Coimbatore`,
     description:
-      "Fine 22 karat gold, hallmarked and finished by hand. Explore the catalogue and book a private appointment.",
+      "BIS hallmarked gold, diamond and silver jewellery in Coimbatore. Explore the catalogue and book a visit to our showroom.",
     type: "website",
     locale: "en_IN",
     siteName: STORE.name,
-    url: 'https://nihaajewels.com',
+    url: SITE_URL,
   },
   robots: {
     index: true,
@@ -91,21 +81,41 @@ export const metadata: Metadata = {
   },
 };
 
+// One JewelryStore per showroom, both tied to the brand, so each location can appear in Maps and "near me" results with its own address and hours.
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "JewelryStore",
-  "name": STORE.name,
-  "telephone": STORE.phoneSchema,
-  "priceRange": "$$$",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": `${STORE.complex}, ${STORE.street}, ${STORE.area}`,
-    "addressLocality": STORE.city,
-    "addressRegion": STORE.state,
-    "postalCode": STORE.postcode,
-    "addressCountry": STORE.country
-  },
-  "openingHours": STORE.openingHoursSchema
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#brand`,
+      "name": STORE.name,
+      "url": SITE_URL,
+      "logo": `${SITE_URL}/images/brand/logo-amber.png`,
+      "sameAs": socialLinksWithInstagram().map((l) => l.href),
+    },
+    ...SHOWROOMS.map((s) => ({
+      "@type": "JewelryStore",
+      "@id": `${SITE_URL}/stores#${s.id}`,
+      "name": `${STORE.name}, ${s.name}`,
+      "parentOrganization": { "@id": `${SITE_URL}/#brand` },
+      "url": `${SITE_URL}/stores`,
+      "image": `${SITE_URL}/images/home/visit-showroom.webp`,
+      "description": `Gold, diamond and silver jewellery shop at ${s.name}, Coimbatore: gold chains, earrings, bangles, rings and bridal jewellery.`,
+      "telephone": s.phoneSchema,
+      "priceRange": "₹₹₹",
+      "areaServed": { "@type": "City", "name": "Coimbatore" },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": `${s.street}, ${s.area}`,
+        "addressLocality": STORE.city,
+        "addressRegion": STORE.state,
+        "postalCode": s.postcode,
+        "addressCountry": STORE.country,
+      },
+      "openingHours": s.openingHoursSchema,
+      "hasMap": s.mapsUrl,
+    })),
+  ],
 };
 
 export default function RootLayout({

@@ -1,4 +1,4 @@
-// The showroom page: where it is, when it is open, what a visit is like and what can be done there; visit copy is placeholder until the client confirms it.
+// The showroom page: the Town Hall showroom with its map, hours and phone, what a visit is like and what can be done there; visit copy is placeholder until the client confirms it.
 
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -10,11 +10,11 @@ import ImageSlot from '@/components/ui/ImageSlot';
 import Reveal from '@/components/ui/Reveal';
 import BookVisitButton from '@/components/ui/BookVisitButton';
 import { aboutSlot, homeSlot } from '@/lib/imageSlots';
-import { MAPS_EMBED_URL, MAPS_URL, STORE, STORE_ADDRESS_ONE_LINE } from '@/constants/store';
+import { SHOWROOMS, STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
-  title: 'Our Showroom in RS Puram, Coimbatore',
-  description: `Visit the ${STORE.name} showroom in RS Puram, Coimbatore. See every piece in person, weighed and priced at the day's gold rate. ${STORE.hours}.`,
+  title: 'Jewellery Showroom at Town Hall, Coimbatore',
+  description: `Visit the ${STORE.name} jewellery showroom at Town Hall, Coimbatore, for gold, diamond and silver jewellery. Every piece weighed and priced at the day's gold rate. Open Monday to Saturday.`,
   alternates: { canonical: '/stores' },
 };
 
@@ -48,40 +48,30 @@ export default function StoresPage() {
                 Visit <em>the House</em>
               </h1>
               <p className="lux-body mt-6">
-                Gold is best judged in the hand. Every piece in our catalogue can be seen, tried on and weighed at our
-                showroom in RS Puram, Coimbatore.
+                Jewellery is best judged in the hand. See gold, diamond and silver pieces in person at our showroom on
+                Karuppa Goundar Street, Town Hall, Coimbatore.
               </p>
 
-              <dl className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div className="flex gap-3">
-                  <MapPin size={18} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
-                  <div>
-                    <dt className="lux-eyebrow" style={{ letterSpacing: '0.24em' }}>Address</dt>
-                    <dd className="mt-2 text-[0.88rem] leading-relaxed">{STORE_ADDRESS_ONE_LINE}</dd>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  <Clock size={18} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
-                  <div>
-                    <dt className="lux-eyebrow" style={{ letterSpacing: '0.24em' }}>Hours</dt>
-                    <dd className="mt-2 text-[0.88rem] leading-relaxed">{STORE.hours}<br />Sunday closed</dd>
-                  </div>
-                </div>
-              </dl>
+              <ul className="mt-8 flex flex-wrap gap-2">
+                {SHOWROOMS.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={`#${s.id}`}
+                      className="inline-flex min-h-10 items-center gap-2 px-4 text-[0.82rem] transition-colors hover:border-[var(--c-burgundy)]"
+                      style={{ border: '1px solid var(--c-border-firm)', background: 'var(--c-product-card)' }}
+                    >
+                      <MapPin size={14} strokeWidth={1.5} aria-hidden="true" style={{ color: 'var(--c-burgundy)' }} />
+                      {s.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
 
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <BookVisitButton label="Book a visit" />
-                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="lux-button lux-button-ghost">
-                  <NavigationIcon size={15} strokeWidth={1.5} aria-hidden="true" />
-                  Directions
-                </a>
-              </div>
-              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-[0.85rem]">
-                <a href={STORE.phoneHref} className="inline-flex min-h-11 items-center gap-2 tabular-nums" style={{ color: 'var(--c-text)' }}>
-                  <Phone size={15} strokeWidth={1.5} aria-hidden="true" /> {STORE.phone}
-                </a>
-                <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2" style={{ color: 'var(--c-text)' }}>
-                  <MessageCircle size={15} strokeWidth={1.5} aria-hidden="true" /> WhatsApp us
+                <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="lux-button lux-button-ghost">
+                  <MessageCircle size={15} strokeWidth={1.5} aria-hidden="true" />
+                  WhatsApp us
                 </a>
               </div>
             </Reveal>
@@ -92,26 +82,52 @@ export default function StoresPage() {
           </div>
         </section>
 
-        <section aria-label="Map" className="pt-20 md:pt-28">
-          <div className="container-wide">
-            <Reveal className="relative overflow-hidden" style={{ border: '1px solid var(--c-border)' }}>
-              <iframe
-                title={`Map showing ${STORE.name}, ${STORE.area}, ${STORE.city}`}
-                src={MAPS_EMBED_URL}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="block h-[340px] w-full md:h-[440px]"
-                style={{ border: 0, filter: 'sepia(0.15) saturate(0.85)' }}
-              />
-              <div
-                className="absolute bottom-4 left-4 right-4 max-w-sm p-5 sm:right-auto md:bottom-6 md:left-6"
-                style={{ background: 'var(--c-page)', boxShadow: '0 12px 40px rgba(36,16,18,0.18)' }}
-              >
-                <p className="lux-title text-[1.2rem]">{STORE.name}</p>
-                <p className="text-soft mt-1 text-[0.8rem] leading-relaxed">{STORE_ADDRESS_ONE_LINE}</p>
-                <a href={MAPS_URL} target="_blank" rel="noopener noreferrer" className="lux-link mt-3">Open in Google Maps</a>
-              </div>
-            </Reveal>
+        <section aria-label="Showroom locations" className="pt-20 md:pt-28">
+          <div className={`container-wide grid grid-cols-1 gap-6 ${SHOWROOMS.length > 1 ? 'lg:grid-cols-2' : 'mx-auto max-w-3xl'}`}>
+            {SHOWROOMS.map((s, i) => (
+              <Reveal key={s.id} delay={i * 0.1} className="flex flex-col" style={{ border: '1px solid var(--c-border-firm)', background: 'var(--c-product-card)' }}>
+                <article id={s.id} className="flex h-full flex-col" style={{ scrollMarginTop: 110 }}>
+                  <iframe
+                    title={`Map showing ${STORE.name}, ${s.name}, ${STORE.city}`}
+                    src={s.mapsEmbedUrl}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="block h-[260px] w-full md:h-[320px]"
+                    style={{ border: 0, filter: 'sepia(0.15) saturate(0.85)' }}
+                  />
+                  <div className="flex flex-1 flex-col p-6 md:p-8">
+                    <p className="lux-eyebrow">Our showroom</p>
+                    <h2 className="lux-display mt-2" style={{ fontSize: 'clamp(1.7rem, 2.6vw, 2.2rem)' }}>
+                      {STORE.name}, <em>{s.name}</em>
+                    </h2>
+                    <dl className="mt-5 flex flex-col gap-3 text-[0.9rem]">
+                      <div className="flex gap-3">
+                        <MapPin size={17} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
+                        <div><dt className="sr-only">Address</dt><dd className="leading-relaxed">{s.address}</dd></div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Clock size={17} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
+                        <div><dt className="sr-only">Hours</dt><dd>{s.hours}<br />Sunday closed</dd></div>
+                      </div>
+                      <div className="flex gap-3">
+                        <Phone size={17} strokeWidth={1.5} className="mt-0.5 shrink-0" style={{ color: 'var(--c-burgundy)' }} aria-hidden="true" />
+                        <div><dt className="sr-only">Phone</dt><dd><a href={s.phoneHref} className="tabular-nums underline-offset-4 hover:underline">{s.phone}</a></dd></div>
+                      </div>
+                    </dl>
+                    <div className="mt-auto flex flex-wrap gap-3 pt-6">
+                      <a href={s.mapsUrl} target="_blank" rel="noopener noreferrer" className="lux-button lux-button-ghost">
+                        <NavigationIcon size={15} strokeWidth={1.5} aria-hidden="true" />
+                        Directions
+                      </a>
+                      <a href={s.phoneHref} className="lux-button lux-button-ghost">
+                        <Phone size={15} strokeWidth={1.5} aria-hidden="true" />
+                        Call
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
           </div>
         </section>
 

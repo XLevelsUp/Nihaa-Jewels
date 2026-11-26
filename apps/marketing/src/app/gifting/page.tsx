@@ -5,8 +5,8 @@ import { Box, Container, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: "Luxury Jewellery Gifting — Nihaa Jewels",
-  description: "Give a gift that lasts beyond a lifetime. Explore our curated range of fine jewellery gifts for your most precious moments.",
+  title: "Gold, Diamond & Silver Jewellery Gifts in Coimbatore",
+  description: "Gold, diamond and silver jewellery gifts from Sakthi Chains, Coimbatore: first gold for children, anniversary and birthday pieces, wrapped properly. Book a visit to choose in person.",
 };
 
 export default function GiftingPage() {

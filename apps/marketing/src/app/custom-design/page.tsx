@@ -137,7 +137,7 @@ export default function CustomDesignPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-soft mt-3 text-[0.78rem]">All in BIS hallmarked gold, in 22K or 18K.</p>
+                <p className="text-soft mt-3 text-[0.78rem]">Gold pieces in BIS hallmarked 22K or 18K. Ask us about diamond and silver commissions.</p>
               </Reveal>
             </div>
           </div>

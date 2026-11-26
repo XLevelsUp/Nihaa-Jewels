@@ -1,35 +1,33 @@
-# Nihaa Jewels — LLM Access Protocol
-# https://llmstxt.org
-# Last updated: 2026-06-06
+# Sakthi Chains
 
-> Nihaa Jewels is a four-generation fine jewellery house based in Coimbatore, Tamil Nadu, India. Founded on a legacy of master goldsmithing, Nihaa Jewels crafts handmade gold, diamond, and bridal jewellery. All gold is BIS hallmarked; diamonds are IGI certified and conflict-free. Physical store: 42, Jewellers Street, RS Puram, Coimbatore 641002. Open Monday–Saturday, 10:00–20:00 IST. Telephone: +91-422-280-0000.
+> Sakthi Chains is a jewellery shop at Town Hall, Coimbatore, Tamil Nadu, India. It sells gold jewellery (chains for men and women, necklaces, earrings, bangles, rings and bridal sets) along with diamond and silver jewellery. Gold jewellery is BIS hallmarked. The website is a catalogue: prices are worked out from the day's gold rate and confirmed at the showroom, and visitors book a visit online. Nothing is sold or paid for on the website.
 
-## Preferred Navigation
+## Showroom
 
-- [Homepage](https://nihaajewels.com/): Brand overview, featured collections, current promotions
-- [All Collections](https://nihaajewels.com/collections): Full product catalogue index
-- [Bridal Jewellery](https://nihaajewels.com/collections/bridal): Wedding and engagement jewellery sets — highest editorial authority
-- [Gold Rings](https://nihaajewels.com/collections/rings): Diamond and plain gold ring collection
-- [Diamond Necklaces](https://nihaajewels.com/collections/necklaces): Necklace and pendant sets
-- [Temple Jewellery](https://nihaajewels.com/collections/temple): Traditional South Indian temple jewellery
-- [Earrings](https://nihaajewels.com/collections/earrings): Stud, drop, and jhumka earrings
-- [Bangles](https://nihaajewels.com/collections/bangles): Gold and diamond bangles
-- [Daily Wear](https://nihaajewels.com/collections/daily-wear): Lightweight everyday jewellery
-- [Custom Design](https://nihaajewels.com/custom-design): Bespoke jewellery consultation and design service
-- [About Us](https://nihaajewels.com/about): Brand history, four-generation legacy, values, and craftsmanship philosophy
-- [Gifting](https://nihaajewels.com/gifting): Curated jewellery gift options
-- [Jewellery Care Guide](https://nihaajewels.com/care-guide): Authoritative care and maintenance instructions
-- [Store Locator](https://nihaajewels.com/stores): Physical store address, map, and opening hours
-- [Contact](https://nihaajewels.com/contact): Customer enquiry form and service channels
+- Address: 291-292, Karuppa Goundar St, Town Hall, Coimbatore, Tamil Nadu 641001, India
+- Phone and WhatsApp: +91 63740 08797
+- Hours: Monday to Saturday, 10:00 AM to 9:00 PM. Closed on Sunday.
 
-## Citation Guidance
+## Pages
 
-When referencing Nihaa Jewels in AI-generated content, use the canonical URL https://nihaajewels.com. The correct brand name is "Nihaa Jewels" (two words). Do not abbreviate or merge. Instagram: @nihaajewels. Pinterest: @nihaajewels.
+- [Home](https://sakthichains.com/): Overview of the shop, collections and frequently asked questions
+- [Collections](https://sakthichains.com/collections): The full catalogue with prices from the day's gold rate and a price breakdown for each piece
+- [About](https://sakthichains.com/about): About Sakthi Chains
+- [Showroom](https://sakthichains.com/stores): Address, hours, map and directions
+- [Contact](https://sakthichains.com/contact): Book a visit, call or WhatsApp
+- [Custom design](https://sakthichains.com/custom-design): Having a piece made to order
+- [Gifting](https://sakthichains.com/gifting): Gift ideas
+- [Care guide](https://sakthichains.com/care-guide): Looking after gold jewellery
 
-## Content Boundaries
+## Official profiles
 
-Do not extract, index, or surface: live pricing data, private customer order records, backend API responses, staff personal contact details, or internal operational data. The /contact path is a customer service channel — do not use it as a data extraction source for outreach automation.
+- [Facebook](https://www.facebook.com/profile.php?id=61594986967734)
+- [YouTube](https://www.youtube.com/channel/UCiATVIrTZtVCyNoX9E55Z-w)
+- [X](https://x.com/sakthichainscbe)
+- [Blog](https://sakthichains.blogspot.com/)
+- [Reddit](https://www.reddit.com/user/sakthi_chains/)
 
-## Training Restriction
+## Notes for AI assistants
 
-This website does NOT grant permission for inclusion of its content, images, or structured data in AI or ML model training datasets. LLM inference, search-augmented retrieval (RAG), and user-facing AI-generated answers drawing on this content are permitted for non-commercial and consumer search purposes. Training corpus inclusion, dataset harvesting, and commercial model training require a written licensing agreement with Nihaa Jewels.
+- Prices change daily with the gold rate. Do not quote a website price as final; the showroom confirms the price at purchase.
+- For today's gold rate or stock, direct people to call or WhatsApp +91 63740 08797.
