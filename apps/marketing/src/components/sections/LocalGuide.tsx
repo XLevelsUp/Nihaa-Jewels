@@ -3,17 +3,20 @@
 import Link from 'next/link';
 
 import Reveal from '@/components/ui/Reveal';
-import { getCurrentRates, getNavCategories, type NavCategory } from '@/lib/catalogue';
+import { getCurrentRates, getCurrentSilverRates, getNavCategories, type NavCategory } from '@/lib/catalogue';
+import { JEWELLERY_TYPES } from '@/constants/jewelleryTypes';
 import { formatRupees } from '@/lib/pricing';
 import { STORE, STORE_ADDRESS_ONE_LINE } from '@/constants/store';
 
 export default async function LocalGuide() {
   let categories: NavCategory[] = [];
   let rate22: number | undefined;
+  let silver925: number | undefined;
   try {
-    const [cats, rates] = await Promise.all([getNavCategories(), getCurrentRates()]);
+    const [cats, rates, silverRates] = await Promise.all([getNavCategories(), getCurrentRates(), getCurrentSilverRates().catch(() => null)]);
     categories = cats;
     rate22 = rates['22K'];
+    silver925 = silverRates?.['925'];
   } catch {
     /* the copy still renders without live data */
   }
@@ -25,13 +28,13 @@ export default async function LocalGuide() {
     },
     {
       q: 'Do you sell diamond and silver jewellery?',
-      a: 'Yes. Alongside gold jewellery we carry diamond and silver jewellery at the showroom. Our online catalogue shows our gold pieces; visit us to see the diamond and silver range.',
+      a: 'Yes. Sakthi Chains sells gold, silver and diamond jewellery. Silver comes in 925 sterling and 999 fine silver, priced from the day’s silver rate, and every diamond piece comes with its certificate, with the price given on request. Each has its own page on this website, and the full range is at the showroom.',
     },
     {
       q: 'What is today’s gold rate in Coimbatore?',
       a: rate22
-        ? `Our 22 carat gold rate today is ${formatRupees(rate22)} per gram, updated by our team. Every price on this website is worked out from it, and the final price is confirmed in store.`
-        : 'Our team updates the day’s gold rate every morning, and every price on this website is worked out from it. Call us for today’s rate.',
+        ? `Our 22 carat gold rate today is ${formatRupees(rate22)} per gram${silver925 ? `, and 925 silver is ${formatRupees(silver925)} per gram` : ''}, updated by our team. Every price on this website is worked out from these rates, and the final price is confirmed in store.`
+        : 'Our team updates the day’s gold and silver rates, and every price on this website is worked out from them. Call us for today’s rate.',
     },
     {
       q: 'How is the price of a gold chain worked out?',
@@ -62,6 +65,16 @@ export default async function LocalGuide() {
     );
   };
 
+  const typeLink = (type: 'silver' | 'diamond', text: string) => (
+    <Link
+      href={JEWELLERY_TYPES[type].path}
+      className="transition-colors hover:text-[var(--c-burgundy)]"
+      style={{ textDecoration: 'underline', textDecorationColor: 'var(--c-champagne)', textUnderlineOffset: '4px' }}
+    >
+      {text}
+    </Link>
+  );
+
   const faqSchema = {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
@@ -69,17 +82,17 @@ export default async function LocalGuide() {
   };
 
   return (
-    <section aria-labelledby="local-guide-heading" className="surface-page pt-24 md:pt-36">
+    <section aria-labelledby="local-guide-heading" className="surface-page pt-12 md:pt-20">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
-      <div className="container-page grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10">
+      <div className="container-page grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
         <Reveal className="lg:col-span-5">
           <p className="lux-eyebrow">Jewellery Shop in Coimbatore</p>
           <h2 id="local-guide-heading" className="lux-display mt-4" style={{ fontSize: 'clamp(2rem, 3.8vw, 3rem)' }}>
             Gold, diamond and silver, <em>under one roof</em>
           </h2>
           <p className="lux-body mt-6">
-            {STORE.name} is a gold jewellery shop at Town Hall, Coimbatore, with diamond jewellery and silver jewellery
-            alongside. Choose {linkTo('chain', 'gold chains')} for men and women, light 3 to 4 gram{' '}
+            {STORE.name} is a gold jewellery shop at Town Hall, Coimbatore, with {typeLink('diamond', 'diamond jewellery')} and{' '}
+            {typeLink('silver', 'silver jewellery')} alongside. Choose {linkTo('chain', 'gold chains')} for men and women, light 3 to 4 gram{' '}
             {linkTo('earring', 'gold earring designs')} for every day, {linkTo('bangle', 'gold bangles')} and{' '}
             {linkTo('ring', 'rings')}, or complete {linkTo('necklace', 'bridal and wedding jewellery sets')}.
           </p>

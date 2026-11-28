@@ -22,31 +22,31 @@ const SERVICES: { eyebrow: string; title: string; body: string; cta: string; hre
   {
     eyebrow: 'For Someone Else',
     title: 'The Art of Gifting',
-    body: 'Birthdays, anniversaries, a first piece of gold. We will help you choose, and wrap it properly.',
+    body: 'Birthdays, anniversaries, or a first keepsake in gold, silver or diamond. We will help you choose, and wrap it properly.',
     cta: 'Explore gifting',
     href: '/gifting',
   },
   {
     eyebrow: 'For Life',
     title: 'Care & Restoration',
-    body: 'Cleaning, polishing, resizing and clasp repairs, for Sakthi pieces and the family gold you already own.',
-    cta: 'Caring for gold',
+    body: 'Cleaning, polishing, resizing and clasp repairs, for Sakthi pieces and the family jewellery you already own.',
+    cta: 'Care guide',
     href: '/care-guide',
   },
 ];
 
 export default function MadeForYou() {
   return (
-    <section aria-labelledby="services-heading" className="surface-page pt-24 md:pt-36">
+    <section aria-labelledby="services-heading" className="surface-page pt-12 md:pt-20">
       <div className="container-wide">
         <Reveal className="mx-auto mb-12 max-w-2xl text-center md:mb-16">
           <p className="lux-eyebrow">Services</p>
           <h2 id="services-heading" className="lux-display mt-4" style={{ fontSize: 'clamp(2.1rem, 4.4vw, 3.6rem)' }}>
-            Everything gold, <em>under one roof</em>
+            Gold, silver &amp; diamond, <em>under one roof</em>
           </h2>
         </Reveal>
 
-        <ul className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {SERVICES.map((s, i) => (
             <li key={s.title}>
               <Reveal delay={i * 0.08} className="h-full">

@@ -12,6 +12,9 @@ export const revalidate = 3600;
 const STATIC_ROUTES: { path: string; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency']; priority: number }[] = [
   { path: '/', changeFrequency: 'daily', priority: 1 },
   { path: '/collections', changeFrequency: 'weekly', priority: 0.9 },
+  { path: '/gold-jewellery', changeFrequency: 'daily', priority: 0.9 },
+  { path: '/silver-jewellery', changeFrequency: 'daily', priority: 0.9 },
+  { path: '/diamond-jewellery', changeFrequency: 'weekly', priority: 0.9 },
   { path: '/about', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/contact', changeFrequency: 'monthly', priority: 0.7 },
   { path: '/custom-design', changeFrequency: 'monthly', priority: 0.7 },

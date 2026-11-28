@@ -1,14 +1,34 @@
-// The selling price, with the original struck through and the saving beneath when a discount applies, as the large jewellers show it.
+// Selling price display, or "Price on request" with optional booking actions when pricing is hidden.
 
-import { formatRupees, type PriceBreakdown } from '@/lib/pricing';
+import BookAppointmentButton from './BookAppointmentButton';
+import { formatRupees, isPriceOnRequest, type PriceResult } from '@/lib/pricing';
 
 interface PriceTagProps {
-  price: PriceBreakdown;
+  price: PriceResult;
   size?: 'md' | 'lg';
+  productId?: string | null;
+  productName?: string;
+  showActions?: boolean;
 }
 
-export default function PriceTag({ price, size = 'md' }: PriceTagProps) {
+export default function PriceTag({ price, size = 'md', productId, productName, showActions = false }: PriceTagProps) {
   const large = size === 'lg';
+
+  if (isPriceOnRequest(price)) {
+    return (
+      <div>
+        <p className={`font-semibold ${large ? 'text-[1.4rem]' : 'text-[0.88rem]'}`} style={{ color: 'var(--c-burgundy)' }}>
+          Price on request
+        </p>
+        {showActions && (
+          <div className="mt-3">
+            <BookAppointmentButton productId={productId} productName={productName} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
   const discounted = price.percentOff > 0;
 
   return (

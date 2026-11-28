@@ -52,10 +52,7 @@ export const metadata: Metadata = {
     default: `${STORE.name} | Gold, Diamond & Silver Jewellery Shop in Coimbatore`,
   },
   description:
-    "Gold, diamond and silver jewellery at Town Hall, Coimbatore: gold chains, earrings, bangles and bridal sets, BIS hallmarked and priced at today's gold rate.",
-  alternates: {
-    canonical: '/',
-  },
+    "BIS hallmarked gold, 925/999 silver and certified diamond jewellery at Town Hall, Coimbatore. Priced at today's rates; book a showroom visit.",
   openGraph: {
     title: `${STORE.name} | Gold, Diamond & Silver Jewellery in Coimbatore`,
     description:
@@ -63,7 +60,6 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     siteName: STORE.name,
-    url: SITE_URL,
   },
   robots: {
     index: true,
@@ -100,10 +96,19 @@ const jsonLd = {
       "parentOrganization": { "@id": `${SITE_URL}/#brand` },
       "url": `${SITE_URL}/stores`,
       "image": `${SITE_URL}/images/home/visit-showroom.webp`,
-      "description": `Gold, diamond and silver jewellery shop at ${s.name}, Coimbatore: gold chains, earrings, bangles, rings and bridal jewellery.`,
+      "description": `BIS hallmarked gold, 925/999 silver and certified diamond jewellery shop at ${s.name}, Coimbatore.`,
       "telephone": s.phoneSchema,
       "priceRange": "₹₹₹",
       "areaServed": { "@type": "City", "name": "Coimbatore" },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Jewellery Catalogue",
+        "itemListElement": [
+          { "@type": "OfferCatalog", "name": "Gold Jewellery", "url": `${SITE_URL}/gold-jewellery` },
+          { "@type": "OfferCatalog", "name": "Silver Jewellery", "url": `${SITE_URL}/silver-jewellery` },
+          { "@type": "OfferCatalog", "name": "Diamond Jewellery", "url": `${SITE_URL}/diamond-jewellery` },
+        ],
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": `${s.street}, ${s.area}`,

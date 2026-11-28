@@ -13,11 +13,14 @@ import PriceBreakdownTable from '@/components/catalogue/PriceBreakdownTable';
 import PriceTag from '@/components/catalogue/PriceTag';
 import BookAppointmentButton from '@/components/catalogue/BookAppointmentButton';
 import { getProductBySlug } from '@/lib/catalogue';
-import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
+import { INDICATIVE_PRICE_DISCLAIMER, isPriceOnRequest } from '@/lib/pricing';
 import { productImageUrl } from '@/lib/supabase';
 import { SITE_URL } from '@/constants/store';
+import { JEWELLERY_TYPES, materialLabel, typeOf } from '@/constants/jewelleryTypes';
 
 const BASE_URL = SITE_URL;
+
+const capitalise = (s: string) => s.replace(/(^|\s)(\S)/g, (_, space: string, c: string) => space + c.toUpperCase());
 
 function absoluteImageUrl(storagePath: string): string {
   const url = productImageUrl(storagePath);
@@ -38,10 +41,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: 'Product not found' };
   }
 
-  const title = `${product.name} | ${product.karat} Gold, Coimbatore`;
-  const description =
-    product.description?.slice(0, 155) ??
-    `${product.name} in ${product.karat} BIS hallmarked gold at Sakthi Chains, Coimbatore. Priced at today's gold rate; book a visit to see it in person.`;
+  const material = capitalise(materialLabel(product));
+  const title = `${product.name} | ${material}, Coimbatore`;
+  const fallback = {
+    gold: `${product.name} in ${material} at Sakthi Chains, Coimbatore. BIS hallmarked and priced at today's gold rate; book a visit to see it in person.`,
+    silver: `${product.name} in ${material} at Sakthi Chains, Coimbatore. Priced at today's silver rate; book a visit to see it in person.`,
+    diamond: `${product.name}, certified diamonds set in gold, at Sakthi Chains, Coimbatore. Price on request; book a visit to see it and its certificate.`,
+  }[typeOf(product)];
+  const description = product.description?.slice(0, 155) ?? fallback;
 
   return {
     title,
@@ -63,6 +70,9 @@ export default async function ProductPage({ params }: PageProps) {
   if (!product) notFound();
 
   const primaryImage = product.images[0];
+  const type = typeOf(product);
+  const material = capitalise(materialLabel(product));
+  const metalWord = product.metal === 'silver' ? 'Silver' : 'Gold';
 
   const productSchema = {
     '@context': 'https://schema.org',
@@ -72,7 +82,8 @@ export default async function ProductPage({ params }: PageProps) {
     description: product.description ?? undefined,
     image: primaryImage ? absoluteImageUrl(primaryImage.storage_path) : undefined,
     brand: { '@type': 'Brand', name: 'Sakthi Chains' },
-    material: `${product.karat} Gold`,
+    material,
+    category: JEWELLERY_TYPES[type].title,
     weight: {
       '@type': 'QuantitativeValue',
       value: product.gross_weight_g,
@@ -221,7 +232,7 @@ export default async function ProductPage({ params }: PageProps) {
                   mb: 1,
                 }}
               >
-                {product.karat} &middot; {product.category?.name ?? 'Jewellery'}
+                {material} &middot; {product.category?.name ?? 'Jewellery'}
               </Typography>
 
               <Typography
@@ -238,8 +249,16 @@ export default async function ProductPage({ params }: PageProps) {
 
               {product.price && (
                 <Box sx={{ mt: 2.5 }}>
-                  <PriceTag price={product.price} size="lg" />
-                  <Typography sx={{ color: 'text.secondary', fontSize: '0.7rem', mt: 0.5 }}>Inclusive of GST &middot; indicative</Typography>
+                  <PriceTag
+                    price={product.price}
+                    size="lg"
+                    productId={product.id}
+                    productName={product.name}
+                    showActions
+                  />
+                  {!isPriceOnRequest(product.price) && (
+                    <Typography sx={{ color: 'text.secondary', fontSize: '0.7rem', mt: 0.5 }}>Inclusive of GST &middot; indicative</Typography>
+                  )}
                 </Box>
               )}
 
@@ -265,10 +284,16 @@ export default async function ProductPage({ params }: PageProps) {
                 }}
               >
                 {[
-                  { label: 'Purity', value: `${product.karat} BIS Hallmarked` },
-                  { label: 'Gold Colour', value: product.metal_colour ? `${product.metal_colour.charAt(0).toUpperCase()}${product.metal_colour.slice(1)} gold` : null },
+                  {
+                    label: 'Purity',
+                    value:
+                      product.metal === 'silver'
+                        ? product.silver_purity === '999' ? '999 Fine silver' : product.silver_purity === '925' ? '925 Sterling silver' : null
+                        : product.karat ? `${product.karat} gold, BIS hallmarked` : null,
+                  },
+                  { label: 'Gold Colour', value: product.metal === 'gold' && product.metal_colour ? `${product.metal_colour.charAt(0).toUpperCase()}${product.metal_colour.slice(1)} gold` : null },
                   { label: 'Gross Weight', value: `${product.gross_weight_g} g` },
-                  { label: 'Net Gold Weight', value: `${product.net_weight_g} g` },
+                  { label: `Net ${metalWord} Weight`, value: `${product.net_weight_g} g` },
                   { label: 'Size / Length', value: product.size_label },
                   { label: 'Dimensions', value: product.dimensions },
                   { label: 'Closure', value: product.closure },
@@ -295,6 +320,42 @@ export default async function ProductPage({ params }: PageProps) {
                 ))}
               </Box>
 
+              {product.has_diamond && (
+                <Box component="section" aria-labelledby="diamond-details" sx={{ mb: 4, p: { xs: 2, sm: 3 }, border: '1px solid rgba(128, 0, 34,0.12)', bgcolor: 'var(--c-product-card)' }}>
+                  <Typography
+                    id="diamond-details"
+                    component="h2"
+                    sx={{ color: 'var(--c-accent)', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', mb: 2 }}
+                  >
+                    Diamond details
+                  </Typography>
+                  <Box component="dl" sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, m: 0 }}>
+                    {[
+                      { label: 'Certificate', value: [product.certificate_lab, product.certificate_number].filter(Boolean).join(' · ') || null },
+                      { label: 'Total Diamond Weight', value: product.diamond_carat != null ? `${Number(product.diamond_carat)} ct` : null },
+                      { label: 'Number of Diamonds', value: product.diamond_count != null ? String(product.diamond_count) : null },
+                      { label: 'Clarity', value: product.diamond_clarity },
+                      { label: 'Colour', value: product.diamond_colour },
+                      { label: 'Cut', value: product.diamond_cut },
+                    ]
+                      .filter((spec): spec is { label: string; value: string } => Boolean(spec.value))
+                      .map((spec) => (
+                        <Box key={spec.label} sx={{ gridColumn: spec.label === 'Certificate' ? '1 / -1' : undefined }}>
+                          <Box component="dt" sx={{ color: 'text.secondary', fontSize: '0.6rem', letterSpacing: '0.15em', textTransform: 'uppercase', mb: 0.5 }}>
+                            {spec.label}
+                          </Box>
+                          <Box component="dd" sx={{ m: 0, color: 'text.primary', fontSize: '0.85rem', overflowWrap: 'anywhere' }}>
+                            {spec.value}
+                          </Box>
+                        </Box>
+                      ))}
+                  </Box>
+                  <Typography sx={{ color: 'text.secondary', fontSize: '0.78rem', mt: 2 }}>
+                    The certificate is shown with the piece at our showroom.
+                  </Typography>
+                </Box>
+              )}
+
               {product.care_instructions && (
                 <Box sx={{ mb: 4 }}>
                   <Typography
@@ -313,7 +374,8 @@ export default async function ProductPage({ params }: PageProps) {
                   <PriceBreakdownTable
                     price={product.price}
                     netWeightG={product.net_weight_g}
-                    karat={product.karat}
+                    productId={product.id}
+                    productName={product.name}
                   />
                 </Box>
               ) : (
@@ -327,7 +389,7 @@ export default async function ProductPage({ params }: PageProps) {
               <BookAppointmentButton
                 productId={product.id}
                 productName={product.name}
-                quotedPrice={product.price?.total ?? null}
+                quotedPrice={isPriceOnRequest(product.price) ? null : product.price?.total ?? null}
               />
             </Box>
           </Box>

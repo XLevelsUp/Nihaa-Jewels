@@ -8,7 +8,7 @@ import { homeSlot } from '@/lib/imageSlots';
 
 export default function EditorialBand() {
   return (
-    <section aria-labelledby="editorial-heading" className="relative isolate mt-24 h-[88svh] min-h-[520px] w-full overflow-hidden md:mt-36">
+    <section aria-labelledby="editorial-heading" className="relative isolate mt-12 h-[88svh] min-h-[520px] w-full overflow-hidden md:mt-20">
       <div className="absolute inset-0 -z-20">
         <ImageSlot slot={homeSlot('bandHeirloom')} sizes="100vw" className="object-[50%_30%]" />
       </div>
@@ -18,7 +18,7 @@ export default function EditorialBand() {
         style={{ background: 'linear-gradient(180deg, rgba(20, 6, 8, 0) 45%, rgba(20, 6, 8, 0.74) 100%)' }}
       />
       <Reveal className="container-page absolute inset-x-0 bottom-0 pb-16 md:pb-24">
-        <p className="lux-eyebrow" style={{ color: 'var(--c-champagne)' }}>Heirloom Gold</p>
+        <p className="lux-eyebrow" style={{ color: 'var(--c-champagne)' }}>Heirloom Jewellery</p>
         <h2
           id="editorial-heading"
           className="lux-display mt-4 max-w-[16ch]"

@@ -7,6 +7,7 @@ import Link from 'next/link';
 export const metadata: Metadata = {
   title: "Gold, Diamond & Silver Jewellery Gifts in Coimbatore",
   description: "Gold, diamond and silver jewellery gifts from Sakthi Chains, Coimbatore: first gold for children, anniversary and birthday pieces, wrapped properly. Book a visit to choose in person.",
+  alternates: { canonical: '/gifting' },
 };
 
 export default function GiftingPage() {
@@ -53,7 +54,7 @@ export default function GiftingPage() {
               lineHeight: 1.8
             }}
           >
-            From anniversaries to life&apos;s milestones, discover the perfect gift from our signature gold and diamond collections.
+            From anniversaries to life&apos;s milestones, discover the perfect gift from our signature gold, silver and diamond collections.
           </Typography>
         </Box>
 

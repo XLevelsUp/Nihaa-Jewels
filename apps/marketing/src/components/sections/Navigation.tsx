@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 
 import BookAppointmentDialog from '@/components/catalogue/BookAppointmentDialog';
+import { productImageUrl } from '@/lib/supabase';
 
 export interface NavItem {
   label: string;
@@ -392,7 +393,8 @@ export default function Navigation({ items }: { items: NavItem[] }) {
 
                               {/* featured card */}
                               {(() => {
-                                const f = { image: cat.heroImagePath ?? "", title: cat.label, desc: cat.description ?? "", badge: cat.badge ?? "", href: cat.href };
+                                const heroPath = cat.heroImagePath?.trim();
+                                const f = { image: heroPath ? productImageUrl(heroPath) : null, title: cat.label, desc: cat.description ?? "", badge: cat.badge ?? "", href: cat.href };
                                 return (
                                   <Box
                                     sx={{
@@ -421,19 +423,37 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                       }}
                                     >
                                       <Box sx={{ position: 'relative', height: 150, overflow: 'hidden', bgcolor: 'var(--c-ivory)' }}>
-                                        <Box
-                                          className="featured-img"
-                                          component="img"
-                                          src={f.image}
-                                          alt={f.title}
-                                          sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            objectFit: 'cover',
-                                            transition: 'transform 0.5s cubic-bezier(.25,1,.5,1)',
-                                          }}
-                                        />
-                                        {/* badge */}
+                                        {f.image ? (
+                                          <Box
+                                            className="featured-img"
+                                            component="img"
+                                            src={f.image}
+                                            alt={f.title}
+                                            sx={{
+                                              width: '100%',
+                                              height: '100%',
+                                              objectFit: 'cover',
+                                              transition: 'transform 0.5s cubic-bezier(.25,1,.5,1)',
+                                            }}
+                                          />
+                                        ) : (
+                                          <Box
+                                            aria-hidden="true"
+                                            sx={{
+                                              height: '100%',
+                                              display: 'grid',
+                                              placeItems: 'center',
+                                              background: 'linear-gradient(135deg, var(--c-icing), var(--c-ivory))',
+                                              fontFamily: 'var(--font-cormorant), serif',
+                                              fontStyle: 'italic',
+                                              fontSize: '1.9rem',
+                                              color: 'var(--c-burgundy)',
+                                            }}
+                                          >
+                                            {f.title}
+                                          </Box>
+                                        )}
+                                        {f.badge && (
                                         <Box
                                           sx={{
                                             position: 'absolute',
@@ -453,6 +473,7 @@ export default function Navigation({ items }: { items: NavItem[] }) {
                                         >
                                           {f.badge}
                                         </Box>
+                                        )}
                                       </Box>
                                       <Box sx={{ p: 2 }}>
                                         <Typography sx={{ fontFamily: 'var(--font-playfair-display)', fontWeight: 600, fontSize: '0.95rem', color: 'var(--c-text)', mb: 0.3 }}>

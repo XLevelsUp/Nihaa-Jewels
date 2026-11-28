@@ -22,3 +22,7 @@ export function homeSlot(key: HomeSlotKey): ResolvedSlot {
 export function aboutSlot(key: AboutSlotKey): ResolvedSlot {
   return resolve(ABOUT_SLOTS[key], 'about');
 }
+
+export function typeSlot(spec: ImageSlotSpec): ResolvedSlot {
+  return resolve(spec, 'jewellery-types');
+}

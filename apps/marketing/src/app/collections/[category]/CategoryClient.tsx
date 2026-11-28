@@ -82,7 +82,7 @@ export default function CategoryClient({ category, products, subCategories, foot
         <FilterBar
           occasions={[...new Set(products.flatMap((p) => p.occasion ?? []))].sort()}
           genders={[...new Set(products.map((p) => p.gender).filter(Boolean) as string[])].sort()}
-          karats={[...new Set(products.map((p) => p.karat))].sort()}
+          karats={[...new Set(products.map((p) => p.karat).filter(Boolean) as string[])].sort()}
           resultCount={products.length}
         />
 

@@ -5,7 +5,7 @@ import { STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
   title: 'Terms & Conditions',
-  description: 'Terms for using the Sakthi Chains website: how catalogue prices are worked out from the day’s gold rate, booking a showroom visit, and custom orders.',
+  description: 'Terms for using the Sakthi Chains website: how gold and silver prices follow the day’s rates, diamond pricing on request, and booking a showroom visit.',
   alternates: { canonical: '/terms-and-conditions' },
 };
 
@@ -31,11 +31,12 @@ export default function TermsAndConditions() {
           body: (
             <>
               <p>
-                Prices on this website are indicative. Each one is worked out from the day’s gold rate entered by our team,
-                plus wastage, making charges, hallmarking and GST, as shown in the price breakdown on each product.
+                Gold and silver prices on this website are indicative. Each one is worked out from the day’s gold or silver rate
+                entered by our team, plus wastage, making charges, hallmarking (where applicable) and GST, as shown in the
+                price breakdown on each product. Diamond jewellery is shown as &ldquo;Price on request&rdquo;.
               </p>
               <p>
-                Gold rates change every day, so the final price is the one confirmed at the showroom when you buy, using that
+                Gold and silver rates change every day, so the final price is confirmed at the showroom when you buy, using that
                 day’s rate and the weight measured at the counter.
               </p>
             </>

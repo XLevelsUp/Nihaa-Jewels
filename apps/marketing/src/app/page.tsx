@@ -6,6 +6,9 @@ import BrandStatement from '@/components/sections/BrandStatement';
 import OpeningCurtain from '@/components/ui/OpeningCurtain';
 import { homeSlot } from '@/lib/imageSlots';
 const DiscoverByCategory = dynamic(() => import('@/components/sections/DiscoverByCategoryServer'));
+const ShopByType = dynamic(() => import('@/components/sections/ShopByType'));
+const TodaysRates = dynamic(() => import('@/components/sections/TodaysRates'));
+const ShopByPrice = dynamic(() => import('@/components/sections/ShopByPrice'));
 const CampaignDiptych = dynamic(() => import('@/components/sections/CampaignDiptych'));
 const SignatureCreations = dynamic(() => import('@/components/sections/SignatureCreations'));
 const Occasions = dynamic(() => import('@/components/sections/Occasions'));
@@ -34,7 +37,10 @@ export default function Home() {
       <Navigation />
       <StaticBrandHero />
       <BrandStatement />
+      <ShopByType />
+      <TodaysRates />
       <DiscoverByCategory />
+      <ShopByPrice />
       <CampaignDiptych />
       <SignatureCreations />
       <Occasions />

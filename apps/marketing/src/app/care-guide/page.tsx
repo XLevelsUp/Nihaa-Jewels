@@ -1,4 +1,4 @@
-// Gold-only care guide: everyday habits, cleaning, storage and chains in particular, a quick do/don't list, then the free check-up at the showroom.
+// Care guide for gold, silver and diamonds: everyday habits, cleaning, storage and chains, silver and diamond care, a do/don't list, then the check-up at the showroom.
 
 import type { Metadata } from 'next';
 import { Droplets, Gem, Link2, Package, Sparkles, SunMedium } from 'lucide-react';
@@ -11,9 +11,9 @@ import BookVisitButton from '@/components/ui/BookVisitButton';
 import { aboutSlot } from '@/lib/imageSlots';
 
 export const metadata: Metadata = {
-  title: 'Gold Jewellery Care Guide',
+  title: 'Jewellery Care Guide: Gold, Silver and Diamond',
   description:
-    'How to wear, clean and store gold jewellery so it lasts a lifetime: everyday habits, gentle cleaning at home, storing chains without tangles, and free check-ups at our showroom.',
+    'How to wear, clean and store gold, silver and diamond jewellery: gentle cleaning at home, keeping silver bright, storing chains and diamonds safely, and check-ups at our showroom.',
   alternates: { canonical: '/care-guide' },
 };
 
@@ -74,8 +74,37 @@ const GUIDES = [
   },
 ];
 
+const OTHER_CARE = [
+  {
+    id: 'silver-care',
+    icon: Sparkles,
+    title: 'Caring for silver',
+    intro: 'Silver slowly darkens as it meets the air. That is normal, and a little care keeps it bright.',
+    points: [
+      'Wipe each piece with a soft dry cloth after wearing, to remove skin oils.',
+      'Store it in a closed pouch or a small sealed bag, away from damp air.',
+      'Keep it away from perfume, chlorine and rubber bands, which speed up darkening.',
+      '999 fine silver is soft, so store it on its own to avoid scratches.',
+      'For a darkened piece, ask us at the showroom rather than using harsh dips.',
+    ],
+  },
+  {
+    id: 'diamond-care',
+    icon: Gem,
+    title: 'Caring for diamonds',
+    intro: 'Diamonds are hard, but they pick up grease easily, and their settings need an eye kept on them.',
+    points: [
+      'Clean with lukewarm water, a drop of mild soap and a soft brush, reaching behind the stone.',
+      'Store each piece separately: a diamond can scratch other jewellery, and other diamonds.',
+      'Take rings off for heavy work; a hard knock can chip a stone or bend a claw.',
+      'Bring the piece in once a year so we can check the claws and settings.',
+      'Keep the diamond certificate safe with the piece.',
+    ],
+  },
+];
+
 const DO = ['Lukewarm water and mild soap', 'A soft brush and a lint-free cloth', 'Separate soft pouches', 'A yearly check of clasps'];
-const DONT = ['Bleach, chlorine or harsh cleaners', 'Toothpaste or abrasive powders', 'Wearing gold in the pool or gym', 'Polishing an antique finish bright'];
+const DONT = ['Bleach, chlorine or harsh cleaners', 'Toothpaste or abrasive powders', 'Wearing jewellery in the pool or gym', 'Polishing an antique finish bright'];
 
 export default function CareGuidePage() {
   return (
@@ -121,6 +150,40 @@ export default function CareGuidePage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section aria-labelledby="silver-diamond-heading" className="pt-20 md:pt-28">
+          <div className="container-wide">
+            <Reveal className="mb-10">
+              <p className="lux-eyebrow">Silver and Diamonds</p>
+              <h2 id="silver-diamond-heading" className="lux-display mt-4" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}>
+                Beyond gold
+              </h2>
+            </Reveal>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+              {OTHER_CARE.map((c, i) => (
+                <Reveal
+                  key={c.id}
+                  delay={i * 0.08}
+                  id={c.id}
+                  className="scroll-mt-24 p-6 md:p-8"
+                  style={{ border: '1px solid var(--c-border-firm)', background: 'var(--c-product-card)' }}
+                >
+                  <c.icon size={22} strokeWidth={1.4} style={{ color: 'var(--c-gold-ink)' }} aria-hidden="true" />
+                  <h3 className="lux-title mt-4 text-[1.5rem]">{c.title}</h3>
+                  <p className="lux-body mt-2 text-[0.9rem]">{c.intro}</p>
+                  <ul className="mt-4 flex flex-col gap-2">
+                    {c.points.map((p) => (
+                      <li key={p} className="lux-body flex gap-2.5 text-[0.88rem]">
+                        <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rotate-45" style={{ background: 'var(--c-gold-ink)' }} />
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 

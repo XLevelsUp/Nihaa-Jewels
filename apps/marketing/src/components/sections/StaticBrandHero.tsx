@@ -117,7 +117,7 @@ export default function StaticBrandHero() {
 
         <motion.h1
           {...reveal(0.25)}
-          className="mt-5"
+          className="mt-4"
           style={{
             fontFamily: 'var(--font-cormorant), Georgia, serif',
             fontWeight: 300,
@@ -127,10 +127,10 @@ export default function StaticBrandHero() {
             color: '#F7ECD9',
           }}
         >
-          Pure gold, <em style={{ fontStyle: 'italic' }}>shaped by hand</em>
+          Fine jewellery, <em style={{ fontStyle: 'italic' }}>shaped by hand</em>
         </motion.h1>
 
-        <motion.div {...reveal(0.6)} className="mt-9">
+        <motion.div {...reveal(0.6)} className="mt-8">
           <Link
             href="/collections"
             className="group inline-flex min-h-11 items-center gap-4 text-[0.66rem] font-medium uppercase tracking-[0.32em]"
