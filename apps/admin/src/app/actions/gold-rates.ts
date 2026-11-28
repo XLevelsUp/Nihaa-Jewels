@@ -3,8 +3,8 @@
 import { z } from 'zod';
 
 import { authorize } from '@/lib/supabase-auth';
-import { getCurrentRates, publishRate, validateRateChange } from '@/lib/rates';
-import type { Karat } from '@/types/database';
+import { getCurrentRates, getCurrentSilverRates, publishRate, publishSilverRate, validateRateChange } from '@/lib/rates';
+import type { Karat, SilverPurity } from '@/types/database';
 
 const schema = z.object({
   karat: z.enum(['22K', '18K', '24K']),
@@ -60,4 +60,40 @@ export async function publishGoldRate(formData: FormData): Promise<PublishRateRe
   }
 
   return { ok: true, message: `${karat} rate updated. The website now shows the new price.` };
+}
+
+const silverSchema = schema.omit({ karat: true }).extend({ purity: z.enum(['925', '999']) });
+
+export async function publishSilverRateAction(formData: FormData): Promise<PublishRateResult> {
+  const auth = await authorize('rates.edit');
+  if (!auth.user) return { ok: false, message: auth.error };
+  const { user } = auth;
+
+  const parsed = silverSchema.safeParse({
+    purity: formData.get('purity'),
+    ratePerGram: formData.get('ratePerGram'),
+    note: formData.get('note') ?? '',
+    confirmed: formData.get('confirmed') === 'true',
+  });
+  if (!parsed.success) {
+    return { ok: false, message: parsed.error.issues[0]?.message ?? 'Check the rate you entered.' };
+  }
+
+  const { purity, ratePerGram, note, confirmed } = parsed.data;
+  const current = await getCurrentSilverRates();
+  const previous = current.get(purity as SilverPurity)?.ratePerGram ?? null;
+
+  const deviationError = validateRateChange(ratePerGram, previous);
+  if (deviationError && !confirmed) {
+    return { ok: false, message: deviationError, needsConfirmation: true };
+  }
+
+  try {
+    await publishSilverRate({ purity: purity as SilverPurity, ratePerGram, note: note || null, createdBy: user.id });
+  } catch (error) {
+    console.error('[publishSilverRate]', error);
+    return { ok: false, message: 'Could not save the silver rate. Please try again.' };
+  }
+
+  return { ok: true, message: `${purity} silver rate updated. The website now shows the new price.` };
 }

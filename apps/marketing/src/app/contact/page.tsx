@@ -13,7 +13,7 @@ import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: `Call, WhatsApp or write to ${STORE.name}, or book a visit to our showroom at Town Hall, Coimbatore.`,
+  description: `Call, WhatsApp or book a visit to ${STORE.name} at Town Hall, Coimbatore for BIS hallmarked gold, 925/999 silver and certified diamond jewellery.`,
   alternates: { canonical: '/contact' },
 };
 
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: 'Is the price on the website final?',
-    a: `${INDICATIVE_PRICE_DISCLAIMER} It moves with the day’s gold rate.`,
+    a: `${INDICATIVE_PRICE_DISCLAIMER} Gold and silver prices move with the day’s rates; diamond pieces are priced on request.`,
   },
   {
     q: 'Can I exchange old gold?',

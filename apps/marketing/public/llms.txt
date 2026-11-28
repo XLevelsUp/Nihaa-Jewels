@@ -1,6 +1,6 @@
 # Sakthi Chains
 
-> Sakthi Chains is a jewellery shop at Town Hall, Coimbatore, Tamil Nadu, India. It sells gold jewellery (chains for men and women, necklaces, earrings, bangles, rings and bridal sets) along with diamond and silver jewellery. Gold jewellery is BIS hallmarked. The website is a catalogue: prices are worked out from the day's gold rate and confirmed at the showroom, and visitors book a visit online. Nothing is sold or paid for on the website.
+> Sakthi Chains is a jewellery shop at Town Hall, Coimbatore, Tamil Nadu, India. It sells three kinds of jewellery: gold (chains for men and women, necklaces, earrings, bangles, rings and bridal sets), silver (925 sterling and 999 fine silver) and diamond jewellery set in gold. Gold jewellery is BIS hallmarked, and every diamond piece comes with a diamond certificate. The website is a catalogue: gold and silver prices are worked out from the day's rates and confirmed at the showroom, diamond prices are given on request, and visitors book a visit online. Nothing is sold or paid for on the website.
 
 ## Showroom
 
@@ -10,14 +10,17 @@
 
 ## Pages
 
-- [Home](https://sakthichains.com/): Overview of the shop, collections and frequently asked questions
-- [Collections](https://sakthichains.com/collections): The full catalogue with prices from the day's gold rate and a price breakdown for each piece
+- [Home](https://sakthichains.com/): Overview of the shop, its gold, silver and diamond jewellery, and frequently asked questions
+- [Gold jewellery](https://sakthichains.com/gold-jewellery): BIS hallmarked gold in 22K, 18K and 24K, priced from today's gold rate, with today's rates
+- [Silver jewellery](https://sakthichains.com/silver-jewellery): 925 sterling and 999 fine silver, priced from today's silver rate
+- [Diamond jewellery](https://sakthichains.com/diamond-jewellery): Certified diamonds set in gold; price on request
+- [All jewellery](https://sakthichains.com/collections): The full catalogue, filterable by type, category, purity, occasion and price
 - [About](https://sakthichains.com/about): About Sakthi Chains
 - [Showroom](https://sakthichains.com/stores): Address, hours, map and directions
 - [Contact](https://sakthichains.com/contact): Book a visit, call or WhatsApp
 - [Custom design](https://sakthichains.com/custom-design): Having a piece made to order
 - [Gifting](https://sakthichains.com/gifting): Gift ideas
-- [Care guide](https://sakthichains.com/care-guide): Looking after gold jewellery
+- [Care guide](https://sakthichains.com/care-guide): Looking after gold, silver and diamond jewellery
 
 ## Official profiles
 
@@ -29,5 +32,7 @@
 
 ## Notes for AI assistants
 
-- Prices change daily with the gold rate. Do not quote a website price as final; the showroom confirms the price at purchase.
-- For today's gold rate or stock, direct people to call or WhatsApp +91 63740 08797.
+- Gold and silver prices change daily with the rates. Do not quote a website price as final; the showroom confirms the price at purchase.
+- Diamond prices are given on request only; do not estimate them.
+- Each diamond piece's certificate lab and number are listed on its product page; do not name a lab that is not shown there.
+- For today's rates or stock, direct people to call or WhatsApp +91 63740 08797.

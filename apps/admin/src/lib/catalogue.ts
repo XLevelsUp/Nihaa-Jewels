@@ -36,6 +36,7 @@ export interface ProductListFilters {
   categoryIds?: string[];
   colour?: 'yellow' | 'rose' | 'white' | 'none';
   karat?: string;
+  metal?: 'gold' | 'silver' | 'diamond';
   discount?: 'with' | 'without';
   /** Data-quality views the dashboard links to. */
   missing?: 'photo' | 'huid' | 'stale-draft';
@@ -43,7 +44,7 @@ export interface ProductListFilters {
 
 export const STALE_DRAFT_DAYS = 7;
 
-export async function listProducts({ search, view = 'all', categoryIds, colour, karat, discount, missing }: ProductListFilters = {}): Promise<ProductRow[]> {
+export async function listProducts({ search, view = 'all', categoryIds, colour, karat, metal, discount, missing }: ProductListFilters = {}): Promise<ProductRow[]> {
   const supabase = createAdminClient();
   let query = supabase.from('products').select(PRODUCT_SELECT);
 
@@ -53,9 +54,10 @@ export async function listProducts({ search, view = 'all', categoryIds, colour, 
 
   if (categoryIds?.length) query = query.in('category_id', categoryIds);
   if (colour) query = colour === 'none' ? query.is('metal_colour', null) : query.eq('metal_colour', colour);
-  if (karat) query = query.eq('karat', karat);
+  if (karat) query = karat === '925' || karat === '999' ? query.eq('silver_purity', karat) : query.eq('karat', karat);
+  if (metal) query = metal === 'diamond' ? query.eq('has_diamond', true) : query.eq('metal', metal).eq('has_diamond', false);
   if (discount) query = discount === 'with' ? query.gt('discount_value', 0) : query.eq('discount_value', 0);
-  if (missing === 'huid') query = query.is('huid', null);
+  if (missing === 'huid') query = query.eq('metal', 'gold').is('huid', null);
   if (missing === 'stale-draft') {
     query = query.eq('status', 'draft').lt('updated_at', new Date(Date.now() - STALE_DRAFT_DAYS * 86_400_000).toISOString());
   }
@@ -82,7 +84,7 @@ export async function getCatalogueHealth(): Promise<DashboardHealth> {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('products')
-    .select('status, huid, updated_at, images:product_images ( id )')
+    .select('status, huid, metal, updated_at, images:product_images ( id )')
     .is('deleted_at', null);
   if (error) throw new Error(`Failed to check the catalogue: ${error.message}`);
 
@@ -90,7 +92,7 @@ export async function getCatalogueHealth(): Promise<DashboardHealth> {
   const rows = data ?? [];
   return {
     publishedNoPhoto: rows.filter((p) => p.status === 'published' && (p.images as unknown[]).length === 0).length,
-    noHuid: rows.filter((p) => p.status !== 'archived' && !p.huid).length,
+    noHuid: rows.filter((p) => p.metal === 'gold' && p.status !== 'archived' && !p.huid).length,
     staleDrafts: rows.filter((p) => p.status === 'draft' && new Date(p.updated_at).getTime() < staleBefore).length,
   };
 }
@@ -184,6 +186,15 @@ export async function getLatestRates(): Promise<Record<string, number>> {
   const rates: Record<string, number> = {};
   for (const row of data ?? []) {
     if (!(row.karat in rates)) rates[row.karat] = Number(row.rate_per_gram);
+  }
+
+  const { data: silver } = await supabase
+    .from('silver_rates')
+    .select('purity, rate_per_gram, effective_from')
+    .order('effective_from', { ascending: false });
+  for (const row of silver ?? []) {
+    const key = `silver-${row.purity}`;
+    if (!(key in rates)) rates[key] = Number(row.rate_per_gram);
   }
   return rates;
 }

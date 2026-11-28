@@ -75,7 +75,7 @@ export default async function InstagramFeed() {
     if (process.env.NODE_ENV === 'production') return null;
     // Development only: show where the section will sit and what is missing.
     return (
-      <section aria-label="Instagram feed setup" className="surface-page pt-24 md:pt-36">
+      <section aria-label="Instagram feed setup" className="surface-page pt-12 md:pt-20">
         <div className="container-wide">
           <div className="p-8 text-center" style={{ border: '1px dashed var(--c-border-firm)', background: 'var(--c-product-card)' }}>
             <p className="lux-eyebrow">Instagram section (visible in development only)</p>
@@ -98,8 +98,8 @@ export default async function InstagramFeed() {
   );
 
   return (
-    <section aria-labelledby="instagram-heading" className="surface-page overflow-hidden pt-24 md:pt-36">
-      <div className="container-wide grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-center lg:gap-12">
+    <section aria-labelledby="instagram-heading" className="surface-page overflow-hidden pt-16 md:pt-24">
+      <div className="container-wide grid grid-cols-1 gap-8 lg:grid-cols-12 lg:items-center lg:gap-12">
         <Reveal className="lg:col-span-4">
           <p className="lux-eyebrow flex items-center gap-2">
             <InstagramGlyph size={14} />
@@ -110,8 +110,8 @@ export default async function InstagramFeed() {
               {handle}
             </a>
           </h2>
-          <p className="lux-body mt-5">
-            New pieces as they leave the bench, behind the scenes at the showroom, and how our customers wear their gold.
+          <p className="lux-body mt-4">
+            New pieces as they leave the bench, behind the scenes at the showroom, and how our customers wear their gold, silver and diamond pieces.
           </p>
           <div className="mt-8 hidden lg:block">{follow}</div>
         </Reveal>
@@ -141,7 +141,7 @@ export default async function InstagramFeed() {
           <div className="mt-8">{follow}</div>
         </div>
       </div>
-      <div className="hidden h-14 lg:block" aria-hidden="true" />
+      <div className="hidden h-12 lg:block" aria-hidden="true" />
     </section>
   );
 }

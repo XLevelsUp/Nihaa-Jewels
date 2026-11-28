@@ -4,6 +4,7 @@
 import Navigation, { type NavItem } from './Navigation';
 import { getNavCategories, getSubCategories, getCategoryOccasions } from '@/lib/catalogue';
 import { PRICE_BANDS, OCCASIONS, titleCase } from '@/constants/filters';
+import { typeNavItems } from '@/constants/typeNav';
 
 
 
@@ -52,5 +53,5 @@ export default async function NavigationServer() {
     };
   });
 
-  return <Navigation items={items} />;
+  return <Navigation items={[...typeNavItems(categories), ...items]} />;
 }

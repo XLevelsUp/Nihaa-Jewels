@@ -5,18 +5,20 @@ import 'server-only';
 import { unstable_cache } from 'next/cache';
 
 import { supabase } from './supabase';
-import { calculatePrice, type PriceBreakdown } from './pricing';
-import type { Category, Karat, ProductWithRelations } from '@/types/database';
+import { calculatePrice, isPriceOnRequest, type PriceResult } from './pricing';
+import type { Category, Karat, ProductWithRelations, SilverPurity } from '@/types/database';
 
 export const GOLD_RATE_TAG = 'gold-rate';
 
 const PRODUCT_SELECT = `
-  id, sku, slug, name, description, category_id, karat,
+  id, sku, slug, name, description, category_id, metal, karat, silver_purity,
   gross_weight_g, net_weight_g, wastage_pct,
   making_charge_type, making_charge_value,
   stone_charges, hallmark_charges, discount_type, discount_value,
   occasion, gender, is_active, is_featured, status, deleted_at,
   metal_colour, huid, size_label, dimensions, closure, care_instructions,
+  has_diamond, diamond_carat, diamond_count, diamond_clarity, diamond_colour, diamond_cut,
+  certificate_lab, certificate_number, diamond_value, price_on_request,
   created_at, updated_at,
   category:categories ( id, slug, name ),
   images:product_images ( id, product_id, storage_path, alt_text, display_order, is_primary, created_at )
@@ -30,7 +32,7 @@ const CATEGORY_SELECT = `
 `;
 
 export interface PricedProduct extends ProductWithRelations {
-  price: PriceBreakdown | null;
+  price: PriceResult | null;
 }
 
 export const getCurrentRates = unstable_cache(
@@ -53,25 +55,61 @@ export const getCurrentRates = unstable_cache(
   { tags: [GOLD_RATE_TAG], revalidate: 3600 },
 );
 
-function withPrice(product: ProductWithRelations, rates: Record<Karat, number>): PricedProduct {
-  const rate = rates[product.karat];
-  if (!rate) return { ...product, price: null };
+export const getCurrentSilverRates = unstable_cache(
+  async (): Promise<Record<SilverPurity, number>> => {
+    const { data, error } = await supabase
+      .from('silver_rates')
+      .select('purity, rate_per_gram, effective_from')
+      .lte('effective_from', new Date().toISOString())
+      .order('effective_from', { ascending: false });
+
+    if (error) throw new Error(`Failed to load silver rates: ${error.message}`);
+
+    const rates = {} as Record<SilverPurity, number>;
+    for (const row of data ?? []) {
+      if (!(row.purity in rates)) rates[row.purity as SilverPurity] = Number(row.rate_per_gram);
+    }
+    return rates;
+  },
+  ['current-silver-rates'],
+  { tags: [GOLD_RATE_TAG], revalidate: 3600 },
+);
+
+function withPrice(
+  product: ProductWithRelations,
+  goldRates: Record<Karat, number>,
+  silverRates: Record<SilverPurity, number>,
+): PricedProduct {
+  const rate =
+    product.metal === 'silver'
+      ? product.silver_purity
+        ? silverRates[product.silver_purity]
+        : undefined
+      : product.karat
+        ? goldRates[product.karat]
+        : undefined;
+
+  if (!product.price_on_request && !rate) return { ...product, price: null };
 
   return {
     ...product,
     price: calculatePrice(
       {
         netWeightG: Number(product.net_weight_g),
+        metal: product.metal,
         karat: product.karat,
+        silverPurity: product.silver_purity,
         wastagePct: Number(product.wastage_pct),
         makingChargeType: product.making_charge_type,
         makingChargeValue: Number(product.making_charge_value),
         stoneCharges: Number(product.stone_charges),
         hallmarkCharges: Number(product.hallmark_charges),
+        diamondValue: product.has_diamond ? Number(product.diamond_value ?? 0) : 0,
+        priceOnRequest: product.price_on_request,
         discountType: product.discount_type,
         discountValue: Number(product.discount_value ?? 0),
       },
-      rate,
+      rate ?? 0,
     ),
   };
 }
@@ -129,14 +167,14 @@ export async function getProducts(filters: ProductFilters = {}): Promise<PricedP
   const { data, error } = await query;
   if (error) throw new Error(`Failed to load products: ${error.message}`);
 
-  const rates = await getCurrentRates();
-  let priced = (data ?? []).map((row) => withPrice(normalise(row), rates));
+  const [goldRates, silverRates] = await Promise.all([getCurrentRates(), getCurrentSilverRates()]);
+  let priced = (data ?? []).map((row) => withPrice(normalise(row), goldRates, silverRates));
 
   // Price is computed from today's rate rather than stored, so it cannot be a
   // database filter — it is applied after pricing.
   if (filters.minPrice != null || filters.maxPrice != null) {
     priced = priced.filter((p) => {
-      if (!p.price) return false;
+      if (!p.price || isPriceOnRequest(p.price)) return false;
       if (filters.minPrice != null && p.price.total < filters.minPrice) return false;
       if (filters.maxPrice != null && p.price.total > filters.maxPrice) return false;
       return true;
@@ -175,8 +213,8 @@ export async function getProductBySlug(slug: string): Promise<PricedProduct | nu
   if (error) throw new Error(`Failed to load product "${slug}": ${error.message}`);
   if (!data) return null;
 
-  const rates = await getCurrentRates();
-  return withPrice(normalise(data), rates);
+  const [goldRates, silverRates] = await Promise.all([getCurrentRates(), getCurrentSilverRates()]);
+  return withPrice(normalise(data), goldRates, silverRates);
 }
 
 export async function getCategories(): Promise<Category[]> {

@@ -1,6 +1,8 @@
 // Duplicated in apps/marketing/src/types/database.ts — no shared package. Change one, change the other.
 
 export type Karat = '18K' | '22K' | '24K';
+export type Metal = 'gold' | 'silver';
+export type SilverPurity = '925' | '999';
 export type MakingChargeType = 'per_gram' | 'flat' | 'percentage';
 export type RateSource = 'api' | 'manual';
 export type AppointmentStatus = 'new' | 'confirmed' | 'completed' | 'cancelled';
@@ -48,7 +50,9 @@ export interface Product {
   name: string;
   description: string | null;
   category_id: string;
-  karat: Karat;
+  metal: Metal;
+  karat: Karat | null;
+  silver_purity: SilverPurity | null;
   gross_weight_g: number;
   net_weight_g: number;
   wastage_pct: number;
@@ -70,6 +74,16 @@ export interface Product {
   dimensions: string | null;
   closure: string | null;
   care_instructions: string | null;
+  has_diamond: boolean;
+  diamond_carat: number | null;
+  diamond_count: number | null;
+  diamond_clarity: string | null;
+  diamond_colour: string | null;
+  diamond_cut: string | null;
+  certificate_lab: string | null;
+  certificate_number: string | null;
+  diamond_value: number | null;
+  price_on_request: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -98,6 +112,17 @@ export interface ProductImage {
 export interface GoldRate {
   id: string;
   karat: Karat;
+  rate_per_gram: number;
+  source: RateSource;
+  effective_from: string;
+  note: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface SilverRate {
+  id: string;
+  purity: SilverPurity;
   rate_per_gram: number;
   source: RateSource;
   effective_from: string;

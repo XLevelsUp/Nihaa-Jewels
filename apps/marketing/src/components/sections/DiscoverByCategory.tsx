@@ -36,7 +36,7 @@ export default function DiscoverByCategory({ categories }: DiscoverByCategoryPro
         };
 
   return (
-    <section aria-labelledby="collections-heading" className="surface-page pt-24 md:pt-36">
+    <section aria-labelledby="collections-heading" className="surface-page pt-12 md:pt-20">
       <div className="container-wide">
         <motion.header {...reveal(0)} className="mb-12 flex flex-col items-start gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <div>
@@ -52,7 +52,7 @@ export default function DiscoverByCategory({ categories }: DiscoverByCategoryPro
                 color: 'var(--c-text)',
               }}
             >
-              Gold, <em style={{ color: 'var(--c-burgundy)' }}>for every moment</em>
+              Gold &amp; silver, <em style={{ color: 'var(--c-burgundy)' }}>for every moment</em>
             </h2>
           </div>
 
@@ -67,7 +67,7 @@ export default function DiscoverByCategory({ categories }: DiscoverByCategoryPro
         </motion.header>
 
         {/* One row of equal square tiles: a quick way into each collection, not a gallery that fills the screen. */}
-        <div className={`grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 md:gap-x-5 ${LG_COLS[count] ?? 'lg:grid-cols-5'}`}>
+        <div className={`grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:gap-x-6 ${LG_COLS[count] ?? 'lg:grid-cols-5'}`}>
           {tiles.map((c, i) => (
             <motion.div key={c.slug} {...reveal(Math.min(i, 4) * 0.08)}>
               <Link href={`/collections/${c.slug}`} className="group block">

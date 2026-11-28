@@ -14,21 +14,21 @@ import { SHOWROOMS, STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
   title: 'Jewellery Showroom at Town Hall, Coimbatore',
-  description: `Visit the ${STORE.name} jewellery showroom at Town Hall, Coimbatore, for gold, diamond and silver jewellery. Every piece weighed and priced at the day's gold rate. Open Monday to Saturday.`,
+  description: `Visit the ${STORE.name} jewellery showroom at Town Hall, Coimbatore, for BIS hallmarked gold, 925/999 silver and certified diamond jewellery. Open Monday to Saturday.`,
   alternates: { canonical: '/stores' },
 };
 
 const VISIT_STEPS = [
   { title: 'Choose a time', body: 'Book a slot online or on WhatsApp. Walk-ins are welcome too.' },
   { title: 'Pieces set aside', body: 'Tell us what you would like to see and we have it waiting at a private counter.' },
-  { title: 'Weighed in front of you', body: 'Weight, wastage and making charges are shown openly at the day’s gold rate.' },
+  { title: 'Weighed in front of you', body: 'Weight, wastage and making charges are shown openly at the day’s gold or silver rate; diamond pieces are priced on request.' },
   { title: 'Take your time', body: 'Try pieces on, compare, and leave with a quote if you want to think it over.' },
 ];
 
 const SERVICES = [
   { title: 'Bespoke commissions', body: 'Bring a sketch or an idea and we will make it at our own bench.', href: '/custom-design' },
   { title: 'Old gold exchange', body: 'Old gold tested in front of you and valued at the day’s rate.', href: '/contact' },
-  { title: 'Gifting', body: 'Help choosing a first piece of gold, wrapped properly.', href: '/gifting' },
+  { title: 'Gifting', body: 'Help choosing a gift in gold, silver or diamond, wrapped properly.', href: '/gifting' },
   { title: 'Care & cleaning', body: 'Bring any Sakthi piece back to be cleaned and checked.', href: '/care-guide' },
 ];
 

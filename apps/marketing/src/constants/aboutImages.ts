@@ -51,6 +51,33 @@ export const ABOUT_SLOTS = {
     size: '2000 × 1000',
     brief: 'Goldsmiths at work in the workshop; a real photograph of the team is best.',
   },
+  aboutGold: {
+    file: 'about-gold',
+    label: 'Gold jewellery, 1000×1250, WebP',
+    alt: 'BIS hallmarked 22K gold chains and bangles arranged on warm velvet',
+    ratio: '4:5',
+    size: '1000 × 1250',
+    brief: '22K gold chains and bangles on warm velvet, soft daylight.',
+    hint: 'public/images/about/about-gold.webp',
+  },
+  aboutSilver: {
+    file: 'about-silver',
+    label: 'Silver jewellery, 1000×1250, WebP',
+    alt: '925 sterling and 999 fine silver chains and keepsakes on pale linen',
+    ratio: '4:5',
+    size: '1000 × 1250',
+    brief: 'Silver chains, anklets and everyday pieces on pale linen, soft daylight.',
+    hint: 'public/images/about/about-silver.webp',
+  },
+  aboutDiamond: {
+    file: 'about-diamond',
+    label: 'Diamond jewellery, 1000×1250, WebP',
+    alt: 'Certified diamond earrings and ring set in gold on dark velvet',
+    ratio: '4:5',
+    size: '1000 × 1250',
+    brief: 'Diamond earrings and ring set in gold on dark velvet, soft sparkle.',
+    hint: 'public/images/about/about-diamond.webp',
+  },
 } satisfies Record<string, ImageSlotSpec>;
 
 export type AboutSlotKey = keyof typeof ABOUT_SLOTS;

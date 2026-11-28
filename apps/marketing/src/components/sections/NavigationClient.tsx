@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import Navigation, { type NavItem } from './Navigation';
 import { PRICE_BANDS, OCCASIONS, titleCase } from '@/constants/filters';
+import { typeNavItems } from '@/constants/typeNav';
 import { supabase } from '@/lib/supabase';
 
 
@@ -27,8 +28,9 @@ export default function NavigationClient() {
 
         const parents = data.filter((c) => !c.parent_id && c.slug);
 
-        setItems(
-          parents.map((c) => {
+        setItems([
+          ...typeNavItems(parents),
+          ...parents.map((c) => {
             const base = `/collections/${c.slug}`;
             const children = data.filter((s) => s.parent_id === c.id);
 
@@ -66,7 +68,7 @@ export default function NavigationClient() {
               ],
             };
           }),
-        );
+        ]);
       });
 
     return () => {

@@ -13,12 +13,13 @@ import {
 } from '@mui/material';
 import { TriangleAlert } from 'lucide-react';
 
-import { publishGoldRate } from '@/app/actions/gold-rates';
+import { publishGoldRate, publishSilverRateAction } from '@/app/actions/gold-rates';
 import { PALETTE } from '@/constants/palette';
-import type { Karat } from '@/types/database';
 
 interface RateCardProps {
-  karat: Karat;
+  metal?: 'gold' | 'silver';
+  purity: string;
+  title: string;
   currentRate: number | null;
   source: string | null;
   effectiveFrom: string | null;
@@ -33,7 +34,7 @@ function formatRupees(amount: number): string {
   }).format(amount);
 }
 
-export default function RateCard({ karat, currentRate, source, effectiveFrom, canEdit }: RateCardProps) {
+export default function RateCard({ metal = 'gold', purity, title, currentRate, source, effectiveFrom, canEdit }: RateCardProps) {
   const [pending, startTransition] = useTransition();
   const [value, setValue] = useState('');
   const [note, setNote] = useState('');
@@ -42,13 +43,13 @@ export default function RateCard({ karat, currentRate, source, effectiveFrom, ca
 
   const submit = (confirmed: boolean) => {
     const formData = new FormData();
-    formData.set('karat', karat);
+    formData.set(metal === 'gold' ? 'karat' : 'purity', purity);
     formData.set('ratePerGram', value);
     formData.set('note', note);
     if (confirmed) formData.set('confirmed', 'true');
 
     startTransition(async () => {
-      const result = await publishGoldRate(formData);
+      const result = metal === 'gold' ? await publishGoldRate(formData) : await publishSilverRateAction(formData);
       setFeedback(result);
       setAwaitingConfirm(Boolean(result.needsConfirmation));
       if (result.ok) {
@@ -67,7 +68,7 @@ export default function RateCard({ karat, currentRate, source, effectiveFrom, ca
     <Paper variant="outlined" sx={{ p: 3 }}>
       <Box sx={{ mb: 2.5 }}>
         <Typography variant="h3" sx={{ fontSize: '1.05rem', mb: 0.5 }}>
-          {karat} Gold
+          {title}
         </Typography>
         {currentRate ? (
           <>
@@ -90,7 +91,7 @@ export default function RateCard({ karat, currentRate, source, effectiveFrom, ca
           </>
         ) : (
           <Typography sx={{ color: 'text.secondary', fontSize: '0.85rem', fontStyle: 'italic' }}>
-            No rate set — products in {karat} show &ldquo;price on enquiry&rdquo;.
+            No rate set. Products in {title.toLowerCase()} show no price until one is added.
           </Typography>
         )}
       </Box>

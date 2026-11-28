@@ -7,12 +7,14 @@ import Link from 'next/link';
 import Navigation from '@/components/sections/NavigationServer';
 import Footer from '@/components/sections/Footer';
 import VisitUs from '@/components/sections/VisitUs';
-import CatalogueBrowser, { type FilterGroup, type FilterOption } from '@/components/catalogue/CatalogueBrowser';
+import CatalogueBrowser from '@/components/catalogue/CatalogueBrowser';
 import { getCategories, getCategoryBySlug, getProducts, type PricedProduct } from '@/lib/catalogue';
+import { applyFilters, buildFilterGroups, inCategoryTree } from '@/lib/browse';
 import { homeSlot } from '@/lib/imageSlots';
 import { INDICATIVE_PRICE_DISCLAIMER } from '@/lib/pricing';
 import { productImageUrl } from '@/lib/supabase';
-import { AUDIENCES, PRICE_BANDS, isAudience, titleCase } from '@/constants/filters';
+import { AUDIENCES, isAudience } from '@/constants/filters';
+import { JEWELLERY_TYPES, isJewelleryType } from '@/constants/jewelleryTypes';
 import type { Category } from '@/types/database';
 
 type Params = Record<string, string | undefined>;
@@ -22,7 +24,11 @@ interface PageProps {
 }
 
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  const { gender, category } = await searchParams;
+  const { gender, category, type } = await searchParams;
+  if (isJewelleryType(type)) {
+    const t = JEWELLERY_TYPES[type];
+    return { title: t.metaTitle, description: t.metaDescription, alternates: { canonical: t.path } };
+  }
   if (isAudience(gender)) {
     const a = AUDIENCES[gender];
     return { title: a.heading, description: a.blurb };
@@ -39,46 +45,12 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   return {
     title: 'All Jewellery',
     description:
-      'Browse Sakthi Chains jewellery in one place: gold chains for men and women, necklaces, bangles and earrings in BIS hallmarked gold, filtered by purity, occasion and price.',
+      'Browse all Sakthi Chains jewellery in one place: gold, silver and diamond chains, necklaces, bangles and earrings, filtered by type, purity, occasion and price.',
     alternates: { canonical: '/collections' },
   };
 }
 
 export const revalidate = 3600;
-
-function applyFilters(products: PricedProduct[], sp: Params, categories: Category[]): PricedProduct[] {
-  const selected = categories.find((c) => c.slug === sp.category);
-  // A parent includes its sub-categories, matching the category pages.
-  const categoryIds = selected ? new Set([selected.id, ...categories.filter((c) => c.parent_id === selected.id).map((c) => c.id)]) : null;
-  const band = PRICE_BANDS.find((b) => b.label === sp.price);
-
-  const filtered = products.filter((p) => {
-    if (categoryIds && !categoryIds.has(p.category_id)) return false;
-    if (sp.karat && p.karat !== sp.karat) return false;
-    if (sp.occasion && !(p.occasion ?? []).includes(sp.occasion)) return false;
-    // Unisex pieces suit everyone, so they appear under women and men too.
-    if (sp.gender && p.gender !== sp.gender && !(p.gender === 'unisex' && (sp.gender === 'women' || sp.gender === 'men'))) return false;
-    if (band) {
-      if (!p.price) return false;
-      if (band.min != null && p.price.total < band.min) return false;
-      if (band.max != null && p.price.total > band.max) return false;
-    }
-    return true;
-  });
-
-  // Unpriced pieces sink to the end of a price sort rather than reading as ₹0.
-  const price = (p: PricedProduct, empty: number) => p.price?.total ?? empty;
-  switch (sp.sort) {
-    case 'price-asc':
-      return filtered.sort((a, b) => price(a, Infinity) - price(b, Infinity));
-    case 'price-desc':
-      return filtered.sort((a, b) => price(b, -Infinity) - price(a, -Infinity));
-    case 'newest':
-      return filtered.sort((a, b) => b.created_at.localeCompare(a.created_at));
-    default:
-      return filtered.sort((a, b) => Number(b.is_featured) - Number(a.is_featured) || b.created_at.localeCompare(a.created_at));
-  }
-}
 
 export default async function CollectionsPage({ searchParams }: PageProps) {
   const sp = await searchParams;
@@ -93,31 +65,11 @@ export default async function CollectionsPage({ searchParams }: PageProps) {
   }
 
   const products = applyFilters(all, sp, categories);
-  const inCategory = (c: Category, p: PricedProduct) =>
-    p.category_id === c.id || categories.some((k) => k.parent_id === c.id && k.id === p.category_id);
   const topLevel = categories
     .filter((c) => !c.parent_id)
-    .map((c) => ({ category: c, count: all.filter((p) => inCategory(c, p)).length }))
+    .map((c) => ({ category: c, count: all.filter((p) => inCategoryTree(categories, c, p)).length }))
     .filter((c) => c.count > 0);
-
-  const countBy = (values: string[]): FilterOption[] =>
-    [...new Set(values)].sort().map((v) => ({ value: v, label: titleCase(v), count: values.filter((x) => x === v).length }));
-
-  const groups: FilterGroup[] = [
-    { key: 'category', label: 'Category', options: topLevel.map(({ category, count }) => ({ value: category.slug, label: category.name, count })) },
-    {
-      key: 'price',
-      label: 'Price',
-      options: PRICE_BANDS.map((b) => ({
-        value: b.label,
-        label: b.label,
-        count: all.filter((p) => p.price && (b.min == null || p.price.total >= b.min) && (b.max == null || p.price.total <= b.max)).length,
-      })).filter((o) => o.count > 0),
-    },
-    { key: 'karat', label: 'Purity', options: countBy(all.map((p) => p.karat)).map((o) => ({ ...o, label: o.value })) },
-    { key: 'occasion', label: 'Occasion', options: countBy(all.flatMap((p) => p.occasion ?? [])) },
-    { key: 'gender', label: 'Worn by', options: countBy(all.map((p) => p.gender).filter(Boolean) as string[]) },
-  ];
+  const groups = buildFilterGroups(all, categories, { withType: true });
 
   // Builds a link that changes only the category, keeping the visitor's other filters.
   const categoryHref = (slug: string | null) => {
@@ -127,7 +79,8 @@ export default async function CollectionsPage({ searchParams }: PageProps) {
     return qs ? `/collections?${qs}` : '/collections';
   };
   const selectedCategory = topLevel.find((c) => c.category.slug === sp.category)?.category;
-  const heading = audience ? audience.heading : selectedCategory ? selectedCategory.name : 'All Jewellery';
+  const type = isJewelleryType(sp.type) ? JEWELLERY_TYPES[sp.type] : null;
+  const heading = audience ? audience.heading : selectedCategory ? selectedCategory.name : type ? type.title : 'All Jewellery';
 
   return (
     <div className="landing-bg min-h-screen">

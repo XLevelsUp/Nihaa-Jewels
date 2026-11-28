@@ -16,7 +16,19 @@ const productSchema = z.object({
   slug: z.string().trim().max(200).optional().or(z.literal('')),
   description: z.string().trim().max(5000).optional().or(z.literal('')),
   categoryId: z.string().uuid('Choose a collection'),
-  karat: z.enum(['18K', '22K', '24K']),
+  metal: z.enum(['gold', 'silver']),
+  karat: z.enum(['18K', '22K', '24K']).optional().or(z.literal('')),
+  silverPurity: z.enum(['925', '999']).optional().or(z.literal('')),
+  hasDiamond: z.boolean(),
+  diamondCarat: z.coerce.number().positive('Enter the total carat weight').optional().or(z.literal('')),
+  diamondCount: z.coerce.number().int('Whole number of stones').positive('At least one stone').optional().or(z.literal('')),
+  diamondClarity: z.string().trim().max(20).optional().or(z.literal('')),
+  diamondColour: z.string().trim().max(20).optional().or(z.literal('')),
+  diamondCut: z.string().trim().max(40).optional().or(z.literal('')),
+  certificateLab: z.string().trim().max(80).optional().or(z.literal('')),
+  certificateNumber: z.string().trim().max(60).optional().or(z.literal('')),
+  diamondValue: z.coerce.number().min(0, 'Cannot be negative').optional().or(z.literal('')),
+  priceOnRequest: z.boolean(),
   grossWeightG: z.coerce.number().positive('Gross weight must be greater than zero'),
   netWeightG: z.coerce.number().positive('Net weight must be greater than zero'),
   wastagePct: z.coerce.number().min(0).max(100),
@@ -68,7 +80,19 @@ function readForm(formData: FormData) {
     slug: (formData.get('slug') as string) ?? '',
     description: (formData.get('description') as string) ?? '',
     categoryId: (formData.get('categoryId') as string) ?? '',
+    metal: (formData.get('metal') as string) || 'gold',
     karat: (formData.get('karat') as string) ?? '',
+    silverPurity: (formData.get('silverPurity') as string) ?? '',
+    hasDiamond: formData.get('hasDiamond') === 'true',
+    diamondCarat: (formData.get('diamondCarat') as string) || undefined,
+    diamondCount: (formData.get('diamondCount') as string) || undefined,
+    diamondClarity: (formData.get('diamondClarity') as string) ?? '',
+    diamondColour: (formData.get('diamondColour') as string) ?? '',
+    diamondCut: (formData.get('diamondCut') as string) ?? '',
+    certificateLab: (formData.get('certificateLab') as string) ?? '',
+    certificateNumber: (formData.get('certificateNumber') as string) ?? '',
+    diamondValue: (formData.get('diamondValue') as string) || undefined,
+    priceOnRequest: formData.get('priceOnRequest') === 'true',
     grossWeightG: formData.get('grossWeightG'),
     netWeightG: formData.get('netWeightG'),
     wastagePct: formData.get('wastagePct') || 0,
@@ -117,6 +141,16 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     };
   }
 
+  if (input.metal === 'gold' && !input.karat) {
+    return { ok: false, message: 'Choose the gold purity.', fieldErrors: { karat: 'Choose 18K, 22K or 24K' } };
+  }
+  if (input.metal === 'silver' && !input.silverPurity) {
+    return { ok: false, message: 'Choose the silver purity.', fieldErrors: { silverPurity: 'Choose 925 or 999' } };
+  }
+  if (input.hasDiamond && input.metal !== 'gold') {
+    return { ok: false, message: 'Diamond jewellery is set in gold. Choose Diamond as the type and pick the gold purity.', fieldErrors: { karat: 'Choose the gold purity' } };
+  }
+
   if (input.discountType === 'percentage' && input.discountValue > 100) {
     return {
       ok: false,
@@ -145,15 +179,35 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
   if (input.status === 'published') {
     const blocker = input.id ? await publishBlocker(supabase, input.id) : 'Create the product as a draft and add a photo before publishing.';
     if (blocker) return { ok: false, message: blocker, fieldErrors: { status: blocker } };
+    if (input.hasDiamond && !(input.certificateLab && input.certificateNumber)) {
+      const message = 'Add the certificate lab and number before publishing a diamond piece.';
+      return { ok: false, message, fieldErrors: { certificateNumber: 'Required to publish' } };
+    }
   }
 
+  const gold = input.metal === 'gold';
+  const diamond = input.hasDiamond;
+  const orNull = <T,>(value: T | '' | undefined) => (diamond && value !== '' && value !== undefined ? value : null);
+
   const row = {
+    metal: input.metal,
+    karat: gold ? input.karat || null : null,
+    silver_purity: gold ? null : input.silverPurity || null,
+    has_diamond: diamond,
+    diamond_carat: orNull(input.diamondCarat),
+    diamond_count: orNull(input.diamondCount),
+    diamond_clarity: orNull(input.diamondClarity),
+    diamond_colour: orNull(input.diamondColour),
+    diamond_cut: orNull(input.diamondCut),
+    certificate_lab: orNull(input.certificateLab),
+    certificate_number: orNull(input.certificateNumber),
+    diamond_value: orNull(input.diamondValue),
+    price_on_request: input.priceOnRequest,
     sku: input.sku,
     slug,
     name: input.name,
     description: input.description || null,
     category_id: input.categoryId,
-    karat: input.karat,
     gross_weight_g: input.grossWeightG,
     net_weight_g: input.netWeightG,
     wastage_pct: input.wastagePct,
@@ -167,8 +221,8 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
     gender: input.gender || null,
     status: input.status,
     is_featured: input.isFeatured ?? false,
-    metal_colour: input.metalColour || null,
-    huid: input.huid || null,
+    metal_colour: gold ? input.metalColour || null : null,
+    huid: gold ? input.huid || null : null,
     size_label: input.sizeLabel || null,
     dimensions: input.dimensions || null,
     closure: input.closure || null,
@@ -190,16 +244,23 @@ export async function saveProduct(formData: FormData): Promise<ActionResult> {
   return { ok: true, message: input.id ? `Product updated. ${STATUS_MESSAGES[input.status]}` : 'Product created.', id: data.id };
 }
 
-// The same rule the form's checklist shows, enforced here so the quick status menu in the list cannot skip it.
+// The same rules the form's checklist shows, enforced here so the quick status menu in the list cannot skip them.
 async function publishBlocker(supabase: ReturnType<typeof createAdminClient>, id: string): Promise<string | null> {
-  const { count } = await supabase.from('product_images').select('id', { count: 'exact', head: true }).eq('product_id', id);
-  return count ? null : 'Add at least one photo before publishing.';
+  const [{ count }, { data: product }] = await Promise.all([
+    supabase.from('product_images').select('id', { count: 'exact', head: true }).eq('product_id', id),
+    supabase.from('products').select('has_diamond, certificate_lab, certificate_number').eq('id', id).maybeSingle(),
+  ]);
+  if (!count) return 'Add at least one photo before publishing.';
+  if (product?.has_diamond && !(product.certificate_lab && product.certificate_number)) {
+    return 'Add the certificate lab and number before publishing a diamond piece.';
+  }
+  return null;
 }
 
 function uniqueConflict(error: { code?: string; message: string }): ActionResult | null {
   if (error.code !== '23505') return null;
-  const field = error.message.includes('huid') ? 'huid' : error.message.includes('sku') ? 'sku' : 'slug';
-  const label = field === 'huid' ? 'HUID' : field === 'sku' ? 'SKU' : 'web address (slug)';
+  const field = error.message.includes('certificate') ? 'certificateNumber' : error.message.includes('huid') ? 'huid' : error.message.includes('sku') ? 'sku' : 'slug';
+  const label = { certificateNumber: 'certificate number', huid: 'HUID', sku: 'SKU', slug: 'web address (slug)' }[field];
   return { ok: false, message: `That ${label} is already used by another product.`, fieldErrors: { [field]: 'Already in use' } };
 }
 
@@ -245,7 +306,7 @@ export async function restoreProduct(id: string): Promise<ActionResult> {
 }
 
 // Columns a copy must not inherit: identity, timestamps, and anything tied to one physical piece.
-const NOT_COPIED = ['id', 'created_at', 'updated_at', 'is_active', 'deleted_at', 'huid', 'images'];
+const NOT_COPIED = ['id', 'created_at', 'updated_at', 'is_active', 'deleted_at', 'huid', 'certificate_number', 'images'];
 
 export async function duplicateProduct(id: string): Promise<ActionResult> {
   const auth = await authorize('products.edit');

@@ -1,22 +1,46 @@
-// GRT-style price breakup: each component's value, any discount on it and the final value, then GST on the discounted subtotal and the grand total.
+// GRT-style price breakup for gold and silver, or a "Price on request" card with booking actions.
 
-import { formatRupees, INDICATIVE_PRICE_DISCLAIMER, type PriceBreakdown } from '@/lib/pricing';
+import BookAppointmentButton from './BookAppointmentButton';
+import { formatRupees, INDICATIVE_PRICE_DISCLAIMER, isPriceOnRequest, type PriceResult } from '@/lib/pricing';
 
 interface PriceBreakdownTableProps {
-  price: PriceBreakdown;
+  price: PriceResult;
   netWeightG: number;
-  karat: string;
+  productId?: string | null;
+  productName?: string;
 }
 
-export default function PriceBreakdownTable({ price, netWeightG, karat }: PriceBreakdownTableProps) {
+export default function PriceBreakdownTable({ price, netWeightG, productId, productName }: PriceBreakdownTableProps) {
+  const cardStyle = {
+    border: '1px solid color-mix(in srgb, var(--c-burgundy) 14%, transparent)',
+    background: 'var(--c-product-card)',
+  };
+
+  if (isPriceOnRequest(price)) {
+    return (
+      <section aria-labelledby="price-breakup" className="p-5 md:p-6" style={cardStyle}>
+        <h2 id="price-breakup" className="lux-eyebrow mb-3" style={{ letterSpacing: '0.22em' }}>Price Breakup</h2>
+        <p className="text-[1.2rem] font-semibold" style={{ color: 'var(--c-burgundy)' }}>Price on request</p>
+        <p className="text-soft mt-1 mb-4 text-[0.8rem] leading-relaxed">
+          Book a showroom visit or message us on WhatsApp for the current price and certificate details.
+        </p>
+        <BookAppointmentButton productId={productId} productName={productName} />
+      </section>
+    );
+  }
+
   const discounted = price.discount > 0;
   const originalGst = price.originalTotal - price.originalSubtotal;
+  const metalLabel = price.purityLabel.charAt(0).toUpperCase() + price.purityLabel.slice(1);
 
   const rows: { label: string; hint?: string; value: number; discount: number }[] = [
-    { label: `Gold (${karat})`, hint: `${netWeightG} g × ${formatRupees(price.ratePerGram)}/g`, value: price.metalCost, discount: 0 },
+    { label: metalLabel, hint: `${netWeightG} g × ${formatRupees(price.ratePerGram)}/g`, value: price.metalCost, discount: 0 },
+  ];
+  if (price.diamondValue > 0) rows.push({ label: 'Diamond value', value: price.diamondValue, discount: 0 });
+  rows.push(
     { label: 'Wastage', value: price.wastageCost, discount: price.wastageDiscount },
     { label: 'Making charges', value: price.makingCharges, discount: price.makingDiscount },
-  ];
+  );
   if (price.stoneCharges > 0) rows.push({ label: 'Stones', value: price.stoneCharges, discount: 0 });
   if (price.hallmarkCharges > 0) rows.push({ label: 'Hallmarking', value: price.hallmarkCharges, discount: 0 });
 
@@ -24,7 +48,7 @@ export default function PriceBreakdownTable({ price, netWeightG, karat }: PriceB
   const rule = { borderTop: '1px solid color-mix(in srgb, var(--c-burgundy) 12%, transparent)' };
 
   return (
-    <section aria-labelledby="price-breakup" className="p-5 md:p-6" style={{ border: '1px solid color-mix(in srgb, var(--c-burgundy) 14%, transparent)', background: 'var(--c-product-card)' }}>
+    <section aria-labelledby="price-breakup" className="p-5 md:p-6" style={cardStyle}>
       <h2 id="price-breakup" className="lux-eyebrow mb-4" style={{ letterSpacing: '0.22em' }}>Price Breakup</h2>
 
       <table className="w-full border-collapse text-[0.8rem]">

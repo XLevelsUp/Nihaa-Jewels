@@ -16,12 +16,25 @@ import {
   Snackbar,
   Switch,
   TextField,
+  ToggleButton,
+  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { CheckCircle2, Circle, Tag, X } from 'lucide-react';
+import { CheckCircle2, Circle, Gem, Tag, X } from 'lucide-react';
 
 import { saveProduct } from '@/app/actions/products';
-import { calculatePrice, formatRupees, type DiscountType, type Karat, type MakingChargeType } from '@/lib/pricing';
+import {
+  calculatePrice,
+  formatRupees,
+  isPriceOnRequest,
+  purityLabel,
+  rateKey,
+  type DiscountType,
+  type Karat,
+  type MakingChargeType,
+  type Metal,
+  type SilverPurity,
+} from '@/lib/pricing';
 import { PALETTE } from '@/constants/palette';
 import { deniedMessage } from '@/lib/permissions';
 import { OCCASIONS, GENDERS } from '@/constants/filters';
@@ -37,6 +50,10 @@ interface ProductFormProps {
 }
 
 const KARATS: Karat[] = ['22K', '18K', '24K'];
+const SILVER_PURITIES: { value: SilverPurity; label: string }[] = [
+  { value: '925', label: '925 · Sterling silver' },
+  { value: '999', label: '999 · Fine silver' },
+];
 
 // New products start as drafts so nothing reaches the website half-finished.
 const STATUSES: { value: ProductStatus; label: string; hint: string }[] = [
@@ -48,7 +65,7 @@ const STATUSES: { value: ProductStatus; label: string; hint: string }[] = [
 const MAKING_TYPES: { value: MakingChargeType; label: string; hint: string }[] = [
   { value: 'per_gram', label: 'Per gram', hint: '₹ per gram of gold' },
   { value: 'flat', label: 'Fixed amount', hint: 'One flat ₹ amount' },
-  { value: 'percentage', label: 'Percentage', hint: '% of the gold value' },
+  { value: 'percentage', label: 'Percentage', hint: '% of the metal value' },
 ];
 
 export default function ProductForm({ product, categories, rates, perms = { canPublish: true, canDiscount: true } }: ProductFormProps) {
@@ -63,7 +80,19 @@ export default function ProductForm({ product, categories, rates, perms = { canP
     slug: product?.slug ?? '',
     description: product?.description ?? '',
     categoryId: product?.category_id ?? categories[0]?.id ?? '',
+    metal: (product?.metal ?? 'gold') as Metal,
     karat: (product?.karat ?? '22K') as Karat,
+    silverPurity: (product?.silver_purity ?? '925') as SilverPurity,
+    hasDiamond: product?.has_diamond ?? false,
+    diamondCarat: product?.diamond_carat != null ? String(product.diamond_carat) : '',
+    diamondCount: product?.diamond_count != null ? String(product.diamond_count) : '',
+    diamondClarity: product?.diamond_clarity ?? '',
+    diamondColour: product?.diamond_colour ?? '',
+    diamondCut: product?.diamond_cut ?? '',
+    certificateLab: product?.certificate_lab ?? '',
+    certificateNumber: product?.certificate_number ?? '',
+    diamondValue: product?.diamond_value != null ? String(product.diamond_value) : '',
+    priceOnRequest: product?.price_on_request ?? false,
     grossWeightG: product ? String(product.gross_weight_g) : '',
     netWeightG: product ? String(product.net_weight_g) : '',
     wastagePct: product ? String(product.wastage_pct) : '10',
@@ -98,24 +127,42 @@ export default function ProductForm({ product, categories, rates, perms = { canP
   };
 
   // Recomputed as fields change, so staff see the customer-facing price before saving.
+  const isGold = form.metal === 'gold';
+  const metalWord = isGold ? 'gold' : 'silver';
+  const purity = purityLabel(form.metal, form.karat, form.silverPurity);
+  const currentRate = rates[rateKey(form.metal, form.karat, form.silverPurity) ?? ''];
+
   const preview = useMemo(() => {
-    const rate = rates[form.karat];
-    if (!rate) return null;
-    return calculatePrice(
+    if (!currentRate) return null;
+    const res = calculatePrice(
       {
         netWeightG: Number(form.netWeightG),
+        metal: form.metal,
         karat: form.karat,
+        silverPurity: form.silverPurity,
         wastagePct: Number(form.wastagePct) || 0,
         makingChargeType: form.makingChargeType,
         makingChargeValue: Number(form.makingChargeValue) || 0,
         stoneCharges: Number(form.stoneCharges) || 0,
         hallmarkCharges: Number(form.hallmarkCharges) || 0,
+        diamondValue: form.hasDiamond && form.diamondValue ? Number(form.diamondValue) : 0,
+        priceOnRequest: false,
         discountType: form.discountType,
         discountValue: Number(form.discountValue) || 0,
       },
-      rate,
+      currentRate,
     );
-  }, [form, rates]);
+    return res && !isPriceOnRequest(res) ? res : null;
+  }, [form, currentRate]);
+
+  const productType: 'gold' | 'silver' | 'diamond' = form.hasDiamond ? 'diamond' : form.metal;
+  const chooseType = (type: 'gold' | 'silver' | 'diamond') => {
+    setForm((prev) =>
+      type === 'diamond'
+        ? { ...prev, metal: 'gold', hasDiamond: true, priceOnRequest: true }
+        : { ...prev, metal: type, hasDiamond: false, priceOnRequest: prev.hasDiamond ? false : prev.priceOnRequest },
+    );
+  };
 
   // Unsaved-changes tracking: compared against the last saved state, so saving clears the warning.
   const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(form));
@@ -144,10 +191,15 @@ export default function ProductForm({ product, categories, rates, perms = { canP
   const photoCount = product?.images.length ?? 0;
   const checklist = [
     { label: 'Name and collection', done: Boolean(form.name.trim() && form.categoryId), essential: true },
-    { label: 'Net gold weight', done: Number(form.netWeightG) > 0, essential: true },
-    { label: `Price (needs a ${form.karat} gold rate)`, done: Boolean(preview), essential: true },
+    { label: `Net ${metalWord} weight`, done: Number(form.netWeightG) > 0, essential: true },
+    form.priceOnRequest
+      ? { label: 'Price on request (no price shown)', done: true, essential: true }
+      : { label: `Price (needs today's ${purity} rate)`, done: Boolean(preview), essential: true },
     { label: product ? 'At least one photo' : 'At least one photo (add after creating)', done: photoCount > 0, essential: true },
-    { label: 'HUID', done: /^[A-Z0-9]{6}$/.test(form.huid), essential: false },
+    ...(form.hasDiamond
+      ? [{ label: 'Diamond certificate lab and number', done: Boolean(form.certificateLab.trim() && form.certificateNumber.trim()), essential: true }]
+      : []),
+    ...(isGold ? [{ label: 'HUID', done: /^[A-Z0-9]{6}$/.test(form.huid), essential: false }] : []),
     { label: 'Description', done: form.description.trim().length > 0, essential: false },
   ];
   const readyToPublish = checklist.every((c) => c.done || !c.essential);
@@ -188,7 +240,8 @@ export default function ProductForm({ product, categories, rates, perms = { canP
   const SECTIONS = [
     { id: 'details', label: 'Details' },
     { id: 'charges', label: 'Weight & charges' },
-    { id: 'gold-details', label: 'Gold details' },
+    ...(form.hasDiamond ? [{ id: 'diamond', label: 'Diamonds' }] : []),
+    { id: 'gold-details', label: isGold ? 'Gold details' : 'Silver details' },
     { id: 'status', label: 'Status & visibility' },
   ];
 
@@ -238,6 +291,30 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                 helperText="Shown on the product page"
               />
 
+              <Box>
+                <Typography sx={{ fontSize: '0.78rem', color: 'text.secondary', mb: 1 }}>Jewellery type</Typography>
+                <ToggleButtonGroup
+                  exclusive
+                  value={productType}
+                  onChange={(_, value: 'gold' | 'silver' | 'diamond' | null) => value && chooseType(value)}
+                  aria-label="Jewellery type"
+                  size="small"
+                  sx={{ display: 'flex', '& .MuiToggleButton-root': { flex: { xs: 1, sm: '0 0 auto' }, px: 3, minHeight: 44 } }}
+                >
+                  <ToggleButton value="gold">Gold</ToggleButton>
+                  <ToggleButton value="silver">Silver</ToggleButton>
+                  <ToggleButton value="diamond" sx={{ gap: 0.75 }}>
+                    <Gem size={15} aria-hidden="true" />
+                    Diamond
+                  </ToggleButton>
+                </ToggleButtonGroup>
+                {productType === 'diamond' && (
+                  <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mt: 1 }}>
+                    Choose the gold purity of the setting below; the diamond and certificate details go in the Diamonds section.
+                  </Typography>
+                )}
+              </Box>
+
               <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
                 <TextField
                   select
@@ -257,21 +334,41 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                   ))}
                 </TextField>
 
-                <TextField
-                  select
-                  label="Gold purity"
-                  value={form.karat}
-                  onChange={(e) => set('karat', e.target.value)}
-                  required
-                  fullWidth
-                  helperText={rates[form.karat] ? `Rate: ${formatRupees(rates[form.karat])}/g` : 'No rate set for this purity'}
-                >
-                  {KARATS.map((k) => (
-                    <MenuItem key={k} value={k}>
-                      {k}
-                    </MenuItem>
-                  ))}
-                </TextField>
+                {isGold ? (
+                  <TextField
+                    select
+                    label={form.hasDiamond ? 'Gold purity of the setting' : 'Gold purity'}
+                    value={form.karat}
+                    onChange={(e) => set('karat', e.target.value)}
+                    required
+                    fullWidth
+                    error={Boolean(errors.karat)}
+                    helperText={errors.karat || (currentRate ? `Today's rate: ${formatRupees(currentRate)}/g` : 'No rate set for this purity')}
+                  >
+                    {KARATS.map((k) => (
+                      <MenuItem key={k} value={k}>
+                        {k}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                ) : (
+                  <TextField
+                    select
+                    label="Silver purity"
+                    value={form.silverPurity}
+                    onChange={(e) => set('silverPurity', e.target.value)}
+                    required
+                    fullWidth
+                    error={Boolean(errors.silverPurity)}
+                    helperText={errors.silverPurity || (currentRate ? `Today's rate: ${formatRupees(currentRate)}/g` : 'No silver rate set for this purity')}
+                  >
+                    {SILVER_PURITIES.map((p) => (
+                      <MenuItem key={p.value} value={p.value}>
+                        {p.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
               </Box>
             </Box>
           </Paper>
@@ -300,7 +397,7 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                   helperText={errors.grossWeightG || 'Including stones'}
                 />
                 <TextField
-                  label="Net gold weight"
+                  label={`Net ${metalWord} weight`}
                   value={form.netWeightG}
                   onChange={(e) => set('netWeightG', e.target.value)}
                   type="number"
@@ -310,7 +407,7 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                     htmlInput: { step: '0.001', min: 0 },
                   }}
                   error={Boolean(errors.netWeightG)}
-                  helperText={errors.netWeightG || 'Gold only — this sets the price'}
+                  helperText={errors.netWeightG || `${isGold ? 'Gold' : 'Silver'} only, without stones; this sets the price`}
                 />
                 <TextField
                   label="Wastage"
@@ -400,7 +497,7 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                       disabled={!perms.canDiscount}
                       value={form.discountType}
                       onChange={(e) => set('discountType', e.target.value)}
-                      helperText="Taken off wastage + making only; never the gold value."
+                      helperText="Taken off wastage + making only; never the metal value."
                     >
                       <MenuItem value="percentage">Percentage (%)</MenuItem>
                       <MenuItem value="flat">Flat amount (₹)</MenuItem>
@@ -447,14 +544,94 @@ export default function ProductForm({ product, categories, rates, perms = { canP
             </Box>
           </Paper>
 
+          {form.hasDiamond && (
+            <Paper variant="outlined" id="diamond" sx={sectionSx}>
+              <Typography variant="h3" sx={{ display: 'flex', alignItems: 'center', gap: 1, fontSize: '1rem', mb: 0.5 }}>
+                <Gem size={16} aria-hidden="true" />
+                Diamonds
+              </Typography>
+              <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 2.5 }}>
+                Copy these exactly from the diamond certificate. The lab and certificate number are needed to publish.
+              </Typography>
+              <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
+                <TextField
+                  label="Certificate lab"
+                  value={form.certificateLab}
+                  onChange={(e) => set('certificateLab', e.target.value)}
+                  error={Boolean(errors.certificateLab)}
+                  helperText={errors.certificateLab || 'As printed on the certificate'}
+                />
+                <TextField
+                  label="Certificate number"
+                  value={form.certificateNumber}
+                  onChange={(e) => set('certificateNumber', e.target.value)}
+                  error={Boolean(errors.certificateNumber)}
+                  helperText={errors.certificateNumber || 'Unique to this piece'}
+                />
+                <TextField
+                  label="Total diamond weight"
+                  value={form.diamondCarat}
+                  onChange={(e) => set('diamondCarat', e.target.value)}
+                  type="number"
+                  error={Boolean(errors.diamondCarat)}
+                  helperText={errors.diamondCarat || 'All stones together'}
+                  slotProps={{
+                    input: { endAdornment: <InputAdornment position="end">ct</InputAdornment> },
+                    htmlInput: { step: '0.001', min: 0 },
+                  }}
+                />
+                <TextField
+                  label="Number of diamonds"
+                  value={form.diamondCount}
+                  onChange={(e) => set('diamondCount', e.target.value)}
+                  type="number"
+                  error={Boolean(errors.diamondCount)}
+                  helperText={errors.diamondCount}
+                  slotProps={{ htmlInput: { step: '1', min: 1 } }}
+                />
+                <TextField
+                  label="Clarity"
+                  value={form.diamondClarity}
+                  onChange={(e) => set('diamondClarity', e.target.value)}
+                  helperText="e.g. VS1, SI2"
+                />
+                <TextField
+                  label="Colour"
+                  value={form.diamondColour}
+                  onChange={(e) => set('diamondColour', e.target.value)}
+                  helperText="e.g. E, G-H"
+                />
+                <TextField
+                  label="Cut"
+                  value={form.diamondCut}
+                  onChange={(e) => set('diamondCut', e.target.value)}
+                  helperText="e.g. Round brilliant, Excellent"
+                />
+                <TextField
+                  label="Diamond value"
+                  value={form.diamondValue}
+                  onChange={(e) => set('diamondValue', e.target.value)}
+                  type="number"
+                  error={Boolean(errors.diamondValue)}
+                  helperText={errors.diamondValue || 'Kept for later; not shown while Price on request is on'}
+                  slotProps={{
+                    input: { startAdornment: <InputAdornment position="start">₹</InputAdornment> },
+                    htmlInput: { step: '1', min: 0 },
+                  }}
+                />
+              </Box>
+            </Paper>
+          )}
+
           <Paper variant="outlined" id="gold-details" sx={sectionSx}>
             <Typography variant="h3" sx={{ fontSize: '1rem', mb: 0.5 }}>
-              Gold details
+              {isGold ? 'Gold details' : 'Silver details'}
             </Typography>
             <Typography sx={{ fontSize: '0.75rem', color: 'text.secondary', mb: 2.5 }}>
               Shown in the product&rsquo;s specifications on the website. Leave blank what does not apply.
             </Typography>
             <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2.5 }}>
+              {isGold && (
               <TextField
                 select
                 label="Gold colour"
@@ -466,6 +643,8 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                 <MenuItem value="rose">Rose gold</MenuItem>
                 <MenuItem value="white">White gold</MenuItem>
               </TextField>
+              )}
+              {isGold && (
               <TextField
                 label="HUID"
                 value={form.huid}
@@ -474,6 +653,7 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                 helperText={errors.huid || 'BIS hallmark ID: 6 letters or digits, unique to this piece'}
                 slotProps={{ htmlInput: { maxLength: 6, style: { textTransform: 'uppercase', letterSpacing: '0.15em' } } }}
               />
+              )}
               <TextField
                 label="Size or length"
                 value={form.sizeLabel}
@@ -594,6 +774,17 @@ export default function ProductForm({ product, categories, rates, perms = { canP
                     </Box>
                   }
                 />
+                <FormControlLabel
+                  control={<Switch checked={form.priceOnRequest} onChange={(e) => set('priceOnRequest', e.target.checked)} />}
+                  label={
+                    <Box>
+                      <Typography sx={{ fontSize: '0.88rem' }}>Price on request</Typography>
+                      <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }}>
+                        Hides the price on the website
+                      </Typography>
+                    </Box>
+                  }
+                />
               </Box>
             </Box>
           </Paper>
@@ -642,10 +833,21 @@ export default function ProductForm({ product, categories, rates, perms = { canP
               Updates as you type.
             </Typography>
 
+            {form.priceOnRequest && (
+              <Alert severity="info" icon={false} sx={{ mb: 2, py: 0.5 }}>
+                <Typography sx={{ fontSize: '0.85rem', fontWeight: 600 }}>Price on request</Typography>
+                <Typography sx={{ fontSize: '0.75rem' }}>
+                  Customers see no price. The figures below are for staff reference
+                  {form.hasDiamond ? ' and cover the metal only, not the diamonds' : ''}.
+                </Typography>
+              </Alert>
+            )}
+
             {preview ? (
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                 {[
-                  { label: `Gold (${form.karat})`, value: preview.metalCost },
+                  { label: purity.charAt(0).toUpperCase() + purity.slice(1), value: preview.metalCost },
+                  ...(preview.diamondValue > 0 ? [{ label: 'Diamond value', value: preview.diamondValue }] : []),
                   { label: 'Wastage', value: preview.wastageCost },
                   { label: 'Making', value: preview.makingCharges },
                   ...(preview.stoneCharges > 0 ? [{ label: 'Stones', value: preview.stoneCharges }] : []),
@@ -696,9 +898,9 @@ export default function ProductForm({ product, categories, rates, perms = { canP
               </Box>
             ) : (
               <Typography sx={{ fontSize: '0.82rem', color: 'text.secondary', fontStyle: 'italic' }}>
-                {rates[form.karat]
+                {currentRate
                   ? 'Enter a net weight to see the price.'
-                  : `No ${form.karat} rate is set. Set one under Gold Rates.`}
+                  : `No ${purity} rate is set. Set one under Rates.`}
               </Typography>
             )}
           </Paper>
@@ -737,7 +939,7 @@ export default function ProductForm({ product, categories, rates, perms = { canP
         >
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography sx={{ fontSize: '1.05rem', fontWeight: 700, color: 'primary.main' }}>
-              {preview ? formatRupees(preview.total) : '—'}
+              {form.priceOnRequest ? 'Price on request' : preview ? formatRupees(preview.total) : '—'}
             </Typography>
             <Typography sx={{ fontSize: '0.7rem', color: 'text.secondary' }}>{dirty ? 'Unsaved changes' : 'All changes saved'}</Typography>
           </Box>

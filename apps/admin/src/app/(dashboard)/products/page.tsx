@@ -11,9 +11,10 @@ export const dynamic = 'force-dynamic';
 
 const VIEWS: ProductView[] = ['all', 'draft', 'published', 'archived', 'deleted'];
 const COLOURS = ['yellow', 'rose', 'white', 'none'] as const;
-const KARATS = ['18K', '22K', '24K'];
+const KARATS = ['18K', '22K', '24K', '925', '999'];
+const METALS = ['gold', 'silver', 'diamond'] as const;
 
-type Params = { q?: string; view?: string; category?: string; colour?: string; karat?: string; discount?: string; missing?: string };
+type Params = { q?: string; view?: string; category?: string; metal?: string; colour?: string; karat?: string; discount?: string; missing?: string };
 const MISSING = ['photo', 'huid', 'stale-draft'] as const;
 
 interface PageProps {
@@ -30,6 +31,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
   // Only known values reach the query; anything else in the URL is ignored rather than erroring.
   const filters: ProductTableFilters = {
     category: sp.category ?? '',
+    metal: (METALS as readonly string[]).includes(sp.metal ?? '') ? (sp.metal as ProductTableFilters['metal']) : '',
     colour: (COLOURS as readonly string[]).includes(sp.colour ?? '') ? (sp.colour as ProductTableFilters['colour']) : '',
     karat: KARATS.includes(sp.karat ?? '') ? sp.karat! : '',
     discount: sp.discount === 'with' || sp.discount === 'without' ? sp.discount : '',
@@ -47,6 +49,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
       categoryIds,
       colour: filters.colour || undefined,
       karat: filters.karat || undefined,
+      metal: filters.metal || undefined,
       discount: filters.discount || undefined,
       missing: filters.missing || undefined,
     }),
@@ -70,7 +73,7 @@ export default async function ProductsPage({ searchParams }: PageProps) {
         <Box>
           <Typography variant="h1">Products</Typography>
           <Typography sx={{ color: 'text.secondary', mt: 0.5, fontSize: '0.9rem' }}>
-            {counts.published} published of {counts.all} in the catalogue. Prices are calculated from today&rsquo;s gold rate.
+            {counts.published} published of {counts.all} in the catalogue. Prices are calculated from today&rsquo;s gold and silver rates.
           </Typography>
         </Box>
         <Button component={Link} href="/products/new" variant="contained" startIcon={<Plus size={16} />}>

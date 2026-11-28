@@ -1,6 +1,7 @@
 // The house's story in the homepage's editorial style; history copy is placeholder (no dates or names) until the client confirms the facts.
 
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
 import Navigation from '@/components/sections/NavigationServer';
 import Footer from '@/components/sections/Footer';
@@ -12,10 +13,11 @@ import { aboutSlot, homeSlot } from '@/lib/imageSlots';
 export const metadata: Metadata = {
   title: 'Our Story',
   description:
-    'Sakthi Chains began with a single thread of gold. Discover the house, the craft and the hands behind our BIS hallmarked gold jewellery.',
+    'Sakthi Chains began with gold chains and today offers BIS hallmarked gold, 925 and 999 silver, and certified diamond jewellery at Town Hall, Coimbatore.',
+  alternates: { canonical: '/about' },
   openGraph: {
     title: 'Our Story | Sakthi Chains',
-    description: 'The house, the craft and the hands behind Sakthi Chains gold jewellery.',
+    description: 'The house, the craft and the gold, silver and diamond jewellery at Sakthi Chains, Coimbatore.',
     type: 'website',
   },
 };
@@ -24,7 +26,7 @@ const CHAPTERS = [
   { numeral: 'I', title: 'The first chain', body: 'A single bench, a coil of gold wire and a goldsmith who made chains that lasted.' },
   { numeral: 'II', title: 'A name in the family', body: 'Word passed from one wedding to the next, and families came back for every occasion after.' },
   { numeral: 'III', title: 'Beyond the chain', body: 'The same patience turned to necklaces, bangles and earrings, all still made by hand.' },
-  { numeral: 'IV', title: 'The house today', body: 'A showroom where every piece can be held, weighed and chosen at the day’s gold rate.' },
+  { numeral: 'IV', title: 'The house today', body: 'A showroom where gold, silver and diamond pieces can be held, weighed and chosen in person.' },
 ];
 
 const CRAFT = [
@@ -34,10 +36,34 @@ const CRAFT = [
 ] as const;
 
 const PROMISES = [
-  { title: 'Pure by measure', body: 'Every piece is BIS hallmarked for its karat, so its purity can be checked by anyone, anywhere.' },
-  { title: 'Weighed in front of you', body: 'Weight, wastage and making charges are shown openly, priced at the day’s published gold rate.' },
+  { title: 'Purity & certification', body: 'Gold pieces are BIS hallmarked for their karat, silver is offered in 925 sterling and 999 fine, and every diamond comes with a certificate.' },
+  { title: 'Weighed in front of you', body: 'Weight, wastage and making charges for gold and silver are shown openly at the day’s rates; diamond pieces are priced on request.' },
   { title: 'Cared for for life', body: 'Bring any Sakthi piece back to be cleaned, polished and checked, for as long as you wear it.' },
 ];
+
+const TODAY_COLLECTIONS = [
+  {
+    key: 'aboutGold',
+    title: 'Gold Jewellery',
+    body: 'BIS hallmarked 22K, 18K and 24K chains, necklaces, bangles and bridal pieces, priced from today’s gold rate.',
+    href: '/gold-jewellery',
+    cta: 'Explore gold',
+  },
+  {
+    key: 'aboutSilver',
+    title: 'Silver Jewellery',
+    body: '925 sterling and 999 fine silver for everyday wear, children and gifting, priced from today’s silver rate.',
+    href: '/silver-jewellery',
+    cta: 'Explore silver',
+  },
+  {
+    key: 'aboutDiamond',
+    title: 'Diamond Jewellery',
+    body: 'Certified diamonds set in gold, with the lab and certificate number shown on each piece; priced on request.',
+    href: '/diamond-jewellery',
+    cta: 'Explore diamond',
+  },
+] as const;
 
 export default function AboutPage() {
   return (
@@ -199,6 +225,44 @@ export default function AboutPage() {
               </li>
             ))}
           </ol>
+        </div>
+      </section>
+
+      <section aria-labelledby="today-heading" className="surface-page pt-24 md:pt-36">
+        <div className="container-wide">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <p className="lux-eyebrow">What We Carry</p>
+            <h2 id="today-heading" className="lux-display mt-4" style={{ fontSize: 'clamp(2.1rem, 4.2vw, 3.4rem)' }}>
+              Gold, silver and <em>diamond today</em>
+            </h2>
+            <p className="lux-body mx-auto mt-6 max-w-[54ch]">
+              Alongside our BIS hallmarked gold chains, bangles and bridal pieces, our Town Hall showroom carries 925 sterling
+              and 999 fine silver priced at the day&apos;s silver rate, and certified diamond jewellery set in gold.
+            </p>
+          </Reveal>
+
+          <ul className="mt-12 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3">
+            {TODAY_COLLECTIONS.map((item, i) => (
+              <li key={item.key}>
+                <Reveal delay={i * 0.08} className="flex h-full flex-col">
+                  <Link href={item.href} className="group block flex-1">
+                    <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4 / 5', background: 'var(--c-icing)' }}>
+                      <ImageSlot
+                        slot={aboutSlot(item.key)}
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="transition-transform duration-[1600ms] ease-out group-hover:scale-[1.04]"
+                      />
+                    </div>
+                    <h3 className="lux-title mt-6 text-[1.45rem]">{item.title}</h3>
+                    <p className="lux-body mt-2 text-[0.9rem]">{item.body}</p>
+                    <span className="lux-link mt-4 inline-flex min-h-[44px] items-center" style={{ textDecoration: 'underline' }}>
+                      {item.cta}
+                    </span>
+                  </Link>
+                </Reveal>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

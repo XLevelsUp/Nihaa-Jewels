@@ -31,7 +31,7 @@ import {
 import { Copy, ImageOff, Pencil, RotateCcw, Search, SlidersHorizontal, Star, Trash2, X } from 'lucide-react';
 
 import { deleteProduct, duplicateProduct, restoreProduct, setProductStatus } from '@/app/actions/products';
-import { calculatePrice, formatRupees, type Karat } from '@/lib/pricing';
+import { calculatePrice, formatRupees, isPriceOnRequest, rateKey } from '@/lib/pricing';
 import ConfirmDialog from '@/components/ConfirmDialog';
 import { PALETTE } from '@/constants/palette';
 import { imageSrc } from '@/lib/site';
@@ -40,6 +40,7 @@ import type { ProductStatus } from '@/types/database';
 
 export interface ProductTableFilters {
   category: string;
+  metal: '' | 'gold' | 'silver' | 'diamond';
   colour: '' | 'yellow' | 'rose' | 'white' | 'none';
   karat: string;
   discount: '' | 'with' | 'without';
@@ -75,7 +76,27 @@ const DISCOUNTS: { value: ProductTableFilters['discount']; label: string }[] = [
   { value: 'without', label: 'No discount' },
 ];
 
-const EMPTY_FILTERS: ProductTableFilters = { category: '', colour: '', karat: '', discount: '', missing: '' };
+const EMPTY_FILTERS: ProductTableFilters = { category: '', metal: '', colour: '', karat: '', discount: '', missing: '' };
+
+const METALS: { value: ProductTableFilters['metal']; label: string }[] = [
+  { value: 'gold', label: 'Gold' },
+  { value: 'silver', label: 'Silver' },
+  { value: 'diamond', label: 'Diamond' },
+];
+
+const PURITIES: { value: string; label: string }[] = [
+  { value: '22K', label: '22K gold' },
+  { value: '18K', label: '18K gold' },
+  { value: '24K', label: '24K gold' },
+  { value: '925', label: '925 silver' },
+  { value: '999', label: '999 silver' },
+];
+
+const purityOf = (p: ProductRow) => {
+  const metal = p.metal === 'silver' ? `${p.silver_purity ?? ''} silver` : p.karat ?? 'Gold';
+  return p.has_diamond ? `Diamond · ${metal}` : metal;
+};
+const TYPE_TINT = { gold: PALETTE.icingWash, silver: '#ECEEF1', diamond: '#E8F1F8' };
 
 const VIEWS: { value: ProductView; label: string }[] = [
   { value: 'all', label: 'All' },
@@ -114,7 +135,8 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
   const active = [
     filters.category && { key: 'category' as const, label: categories.find((c) => c.id === filters.category)?.name ?? 'Collection' },
     filters.colour && { key: 'colour' as const, label: COLOURS.find((c) => c.value === filters.colour)?.label ?? filters.colour },
-    filters.karat && { key: 'karat' as const, label: filters.karat },
+    filters.metal && { key: 'metal' as const, label: METALS.find((m) => m.value === filters.metal)?.label ?? filters.metal },
+    filters.karat && { key: 'karat' as const, label: PURITIES.find((p) => p.value === filters.karat)?.label ?? filters.karat },
     filters.discount && { key: 'discount' as const, label: DISCOUNTS.find((d) => d.value === filters.discount)?.label ?? '' },
     filters.missing && { key: 'missing' as const, label: MISSING_LABELS[filters.missing] },
   ].filter(Boolean) as { key: keyof ProductTableFilters; label: string }[];
@@ -134,22 +156,28 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
   };
 
   const priceOf = (product: ProductRow) => {
-    const rate = rates[product.karat];
+    if (product.price_on_request) return null;
+    const rate = rates[rateKey(product.metal, product.karat, product.silver_purity) ?? ''];
     if (!rate) return null;
-    return calculatePrice(
+    const res = calculatePrice(
       {
         netWeightG: Number(product.net_weight_g),
-        karat: product.karat as Karat,
+        metal: product.metal,
+        karat: product.karat,
+        silverPurity: product.silver_purity,
         wastagePct: Number(product.wastage_pct),
         makingChargeType: product.making_charge_type,
         makingChargeValue: Number(product.making_charge_value),
         stoneCharges: Number(product.stone_charges),
         hallmarkCharges: Number(product.hallmark_charges),
+        diamondValue: product.has_diamond ? Number(product.diamond_value ?? 0) : 0,
+        priceOnRequest: product.price_on_request,
         discountType: product.discount_type,
         discountValue: Number(product.discount_value ?? 0),
       },
       rate,
     );
+    return res && !isPriceOnRequest(res) ? res : null;
   };
 
   const deleted = view === 'deleted';
@@ -285,6 +313,20 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
           <TextField
             select
             size="small"
+            label="Metal"
+            value={filters.metal}
+            onChange={(e) => go({ filters: { metal: e.target.value as ProductTableFilters['metal'] } })}
+            sx={{ ...filterSx, minWidth: 140 }}
+          >
+            <MenuItem value="">All metals</MenuItem>
+            {METALS.map((m) => (
+              <MenuItem key={m.value} value={m.value}>{m.label}</MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            select
+            size="small"
             label="Gold colour"
             value={filters.colour}
             onChange={(e) => go({ filters: { colour: e.target.value as ProductTableFilters['colour'] } })}
@@ -314,8 +356,8 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
             sx={{ ...filterSx, minWidth: 120 }}
           >
             <MenuItem value="">Any purity</MenuItem>
-            {['22K', '18K', '24K'].map((k) => (
-              <MenuItem key={k} value={k}>{k}</MenuItem>
+            {PURITIES.map((p) => (
+              <MenuItem key={p.value} value={p.value}>{p.label}</MenuItem>
             ))}
           </TextField>
 
@@ -405,7 +447,11 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
                     <TableCell sx={{ fontSize: '0.82rem' }}>{product.category?.name ?? '—'}</TableCell>
                     <TableCell>
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75 }}>
-                        <Chip label={product.karat} size="small" sx={{ height: 20, fontSize: '0.68rem', bgcolor: PALETTE.icingWash }} />
+                        <Chip
+                          label={purityOf(product)}
+                          size="small"
+                          sx={{ height: 20, fontSize: '0.68rem', bgcolor: TYPE_TINT[product.has_diamond ? 'diamond' : product.metal] }}
+                        />
                         {product.metal_colour && (
                           <Tooltip title={COLOURS.find((c) => c.value === product.metal_colour)?.label ?? ''}>
                             <Box
@@ -430,7 +476,7 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
                         </>
                       ) : (
                         <Typography component="span" sx={{ fontSize: '0.75rem', color: 'text.secondary', fontStyle: 'italic' }}>
-                          no {product.karat} rate
+                          {product.price_on_request ? 'On request' : `no ${purityOf(product)} rate`}
                         </Typography>
                       )}
                     </TableCell>
@@ -474,10 +520,10 @@ export default function ProductTable({ products, rates, initialSearch, view, cou
                     {product.name}
                   </Typography>
                   <Typography sx={{ fontSize: '0.72rem', color: 'text.secondary' }} noWrap>
-                    {product.sku} · {product.karat} · {product.net_weight_g} g
+                    {product.sku} · {purityOf(product)} · {product.net_weight_g} g
                   </Typography>
                   <Typography sx={{ fontSize: '0.85rem', fontWeight: 600, mt: 0.25 }}>
-                    {price ? formatRupees(price.total) : `no ${product.karat} rate`}
+                    {price ? formatRupees(price.total) : product.price_on_request ? 'Price on request' : `no ${purityOf(product)} rate`}
                     {price && price.percentOff > 0 && (
                       <Typography component="span" sx={{ fontSize: '0.7rem', color: 'primary.main', ml: 0.75 }}>{price.percentOff}% off</Typography>
                     )}

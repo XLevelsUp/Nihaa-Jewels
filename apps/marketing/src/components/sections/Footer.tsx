@@ -7,13 +7,15 @@ import { Clock, Heart, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import SocialIcons from '@/components/ui/SocialIcons';
 import OpenNow from '@/components/ui/OpenNow';
 import { SHOWROOMS, STORE, socialLinksWithInstagram } from '@/constants/store';
+import { JEWELLERY_TYPES, TYPE_ORDER } from '@/constants/jewelleryTypes';
 
 const EXPLORE = [
-  { label: 'The Catalogue', href: '/collections' },
+  ...TYPE_ORDER.map((t) => ({ label: JEWELLERY_TYPES[t].title, href: JEWELLERY_TYPES[t].path })),
+  { label: 'All Jewellery', href: '/collections' },
   { label: 'Our Story', href: '/about' },
   { label: 'Bespoke Commissions', href: '/custom-design' },
   { label: 'Gifting', href: '/gifting' },
-  { label: 'Caring for Gold', href: '/care-guide' },
+  { label: 'Care Guide', href: '/care-guide' },
 ];
 
 const LEGAL = [
@@ -41,7 +43,7 @@ export default function Footer() {
 
   return (
     <footer className="chrome-block">
-      <div className="container-wide grid grid-cols-1 gap-x-10 gap-y-12 pt-14 pb-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1.3fr_1fr]">
+      <div className="container-wide grid grid-cols-1 gap-x-8 gap-y-12 pt-12 pb-12 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1.3fr_1fr]">
         <div>
           <Link href="/" className="inline-flex items-center gap-3" aria-label={`${STORE.name} home`}>
             <Image src="/images/brand/logo-champagne.png" alt="" width={44} height={44} />
@@ -49,7 +51,7 @@ export default function Footer() {
               {STORE.name}
             </span>
           </Link>
-          <p className="mt-5 max-w-[22rem] text-[0.88rem] leading-[1.7]" style={soft}>
+          <p className="mt-4 max-w-[22rem] text-[0.88rem] leading-[1.7]" style={soft}>
             Gold, diamond and silver jewellery at Town Hall, Coimbatore. BIS hallmarked, weighed in front of you and priced at
             the day’s gold rate.
           </p>
@@ -71,7 +73,7 @@ export default function Footer() {
 
         <div>
           <p className={heading}>Visit Us</p>
-          <ul className="mt-5 space-y-4">
+          <ul className="mt-4 space-y-4">
             <Row icon={<MapPin size={16} />}>
               <address className="not-italic">{showroom.address}</address>
               <a href={showroom.mapsUrl} target="_blank" rel="noopener noreferrer" className="mt-1 inline-block opacity-85 hover:opacity-100"
@@ -111,7 +113,7 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
-          <p className="mt-6 inline-block rounded-full px-5 py-3 text-[0.8rem]" style={{ border: '1px solid currentColor', opacity: 0.85 }}>
+          <p className="mt-6 inline-block rounded-full px-4 py-3 text-[0.8rem]" style={{ border: '1px solid currentColor', opacity: 0.85 }}>
             BIS hallmarked gold, priced daily
           </p>
         </div>

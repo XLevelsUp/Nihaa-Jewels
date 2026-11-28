@@ -7,16 +7,16 @@ import { homeSlot } from '@/lib/imageSlots';
 
 const PROMISES = [
   {
-    title: 'Hallmarked purity',
-    body: 'A BIS 916 hallmark on every piece, checked before it reaches the counter.',
+    title: 'Purity & certification',
+    body: 'Every gold piece is BIS hallmarked, silver is offered in 925 sterling and 999 fine, and every diamond comes with a certificate.',
   },
   {
     title: "Priced at today's rate",
-    body: "Gold is valued at the day's rate, with weight and making charges shown line by line.",
+    body: "Gold and silver are valued at the day's rate with a line-by-line breakdown; diamond pieces are priced on request.",
   },
   {
-    title: 'Lifetime exchange',
-    body: 'Return any Sakthi piece against its gold value on the day you bring it back.',
+    title: 'Gold exchange',
+    body: 'Bring old gold to be tested in front of you and valued at the day’s gold rate against something new.',
   },
   {
     title: 'By appointment',
@@ -28,7 +28,7 @@ export default function HousePromise() {
   const background = homeSlot('promise').src;
 
   return (
-    <section aria-labelledby="promise-heading" className="chrome-block mt-24 overflow-hidden py-28 md:mt-36 md:py-40">
+    <section aria-labelledby="promise-heading" className="chrome-block mt-12 overflow-hidden py-12 md:mt-20 md:py-20">
       {background && (
         <>
           <Image src={background} alt="" fill loading="lazy" sizes="100vw" className="-z-20 object-cover" />
@@ -43,7 +43,7 @@ export default function HousePromise() {
           </h2>
         </Reveal>
 
-        <ul className="mt-16 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2 md:mt-20 lg:grid-cols-4">
+        <ul className="mt-12 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 md:mt-16 lg:grid-cols-4">
           {PROMISES.map((p, i) => (
             <li key={p.title}>
               <Reveal delay={i * 0.08} className="pt-6" style={{ borderTop: '1px solid var(--c-chrome-rule)' }}>

@@ -19,8 +19,8 @@ export default function VisitUs({ showroom }: { showroom: ResolvedSlot }) {
   const [bookingOpen, setBookingOpen] = useState(false);
 
   return (
-    <section aria-labelledby="visit-heading" className="surface-page py-24 md:py-36">
-      <div className="container-page grid grid-cols-1 items-center gap-14 md:grid-cols-12 md:gap-10">
+    <section aria-labelledby="visit-heading" className="surface-page py-12 md:py-20">
+      <div className="container-page grid grid-cols-1 items-center gap-8 md:grid-cols-12 md:gap-8">
         <Reveal className="md:col-span-7">
           <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
             <ImageSlot slot={showroom} sizes="(max-width: 768px) 100vw, 58vw" />
@@ -34,34 +34,40 @@ export default function VisitUs({ showroom }: { showroom: ResolvedSlot }) {
           </h2>
           <p className="lux-body mt-6">
             Tell us what you would like to see and we will have it waiting at a private counter, with a consultant
-            and the day&apos;s gold rate to hand.
+            and the day&apos;s gold and silver rates to hand.
           </p>
 
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-            <button type="button" onClick={() => setBookingOpen(true)} className="lux-button">
+          <div className="mt-8 grid max-w-md grid-cols-2 gap-3">
+            <button type="button" onClick={() => setBookingOpen(true)} className="lux-button col-span-2 w-full">
               <CalendarCheck size={15} strokeWidth={1.5} aria-hidden="true" />
               Book an appointment
             </button>
-            <a href={WHATSAPP_HREF} target="_blank" rel="noopener noreferrer" className="lux-button lux-button-ghost">
+            <a
+              href={WHATSAPP_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="lux-button lux-button-ghost w-full"
+              style={{ paddingInline: '1rem' }}
+            >
               WhatsApp
             </a>
-            <a href={STORE.phoneHref} className="lux-button lux-button-ghost">
+            <a href={STORE.phoneHref} className="lux-button lux-button-ghost w-full" style={{ paddingInline: '1rem' }}>
               Call
             </a>
           </div>
 
-          <hr className="lux-rule mt-12" />
+          <hr className="lux-rule mt-10" />
 
-          <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+          <div className={`mt-8 grid grid-cols-1 gap-8 ${SHOWROOMS.length > 1 ? 'sm:grid-cols-2' : ''}`}>
             {SHOWROOMS.map((s) => (
-              <address key={s.id} className="not-italic">
+              <address key={s.id} className="flex flex-col items-start not-italic">
                 <p className="lux-eyebrow" style={{ letterSpacing: '0.3em' }}>{s.name}</p>
                 <p className="text-body mt-3 text-[0.88rem] leading-[1.75]">{s.address}</p>
                 <p className="text-soft mt-1 text-[0.82rem]">{s.hours}</p>
-                <a href={s.phoneHref} className="text-body inline-flex min-h-11 items-center text-[0.88rem] tabular-nums">
+                <a href={s.phoneHref} className="text-body mt-1 inline-flex min-h-11 items-center text-[0.95rem] font-medium tabular-nums">
                   {s.phone}
                 </a>
-                <a href={s.mapsUrl} target="_blank" rel="noopener noreferrer" className="lux-link">
+                <a href={s.mapsUrl} target="_blank" rel="noopener noreferrer" className="lux-link mt-3">
                   Directions
                 </a>
               </address>

@@ -5,6 +5,7 @@ import Image from 'next/image';
 
 import PriceTag from './PriceTag';
 import { productImageUrl } from '@/lib/supabase';
+import { materialLabel } from '@/constants/jewelleryTypes';
 import type { PricedProduct } from '@/lib/catalogue';
 
 interface ProductCardProps {
@@ -47,7 +48,7 @@ export default function ProductCard({ product, priority = false, sizes = '(max-w
 
         <div className="pt-3">
           <p className="text-soft text-[0.58rem] uppercase tracking-[0.18em] tabular-nums">
-            {product.karat} gold &middot; {Number(product.net_weight_g)} g
+            {materialLabel(product)} &middot; {Number(product.net_weight_g)} g
           </p>
           <h3 className="lux-title mt-1 line-clamp-2 text-[0.98rem] leading-snug transition-colors duration-300 group-hover:text-[var(--c-burgundy)]">
             {product.name}

@@ -12,8 +12,8 @@ import { aboutSlot } from '@/lib/imageSlots';
 import { STORE } from '@/constants/store';
 
 export const metadata: Metadata = {
-  title: 'Bespoke Gold Jewellery, Made to Order',
-  description: `Commission a piece of gold jewellery from ${STORE.name} in Coimbatore. Bring a sketch, a photo or an heirloom; we draw it, weigh it and make it at our own bench.`,
+  title: 'Bespoke Jewellery, Made to Order',
+  description: `Commission bespoke gold jewellery from ${STORE.name} in Coimbatore, or enquire about diamond and silver pieces. Bring a sketch or photo; see the price first.`,
   alternates: { canonical: '/custom-design' },
 };
 
@@ -61,11 +61,11 @@ export default function CustomDesignPage() {
             <Reveal className="lg:col-span-6">
               <p className="lux-eyebrow">Bespoke Commissions</p>
               <h1 id="bespoke-heading" className="lux-display mt-4" style={{ fontSize: 'clamp(2.4rem, 5vw, 4rem)' }}>
-                Your idea, <em>made in gold</em>
+                Your idea, <em>made to order</em>
               </h1>
               <p className="lux-body mt-6">
-                Bring a sketch, an heirloom or only an idea. We will draw it, weigh it and make it at our own bench, and
-                you will see the price before anything is made.
+                Bring a sketch, an heirloom or only an idea. We craft bespoke gold commissions at our bench with the price
+                shared before work begins, and take diamond and silver commission enquiries on request.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <BookVisitButton label="Book a design consultation" />
@@ -137,7 +137,7 @@ export default function CustomDesignPage() {
                     </li>
                   ))}
                 </ul>
-                <p className="text-soft mt-3 text-[0.78rem]">Gold pieces in BIS hallmarked 22K or 18K. Ask us about diamond and silver commissions.</p>
+                <p className="text-soft mt-3 text-[0.78rem]">Gold commissions are BIS hallmarked in 22K or 18K. Diamond and silver commissions are available on request — speak with our showroom team.</p>
               </Reveal>
             </div>
           </div>
