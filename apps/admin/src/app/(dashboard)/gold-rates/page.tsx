@@ -12,24 +12,50 @@ import {
 } from '@mui/material';
 
 import RateCard from './RateCard';
-import { getCurrentRates, getRateHistory, KARATS, formatRupees } from '@/lib/rates';
+import {
+  getCurrentRates,
+  getCurrentSilverRates,
+  getRateHistory,
+  getSilverRateHistory,
+  KARATS,
+  SILVER_PURITIES,
+  formatRupees,
+} from '@/lib/rates';
 import { getCurrentUser } from '@/lib/supabase-auth';
 import { can, deniedMessage } from '@/lib/permissions';
 import { PALETTE } from '@/constants/palette';
 
 export const dynamic = 'force-dynamic';
 
-export default async function GoldRatesPage() {
-  const [current, history, user] = await Promise.all([getCurrentRates(), getRateHistory(30), getCurrentUser()]);
+const SILVER_TITLES: Record<string, string> = { '925': '925 Sterling silver', '999': '999 Fine silver' };
+
+export default async function RatesPage() {
+  const [gold, silver, goldHistory, silverHistory, user] = await Promise.all([
+    getCurrentRates(),
+    getCurrentSilverRates(),
+    getRateHistory(30),
+    getSilverRateHistory(30),
+    getCurrentUser(),
+  ]);
   const canEdit = can(user?.role, 'rates.edit');
+
+  const history = [
+    ...goldHistory.map((r) => ({ id: r.id, when: r.effective_from, label: `${r.karat} gold`, rate: r.rate_per_gram, source: r.source, note: r.note })),
+    ...silverHistory.map((r) => ({ id: r.id, when: r.effective_from, label: `${r.purity} silver`, rate: r.rate_per_gram, source: r.source, note: r.note })),
+  ]
+    .sort((a, b) => new Date(b.when).getTime() - new Date(a.when).getTime())
+    .slice(0, 40);
+
+  const grid = { display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' }, gap: 2.5 };
+  const sectionTitle = { fontSize: '1.05rem', mb: 2 };
 
   return (
     <Box>
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h1">Gold Rates</Typography>
+        <Typography variant="h1">Gold &amp; Silver Rates</Typography>
         <Typography sx={{ color: 'text.secondary', mt: 0.5, fontSize: '0.9rem' }}>
-          Every price on the website is calculated from these rates. A change reaches the website within about an
-          hour.
+          Every price on the website is calculated from these rates. Update them each morning; a change reaches the website
+          within about an hour.
         </Typography>
         {!canEdit && (
           <Typography sx={{ mt: 1.5, fontSize: '0.82rem', fontWeight: 600, color: 'primary.main' }}>
@@ -38,20 +64,35 @@ export default async function GoldRatesPage() {
         )}
       </Box>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
-          gap: 2.5,
-          mb: 5,
-        }}
-      >
+      <Typography variant="h2" sx={sectionTitle}>Gold</Typography>
+      <Box sx={{ ...grid, mb: 5 }}>
         {KARATS.map((karat) => {
-          const rate = current.get(karat);
+          const rate = gold.get(karat);
           return (
             <RateCard
               key={karat}
-              karat={karat}
+              metal="gold"
+              purity={karat}
+              title={`${karat} Gold`}
+              currentRate={rate?.ratePerGram ?? null}
+              source={rate?.source ?? null}
+              effectiveFrom={rate?.effectiveFrom ?? null}
+              canEdit={canEdit}
+            />
+          );
+        })}
+      </Box>
+
+      <Typography variant="h2" sx={sectionTitle}>Silver</Typography>
+      <Box sx={{ ...grid, mb: 5 }}>
+        {SILVER_PURITIES.map((purity) => {
+          const rate = silver.get(purity);
+          return (
+            <RateCard
+              key={purity}
+              metal="silver"
+              purity={purity}
+              title={SILVER_TITLES[purity]}
               currentRate={rate?.ratePerGram ?? null}
               source={rate?.source ?? null}
               effectiveFrom={rate?.effectiveFrom ?? null}
@@ -75,7 +116,7 @@ export default async function GoldRatesPage() {
           <TableHead>
             <TableRow>
               <TableCell>Date &amp; time</TableCell>
-              <TableCell>Purity</TableCell>
+              <TableCell>Metal &amp; purity</TableCell>
               <TableCell align="right">Rate / gram</TableCell>
               <TableCell>Set by</TableCell>
               <TableCell>Note</TableCell>
@@ -92,7 +133,7 @@ export default async function GoldRatesPage() {
               history.map((row) => (
                 <TableRow key={row.id} hover>
                   <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                    {new Date(row.effective_from).toLocaleString('en-IN', {
+                    {new Date(row.when).toLocaleString('en-IN', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
@@ -100,9 +141,9 @@ export default async function GoldRatesPage() {
                       minute: '2-digit',
                     })}
                   </TableCell>
-                  <TableCell>{row.karat}</TableCell>
+                  <TableCell sx={{ whiteSpace: 'nowrap' }}>{row.label}</TableCell>
                   <TableCell align="right" sx={{ fontWeight: 600 }}>
-                    {formatRupees(Number(row.rate_per_gram))}
+                    {formatRupees(Number(row.rate))}
                   </TableCell>
                   <TableCell>
                     <Chip
